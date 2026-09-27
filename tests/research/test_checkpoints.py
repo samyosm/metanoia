@@ -110,3 +110,24 @@ def test_dev_only_collection_and_selection(fixtures, tmp_path) -> None:
     load_predictor(Path(artifact.chosen.predictor_path))
     with pytest.raises(ValueError, match="not allowed"):
         select([runs / names[0]], fixtures / "dataset", "test", "b0", "nll")
+
+
+def test_init_from_starts_at_the_source_weights(fixtures, tmp_path) -> None:
+    from metanoia_contracts import Candidate, DecisionRequest
+
+    train(config(fixtures), MODEL, tmp_path / "a")
+    warm = config(fixtures, init_from=str(tmp_path / "a"), learning_rate=1e-12, epochs=1)
+    manifest = train(warm, MODEL, tmp_path / "b")
+    assert manifest.training["initialized_from"] == load_predictor(tmp_path / "a").predictor_id
+    request = DecisionRequest(
+        context="Alpha is bright.",
+        question="Which one is bright?",
+        candidates=(Candidate(id="a", text="Alpha"), Candidate(id="b", text="Beta")),
+    )
+    before = load_predictor(tmp_path / "a").decide(request).logits
+    after = load_predictor(tmp_path / "b").decide(request).logits
+    assert after == pytest.approx(before, abs=1e-6)
+
+    other = ModelConfig(name="tiny", encoder=HashingEncoderConfig(buckets=64, dim=16))
+    with pytest.raises(ValueError, match="model configuration"):
+        train(warm, other, tmp_path / "c")

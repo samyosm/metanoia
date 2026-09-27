@@ -15,6 +15,9 @@ class TrainingConfig(StrictModel):
     # Dev examples come from ``dataset`` unless a separate bundle is named, e.g. a large
     # train-only dataset evaluated against a suite's dev split.
     dev_dataset: str | None = None
+    # Start from the weights of an existing predictor bundle with the same model config
+    # (warm start / transfer). ``None`` starts from the pretrained encoder.
+    init_from: str | None = None
     train_split: str = "train"
     dev_split: str = "dev"
     epochs: int = Field(ge=1)

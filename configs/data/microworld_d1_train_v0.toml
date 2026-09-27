@@ -1,0 +1,17 @@
+# Train-only depth-1 micro-worlds (the easiest level of reasoning_v0) for the
+# curriculum diagnostic after R007. Same generator settings otherwise.
+generator = "microworld"
+dataset_id = "microworld_d1_train_v0"
+seed = 20260928
+n_worlds = 1000
+examples_per_world = 5
+entities_per_world = 8
+predicates_per_world = 44
+n_candidates = 4
+depths = [1]
+heldout_depths = []
+heldout_depth_splits = ["test"]
+conjunction_probability = 0.3
+
+[splits]
+train = 1.0

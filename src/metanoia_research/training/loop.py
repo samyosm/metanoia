@@ -292,14 +292,22 @@ def train(
         dev_dir, config.dev_split, config.max_dev_examples, config.subset, config.seed
     )
 
-    model = build_model(model_config, seed=config.seed).to(config.device)
+    model = build_model(model_config, seed=config.seed)
+    init_predictor = _load_initial_weights(model, model_config, config.init_from)
+    model = model.to(config.device)
     state = None
     if resume:
         work, state = _load_resume_state(out_dir, model, model_config, config, dataset_manifest)
     else:
         work = new_incomplete_directory(out_dir)
     context = _BundleContext(
-        model, model_config, config, dataset_manifest, len(train_examples), len(dev_examples)
+        model,
+        model_config,
+        config,
+        dataset_manifest,
+        len(train_examples),
+        len(dev_examples),
+        init_predictor,
     )
 
     def checkpoint(
@@ -323,6 +331,26 @@ def train(
         raise
     finalize_directory(work, out_dir)
     return manifest
+
+
+def _load_initial_weights(
+    model: DirectDecisionModel, model_config: ModelConfig, init_from: str | None
+) -> str | None:
+    """Load a bundle's weights as the starting point; returns its predictor id."""
+    if init_from is None:
+        return None
+    directory = Path(init_from)
+    manifest = load_strict(
+        PredictorBundleManifest, json.loads((directory / BUNDLE_MANIFEST).read_text())
+    )
+    if manifest.resolved_config["model"] != model_config.model_dump(mode="json"):
+        raise ValueError(f"model configuration differs from the one in {directory}")
+    check_encoder_identity(model, manifest.resolved_config["encoder_identity"])
+    weights = directory / manifest.weights.path
+    if sha256_file(weights) != manifest.weights.sha256:
+        raise ValueError(f"weights hash mismatch in {directory}")
+    model.load_persistent_state_dict(torch.load(weights, map_location="cpu", weights_only=True))
+    return manifest.predictor_id
 
 
 def _load_resume_state(
@@ -373,6 +401,7 @@ class _BundleContext:
     dataset_manifest: DatasetManifest
     n_train: int
     n_dev: int
+    init_predictor: str | None = None
 
     def write_bundle(
         self,
@@ -409,6 +438,8 @@ class _BundleContext:
             "wall_time_seconds": round(progress.elapsed_seconds, 1),
             "train_examples_per_second": round(seen / max(progress.elapsed_seconds, 1e-9), 2),
         }
+        if self.init_predictor is not None:
+            training["initialized_from"] = self.init_predictor
         if checkpoint is not None:
             training["checkpoint"] = checkpoint
         manifest = PredictorBundleManifest(

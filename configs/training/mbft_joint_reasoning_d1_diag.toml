@@ -1,0 +1,23 @@
+name = "mbft_joint_reasoning_d1_diag"
+# Diagnostic E2 after R007: from ModernBERT, 4,800 depth-1-only puzzles, 1 epoch
+# (300 steps, ~9 min on an RTX 2060).
+dataset = "artifacts/datasets/microworld_d1_train_v0"
+model_config_path = "configs/models/direct_modernbert_ft_joint.toml"
+dev_dataset = "artifacts/datasets/microworld_v0"
+train_split = "train"
+dev_split = "dev"
+batch_size = 16
+micro_batch_size = 4
+learning_rate = 1e-4
+encoder_learning_rate = 2e-5
+weight_decay = 0.01
+warmup_fraction = 0.06
+schedule = "linear"
+precision = "fp16-mixed"
+grad_clip = 1.0
+seed = 0
+device = "cuda"
+log_every_steps = 25
+epochs = 1
+max_train_examples = 4800
+subset = "random"
