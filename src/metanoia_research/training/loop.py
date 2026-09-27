@@ -348,6 +348,22 @@ def train(
     return manifest
 
 
+def _weight_layout(model_config: dict[str, Any]) -> dict[str, Any]:
+    """The parts of a model configuration that determine its weights.
+
+    The name and gradient checkpointing never do. A pretrained Hugging Face encoder's
+    ``max_length`` is only a truncation setting, whereas the hashing encoder sizes its
+    position table by it, so there it stays part of the layout.
+    """
+    layout = json.loads(json.dumps(model_config))
+    layout.pop("name", None)
+    encoder = layout.get("encoder", {})
+    encoder.pop("gradient_checkpointing", None)
+    if encoder.get("kind") == "hf":
+        encoder.pop("max_length", None)
+    return layout
+
+
 def _load_initial_weights(
     model: DirectDecisionModel, model_config: ModelConfig, init_from: str | None
 ) -> str | None:
@@ -358,9 +374,17 @@ def _load_initial_weights(
     manifest = load_strict(
         PredictorBundleManifest, json.loads((directory / BUNDLE_MANIFEST).read_text())
     )
-    if manifest.resolved_config["model"] != model_config.model_dump(mode="json"):
+    if _weight_layout(manifest.resolved_config["model"]) != _weight_layout(
+        model_config.model_dump(mode="json")
+    ):
         raise ValueError(f"model configuration differs from the one in {directory}")
-    check_encoder_identity(model, manifest.resolved_config["encoder_identity"])
+    recorded = dict(manifest.resolved_config["encoder_identity"])
+    current = dict(model.encoder.identity())
+    if recorded.get("kind") == "hf":
+        recorded.pop("max_length", None)
+        current.pop("max_length", None)
+    if recorded != current:
+        raise ValueError(f"encoder identity mismatch: bundle {recorded}, loaded {current}")
     weights = directory / manifest.weights.path
     if sha256_file(weights) != manifest.weights.sha256:
         raise ValueError(f"weights hash mismatch in {directory}")

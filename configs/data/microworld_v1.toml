@@ -1,0 +1,23 @@
+# Controlled micro-worlds for suites/reasoning_v1 (decision 0007): generator revision 2,
+# held-out test depths 4-8, every example padded to 46 sentences so input length does
+# not track depth. Needs a 640-token encoder (max 609 joint tokens measured).
+generator = "microworld"
+revision = 2
+dataset_id = "microworld_v1"
+seed = 20260929
+n_worlds = 1600
+examples_per_world = 5
+entities_per_world = 8
+predicates_per_world = 120
+n_candidates = 4
+depths = [1, 2, 3]
+heldout_depths = [4, 5, 6, 7, 8]
+heldout_depth_splits = ["test"]
+conjunction_probability = 0.3
+pad_to_sentences = 46
+
+[splits]
+train = 0.6
+dev = 0.1
+calibration = 0.1
+test = 0.2

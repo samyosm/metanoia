@@ -7,7 +7,14 @@ number of rule applications on the longest path of the answer's derivation
 (SCIENTIFIC_FOUNDATIONS §11.1 and §13.2).
 
 v0 limitations: unary predicates only (no binary relations or role binding), no
-negation, closed candidate set. The rendered text is parsed back by
+negation, closed candidate set.
+
+Revision 2 (``revision = 2``; revision-1 configs generate byte-identical output) adds:
+- a 400-word nonce vocabulary (:mod:`.microworld_vocab`), so deeper chains fit;
+- optional length control (``pad_to_sentences``): every example is padded to the same
+  sentence count with facts and dead-end chains about *non-candidate* entities, so
+  input length does not track depth and candidate mention counts stay equal;
+- an ``n_words`` annotation (whitespace words in the context). The rendered text is parsed back by
 :func:`parse_context`, which the symbolic oracle uses; the parser is exact only for
 the templates below.
 """
@@ -23,8 +30,9 @@ from pydantic import Field, model_validator
 from metanoia_contracts import Candidate, DecisionRequest
 from metanoia_contracts.artifacts import CaseRecord, LabelRecord
 from metanoia_contracts.base import StrictModel
+from metanoia_research.data.microworld_vocab import PREDICATES_V2
 
-GENERATOR_REVISION = "microworld/1"
+GENERATOR_REVISION = "microworld/1"  # revision 1; see generator_revision()
 
 _SYLLABLES = [
     "ka",
@@ -140,6 +148,8 @@ class MicroworldConfig(StrictModel):
     heldout_depth_splits: tuple[str, ...] = ("test",)
     conjunction_probability: float = Field(default=0.3, ge=0.0, le=1.0)
     splits: dict[str, float]
+    revision: Literal[1, 2] = 1
+    pad_to_sentences: int | None = Field(default=None, ge=1)
 
     @model_validator(mode="after")
     def _check(self) -> "MicroworldConfig":
@@ -151,13 +161,29 @@ class MicroworldConfig(StrictModel):
             raise ValueError("held-out depths must not appear in training depths")
         if self.n_candidates > self.entities_per_world:
             raise ValueError("n_candidates exceeds entities_per_world")
-        if self.predicates_per_world > len(PREDICATES):
-            raise ValueError(f"at most {len(PREDICATES)} predicates are available")
+        if self.revision == 1 and self.pad_to_sentences is not None:
+            raise ValueError("pad_to_sentences requires revision 2")
+        if self.pad_to_sentences is not None and self.n_candidates >= self.entities_per_world:
+            raise ValueError("padding needs at least one non-candidate entity")
+        vocabulary = vocabulary_for(self.revision)
+        if self.predicates_per_world > len(vocabulary):
+            raise ValueError(f"at most {len(vocabulary)} predicates are available")
         max_depth = max((*self.depths, *self.heldout_depths))
         needed = 3 + max_depth + 2 * (self.n_candidates - 1) * (max_depth + 1)
+        if self.pad_to_sentences is not None:
+            # Each padded sentence consumes at most one fresh predicate.
+            needed = max(needed, self.pad_to_sentences + 3)
         if needed > self.predicates_per_world:
             raise ValueError(f"predicates_per_world must be >= {needed} for these depths")
         return self
+
+
+def vocabulary_for(revision: int) -> tuple[str, ...] | list[str]:
+    return PREDICATES if revision == 1 else PREDICATES_V2
+
+
+def generator_revision(config: "MicroworldConfig") -> str:
+    return f"microworld/{config.revision}"
 
 
 @dataclass(frozen=True)
@@ -237,6 +263,7 @@ def _build_example(
     n_candidates: int,
     depth: int,
     conjunctive: bool,
+    pad_to: int | None = None,
 ) -> tuple[World, list[str], str, str]:
     """Returns (world, candidate names, answer, target predicate)."""
     candidates = rng.sample(names, n_candidates)
@@ -279,7 +306,35 @@ def _build_example(
     for entity in distractors:
         while sum(e == entity for e, _ in world.facts) < answer_facts:
             world.facts.append((entity, _dead_end(world, fresh, 1 + rng.randrange(depth))))
+    if pad_to is not None:
+        fillers = [n for n in names if n not in candidates]
+        _pad(world, rng, fresh, fillers, pad_to)
     return world, candidates, answer, target
+
+
+def _pad(
+    world: World, rng: random.Random, fresh: Iterator[str], fillers: list[str], total: int
+) -> None:
+    """Add facts and dead-end chains about non-candidate entities up to ``total`` sentences.
+
+    Only non-candidates are touched, so candidate mention counts stay equal and no
+    padding sentence can make a candidate hold the target.
+    """
+    remaining = total - len(world.facts) - len(world.rules)
+    if remaining < 0:
+        raise ValueError(f"example has {total - remaining} sentences, more than {total}")
+    try:
+        while remaining > 0:
+            entity = rng.choice(fillers)
+            if remaining == 1:
+                world.facts.append((entity, next(fresh)))
+                remaining -= 1
+            else:
+                length = rng.randint(1, min(3, remaining - 1))
+                world.facts.append((entity, _dead_end(world, fresh, length)))
+                remaining -= 1 + length
+    except StopIteration:
+        raise ValueError("predicates_per_world is too small for pad_to_sentences") from None
 
 
 def _dead_end(world: World, fresh: Iterator[str], length: int) -> str:
@@ -306,7 +361,7 @@ def generate(config: MicroworldConfig) -> tuple[list[CaseRecord], list[LabelReco
     for world_index in range(config.n_worlds):
         world_rng = random.Random(f"{config.seed}:{world_index}")
         names = _world_names(world_rng, config.entities_per_world)
-        predicates = world_rng.sample(PREDICATES, config.predicates_per_world)
+        predicates = world_rng.sample(vocabulary_for(config.revision), config.predicates_per_world)
         split = world_split[world_index]
         depths = config.depths
         if split in config.heldout_depth_splits:
@@ -318,7 +373,13 @@ def generate(config: MicroworldConfig) -> tuple[list[CaseRecord], list[LabelReco
             family_index = world_rng.randrange(len(TEMPLATE_FAMILIES))
             family = TEMPLATE_FAMILIES[family_index]
             world, candidates, answer, target = _build_example(
-                world_rng, names, predicates, config.n_candidates, depth, conjunctive
+                world_rng,
+                names,
+                predicates,
+                config.n_candidates,
+                depth,
+                conjunctive,
+                config.pad_to_sentences,
             )
             known = forward_chain(world.facts, world.rules)
             holders = [c for c in candidates if (c, target) in known]
@@ -327,6 +388,15 @@ def generate(config: MicroworldConfig) -> tuple[list[CaseRecord], list[LabelReco
 
             sentences = _render(world, family)
             world_rng.shuffle(sentences)
+            annotations: dict[str, str | int | float | bool] = {
+                "depth": depth,
+                "conjunctive": conjunctive,
+                "template_family": family_index,
+                "n_candidates": len(candidates),
+                "n_sentences": len(sentences),
+            }
+            if config.revision >= 2:
+                annotations["n_words"] = sum(len(s.split()) for s in sentences)
             example_id = f"{config.dataset_id}-{group_id}-e{example_index:03d}"
             request = DecisionRequest(
                 context=" ".join(sentences),
@@ -342,13 +412,7 @@ def generate(config: MicroworldConfig) -> tuple[list[CaseRecord], list[LabelReco
                     group_id=group_id,
                     split=split,
                     label_id=answer.lower(),
-                    annotations={
-                        "depth": depth,
-                        "conjunctive": conjunctive,
-                        "template_family": family_index,
-                        "n_candidates": len(candidates),
-                        "n_sentences": len(sentences),
-                    },
+                    annotations=annotations,
                 )
             )
             proofs.append({"example_id": example_id, "steps": proof_steps((answer, target), known)})

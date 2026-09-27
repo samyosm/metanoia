@@ -66,3 +66,42 @@ def test_proofs_have_declared_depth() -> None:
     for label, proof in zip(labels, proofs, strict=True):
         assert proof["example_id"] == label.example_id
         assert len(proof["steps"]) >= label.annotations["depth"]
+
+
+V2 = CONFIG.model_copy(
+    update={
+        "revision": 2,
+        "predicates_per_world": 120,
+        "heldout_depths": (4, 5, 6, 7, 8),
+        "pad_to_sentences": 46,
+    }
+)
+
+
+def test_revision_2_pads_every_example_to_the_same_length() -> None:
+    cases, labels, _ = generate(V2)
+    assert {label.annotations["n_sentences"] for label in labels} == {46}
+    assert {label.annotations["depth"] for label in labels} >= {1, 8}
+    assert all(label.annotations["n_words"] > 0 for label in labels)
+
+
+def test_revision_2_padding_never_touches_candidates() -> None:
+    cases, labels, _ = generate(V2)
+    oracle = MicroworldOracle()
+    for case, label in zip(cases, labels, strict=True):
+        world = parse_context(case.request.context)
+        names = [c.text for c in case.request.candidates]
+        mentions = Counter(entity for entity, _ in world.facts)
+        assert len({mentions[n] for n in names}) == 1  # equal candidate mentions
+        result = oracle.decide(case.request)
+        assert result.candidate_ids[result.probabilities.index(max(result.probabilities))] == (
+            label.label_id
+        )
+
+
+def test_revision_1_ignores_the_new_fields() -> None:
+    import pytest
+
+    assert "n_words" not in generate(CONFIG)[1][0].annotations
+    with pytest.raises(ValueError, match="revision 2"):
+        MicroworldConfig.model_validate({**CONFIG.model_dump(), "pad_to_sentences": 46})

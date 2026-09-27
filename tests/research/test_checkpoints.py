@@ -132,3 +132,23 @@ def test_init_from_starts_at_the_source_weights(fixtures, tmp_path) -> None:
     other = ModelConfig(name="tiny", encoder=HashingEncoderConfig(buckets=64, dim=16))
     with pytest.raises(ValueError, match="model configuration"):
         train(warm, other, tmp_path / "c")
+    # A new name does not change the weights; a hashing encoder's max_length does.
+    renamed = MODEL.model_copy(update={"name": "renamed"})
+    train(warm, renamed, tmp_path / "d")
+    longer = ModelConfig(
+        name="tiny", encoder=HashingEncoderConfig(buckets=128, dim=16, max_length=1024)
+    )
+    with pytest.raises(ValueError, match="model configuration"):
+        train(warm, longer, tmp_path / "e")
+
+
+def test_hf_max_length_is_not_part_of_the_weight_layout() -> None:
+    from metanoia_research.training.loop import _weight_layout
+
+    base = {"name": "a", "encoder": {"kind": "hf", "model": "m", "max_length": 384}}
+    longer = {"name": "b", "encoder": {"kind": "hf", "model": "m", "max_length": 640}}
+    assert _weight_layout(base) == _weight_layout(longer)
+    hashing = {"name": "a", "encoder": {"kind": "hashing", "max_length": 384}}
+    assert _weight_layout(hashing) != _weight_layout(
+        {**hashing, "encoder": {"kind": "hashing", "max_length": 640}}
+    )

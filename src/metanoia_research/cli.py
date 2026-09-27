@@ -27,7 +27,10 @@ def prepare(args: argparse.Namespace) -> None:
 
         config = load_strict(microworld.MicroworldConfig, raw)
         cases, labels, proofs = microworld.generate(config)
-        info = {"revision": microworld.GENERATOR_REVISION, "config": config.model_dump(mode="json")}
+        info = {
+            "revision": microworld.generator_revision(config),
+            "config": config.model_dump(mode="json"),
+        }
     elif generator == "mcqa":
         from metanoia_research.data import mcqa
 
