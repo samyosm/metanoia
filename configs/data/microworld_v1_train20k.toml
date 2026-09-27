@@ -1,0 +1,20 @@
+# Train-only revision-2 micro-worlds (depths 1-3, padded to 46 sentences) for training
+# reasoning_v1 predictors to convergence (after R011). Same settings as microworld_v1
+# except the seed, size and splits; no held-out depths.
+generator = "microworld"
+revision = 2
+dataset_id = "microworld_v1_train20k"
+seed = 20260930
+n_worlds = 4000
+examples_per_world = 5
+entities_per_world = 8
+predicates_per_world = 120
+n_candidates = 4
+depths = [1, 2, 3]
+heldout_depths = []
+heldout_depth_splits = ["test"]
+conjunction_probability = 0.3
+pad_to_sentences = 46
+
+[splits]
+train = 1.0
