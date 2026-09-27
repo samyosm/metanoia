@@ -88,26 +88,82 @@ class TorchPredictor:
             results.append(self._result(request, logits))
         return results
 
+    def _trace(
+        self,
+        request: DecisionRequest,
+        logits: list[float],
+        probabilities: tuple[float, ...],
+    ) -> tuple[TraceEvent, ...]:
+        """What the direct model computed, as detached summaries. Tracing never feeds
+        back into the prediction (the logits above were computed without it)."""
+        from metanoia.encoding.inputs import RENDERING_REVISION, render_input
+
+        encoder = self.model.encoder
+        rendered = render_input(request)
+        tokens = encoder.token_count(rendered)
+        info = self.calibrator.info
+        return (
+            TraceEvent(
+                seq=0,
+                op="render",
+                inputs=(
+                    "question",
+                    "context",
+                    *(("observations",) if request.observations else ()),
+                ),
+                outputs=("input",),
+                details={"rendering": RENDERING_REVISION, "text": rendered},
+            ),
+            TraceEvent(
+                seq=1,
+                op="encode",
+                inputs=("input", *request.candidate_ids),
+                outputs=("context", *(f"a:{cid}" for cid in request.candidate_ids)),
+                details={
+                    "encoder": str(encoder.identity().get("model", encoder.identity()["kind"])),
+                    "input_tokens": tokens,
+                    "max_length": encoder.max_length,
+                    "truncated": tokens > encoder.max_length,
+                    # joint: each candidate is encoded together with the input.
+                    "candidate_encoding": self.model.candidate_encoding,
+                },
+            ),
+            TraceEvent(
+                seq=2,
+                op="direct_score",
+                inputs=("context", *(f"a:{cid}" for cid in request.candidate_ids)),
+                outputs=request.candidate_ids,
+                details={"logits": list(logits)},
+            ),
+            TraceEvent(
+                seq=3,
+                op="calibrate",
+                inputs=request.candidate_ids,
+                outputs=request.candidate_ids,
+                details={
+                    "status": info.status.value,
+                    "calibrator_id": info.calibrator_id,
+                    "temperature": info.temperature,
+                    "probabilities": list(probabilities),
+                },
+            ),
+        )
+
     def _result(self, request: DecisionRequest, logits: list[float]) -> DecisionResult:
         # The direct model performs no graph work, so it consumes none of the reasoning
         # budget; the budget is a cap, not a quota.
-        trace = None
-        if request.trace is TraceMode.EVENTS:
-            trace = (
-                TraceEvent(seq=0, op="encode", outputs=("context", "candidates")),
-                TraceEvent(
-                    seq=1,
-                    op="direct_score",
-                    inputs=("context", *request.candidate_ids),
-                    details={"logits": list(logits)},
-                ),
-            )
+        probabilities = tuple(self.calibrator.probabilities(logits))
+        trace = (
+            self._trace(request, logits, probabilities)
+            if request.trace is TraceMode.EVENTS
+            else None
+        )
         return DecisionResult(
             request_id=request.request_id,
             predictor_id=self.predictor_id,
             candidate_ids=request.candidate_ids,
             logits=tuple(logits),
-            probabilities=tuple(self.calibrator.probabilities(logits)),
+            probabilities=probabilities,
             calibration=self.calibrator.info,
             budget=request.budget,
             trace=trace,

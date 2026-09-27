@@ -80,6 +80,12 @@ A trained bundle loads with `metanoia.api.load_predictor(path)`, which offers th
 Probabilities are marked `uncalibrated` unless `--calibration` names a temperature
 fitted for that predictor on its calibration split.
 
+`metanoia serve --bundle … [--calibration …] [--device …]` keeps a bundle loaded and
+answers JSON lines on stdin and stdout: `{"id", "request"}` in, `{"id", "result"}` or
+`{"id", "error"}` out, after a `{"ready"}` line. The web workbench in
+[`../interface`](../interface/) uses it to show each candidate's probability and the
+trace (render → encode → score → calibrate).
+
 ## Workflow: prepare → train → collect → calibrate → analyze → compare
 
 ```sh

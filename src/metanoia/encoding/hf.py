@@ -47,6 +47,10 @@ class HFEncoder(nn.Module):
             self.model.eval()
         return self
 
+    def token_count(self, text: str) -> int:
+        """Tokens (with special tokens) before truncation to ``max_length``."""
+        return len(self.tokenizer(text, truncation=False)["input_ids"])
+
     def encode(self, texts: Sequence[str]) -> EncodedText:
         device = next(self.model.parameters()).device
         batch = self.tokenizer(

@@ -1,4 +1,7 @@
-"""``metanoia decide``: ask a trained predictor bundle for candidate probabilities.
+"""``metanoia``: ask a trained predictor bundle for candidate probabilities.
+
+``decide`` answers one request. ``serve`` keeps a bundle loaded and answers requests
+as JSON lines on stdin/stdout, for a local front end such as ``../interface``.
 
 Thin wrapper around :func:`metanoia.api.load_predictor`. Inputs come either from flags
 or from a JSON request file (the public :class:`DecisionRequest` schema); the output is
@@ -45,10 +48,9 @@ def build_request(args: argparse.Namespace) -> DecisionRequest:
     )
 
 
-def decide(args: argparse.Namespace) -> None:
+def _load(args: argparse.Namespace):  # type: ignore[no-untyped-def]
     from metanoia.api import load_predictor
 
-    request = build_request(args)
     try:  # Quiet the pretrained-weights load report; it is not part of the answer.
         from transformers.utils import logging as hf_logging
 
@@ -61,13 +63,17 @@ def decide(args: argparse.Namespace) -> None:
         import torch
 
         device = "cuda" if torch.cuda.is_available() else "cpu"
-    predictor = load_predictor(
+    return load_predictor(
         Path(args.bundle),
         calibration=Path(args.calibration) if args.calibration else None,
         device=device,
         precision=args.precision,
     )
-    result = predictor.decide(request)
+
+
+def decide(args: argparse.Namespace) -> None:
+    request = build_request(args)
+    result = _load(args).decide(request)
     if args.json:
         print(json.dumps(result.model_dump(mode="json"), indent=2))
         return
@@ -83,22 +89,62 @@ def decide(args: argparse.Namespace) -> None:
     print(f"calibration: {result.calibration.status.value}  predictor: {result.predictor_id}")
 
 
+def serve(args: argparse.Namespace) -> None:
+    """JSON-lines worker. Each input line is ``{"id": ..., "request": DecisionRequest}``;
+    each output line is ``{"id": ..., "result": DecisionResult}`` or
+    ``{"id": ..., "error": "..."}``. The first output line announces readiness.
+    Only stdout carries protocol lines; diagnostics go to stderr."""
+    import time
+
+    out = sys.stdout
+    predictor = _load(args)
+    ready = {"ready": True, "predictor": predictor.describe()}
+    out.write(json.dumps(ready) + "\n")
+    out.flush()
+    for line in sys.stdin:
+        if not line.strip():
+            continue
+        message_id = None
+        try:
+            message = json.loads(line)
+            message_id = message.get("id")
+            request = load_strict(DecisionRequest, message["request"])
+            start = time.perf_counter()
+            result = predictor.decide(request)
+            reply = {
+                "id": message_id,
+                "result": result.model_dump(mode="json"),
+                "wall_time_ms": (time.perf_counter() - start) * 1000.0,
+            }
+        except Exception as error:  # noqa: BLE001 - reported to the caller, worker lives on
+            reply = {"id": message_id, "error": f"{type(error).__name__}: {error}"}
+        out.write(json.dumps(reply) + "\n")
+        out.flush()
+
+
+def _model_arguments(p: argparse.ArgumentParser) -> None:
+    p.add_argument("--bundle", required=True, help="predictor bundle directory")
+    p.add_argument("--calibration", help="fitted calibration JSON for this predictor")
+    p.add_argument("--device", default="auto", help="cpu, cuda, or auto (default)")
+    p.add_argument("--precision", default="fp32", choices=["fp32", "fp16"])
+
+
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(prog="metanoia", description=__doc__.split("\n\n")[0])
     commands = parser.add_subparsers(dest="command", required=True)
     p = commands.add_parser("decide", help="candidate probabilities for one request")
-    p.add_argument("--bundle", required=True, help="predictor bundle directory")
-    p.add_argument("--calibration", help="fitted calibration JSON for this predictor")
+    _model_arguments(p)
     p.add_argument("--context", help="context text")
     p.add_argument("--context-file", help="read the context from a file")
     p.add_argument("--question")
     p.add_argument("--candidate", action="append", help="repeat once per candidate")
     p.add_argument("--request", help="DecisionRequest JSON file, or - for stdin")
-    p.add_argument("--device", default="auto", help="cpu, cuda, or auto (default)")
-    p.add_argument("--precision", default="fp32", choices=["fp32", "fp16"])
     p.add_argument("--trace", action="store_true", help="include trace events")
     p.add_argument("--json", action="store_true", help="print the DecisionResult as JSON")
     p.set_defaults(func=decide)
+    p = commands.add_parser("serve", help="answer JSON-line requests on stdin/stdout")
+    _model_arguments(p)
+    p.set_defaults(func=serve)
     args = parser.parse_args(argv)
     try:
         args.func(args)

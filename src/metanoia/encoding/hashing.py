@@ -42,6 +42,10 @@ class HashingEncoder(nn.Module):
             for t in tokens
         ] or [1]
 
+    def token_count(self, text: str) -> int:
+        """Tokens before truncation to ``max_length`` (for trace diagnostics)."""
+        return len(_TOKEN.findall(text.lower()))
+
     def encode(self, texts: Sequence[str]) -> EncodedText:
         device = self.embedding.weight.device
         ids = [self.token_ids(text) for text in texts]

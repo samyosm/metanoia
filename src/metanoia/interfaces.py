@@ -27,7 +27,13 @@ class TextEncoder(Protocol):
     # therefore not saved in predictor bundles.
     external_prefixes: tuple[str, ...]
 
+    max_length: int
+
     def encode(self, texts: Sequence[str]) -> EncodedText: ...
+
+    def token_count(self, text: str) -> int:
+        """Tokens before truncation; traces compare it with ``max_length``."""
+        ...
 
     def identity(self) -> dict[str, object]:
         """Resolved identity (checkpoint revision, tokenizer, pooling) for bundles."""
