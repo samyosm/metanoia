@@ -1,0 +1,20 @@
+# Controlled micro-world task pinned by suites/reasoning_v0.
+generator = "microworld"
+dataset_id = "microworld_v0"
+seed = 20260926
+n_worlds = 600
+examples_per_world = 5
+entities_per_world = 8
+predicates_per_world = 44
+n_candidates = 4
+depths = [1, 2, 3]
+# Depth 4 appears only in test worlds: a held-out derivation length.
+heldout_depths = [4]
+heldout_depth_splits = ["test"]
+conjunction_probability = 0.3
+
+[splits]
+train = 0.6
+dev = 0.1
+calibration = 0.1
+test = 0.2

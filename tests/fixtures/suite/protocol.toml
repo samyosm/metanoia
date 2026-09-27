@@ -1,0 +1,21 @@
+suite_id = "tiny"
+revision = 1
+task = "exclusive_choice"
+question = "Fixture suite for tests."
+analysis_specification = "tests/fixtures/spec.toml"
+
+[dataset]
+dataset_id = "microworld_tiny"
+cases_sha256 = "0b212420bef862cf4b99167d05f64c0933de140ae0d4800daf5ee48328751e65"
+labels_sha256 = "00385c41aa6403b0922d3f2271dba723b6599e3c6c30e3cd50a162f03badc77d"
+
+[evaluation]
+splits = ["dev", "calibration", "test"]
+batch_size = 4
+repeats = 1
+base_seed = 0
+trace = "off"
+failure_policy = "uniform"
+
+[[budgets]]
+id = "b0"

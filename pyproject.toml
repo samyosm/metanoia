@@ -1,0 +1,61 @@
+[project]
+name = "metanoia"
+version = "0.1.0"
+description = "Budgeted, non-generative decision model with an independent evaluation instrument."
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+# The contracts layer needs only Pydantic. Everything else is an optional set.
+dependencies = ["pydantic>=2.8"]
+
+[project.optional-dependencies]
+model = ["torch>=2.4", "numpy>=1.26"]
+hf = ["transformers>=4.48"]
+research = ["metanoia[model]", "pyarrow>=17"]
+analysis = ["numpy>=1.26", "scipy>=1.13", "pyarrow>=17", "matplotlib>=3.9"]
+
+[project.scripts]
+metanoia-research = "metanoia_research.cli:main"
+metanoia-analysis = "metanoia_analysis.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.6", "mypy>=1.11"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = [
+    "src/metanoia_contracts",
+    "src/metanoia",
+    "src/metanoia_research",
+    "src/metanoia_analysis",
+]
+
+# CPU wheels by default: no GPU is assumed (see docs/decisions).
+[tool.uv.sources]
+torch = [{ index = "pytorch-cpu" }]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+markers = ["slow: learning smoke tests that train a tiny model"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+
+[tool.mypy]
+python_version = "3.12"
+packages = ["metanoia_contracts", "metanoia", "metanoia_research", "metanoia_analysis"]
+mypy_path = "src"
+ignore_missing_imports = true
+check_untyped_defs = true

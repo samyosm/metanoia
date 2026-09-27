@@ -1,0 +1,85 @@
+{
+  "run_version": 1,
+  "run_id": "lexical",
+  "status": "complete",
+  "suite": {
+    "suite_id": "tiny",
+    "revision": 1,
+    "path": "tests/fixtures/suite"
+  },
+  "protocol_sha256": "56de9357911cdb38a02a2dcfd56477f68480b62ec0b1d4ecb6acfc1a6bc728cc",
+  "protocol": {
+    "suite_id": "tiny",
+    "revision": 1,
+    "task": "exclusive_choice",
+    "question": "Fixture suite for tests.",
+    "analysis_specification": "tests/fixtures/spec.toml",
+    "dataset": {
+      "dataset_id": "microworld_tiny",
+      "cases_sha256": "0b212420bef862cf4b99167d05f64c0933de140ae0d4800daf5ee48328751e65",
+      "labels_sha256": "00385c41aa6403b0922d3f2271dba723b6599e3c6c30e3cd50a162f03badc77d"
+    },
+    "evaluation": {
+      "splits": [
+        "dev",
+        "calibration",
+        "test"
+      ],
+      "batch_size": 4,
+      "repeats": 1,
+      "base_seed": 0,
+      "trace": "off",
+      "failure_policy": "uniform"
+    },
+    "budgets": [
+      {
+        "id": "b0"
+      }
+    ]
+  },
+  "dataset_id": "microworld_tiny",
+  "cases_sha256": "0b212420bef862cf4b99167d05f64c0933de140ae0d4800daf5ee48328751e65",
+  "labels_sha256": "00385c41aa6403b0922d3f2271dba723b6599e3c6c30e3cd50a162f03badc77d",
+  "predictor": {
+    "predictor_id": "lexical_overlap@1",
+    "kind": "lexical_overlap",
+    "spec": {
+      "kind": "lexical",
+      "path": null,
+      "calibration": null,
+      "device": "cpu"
+    }
+  },
+  "runner_revision": "runner/1+metanoia_research-0.1.0",
+  "environment": {
+    "python": "3.12.14",
+    "implementation": "CPython",
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.44",
+    "machine": "x86_64",
+    "packages": {
+      "metanoia": "0.1.0",
+      "pydantic": "2.13.5",
+      "torch": "2.14.0+cpu",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "pyarrow": "25.0.1"
+    }
+  },
+  "source": {
+    "vcs": null
+  },
+  "counts": {
+    "expected": 18,
+    "attempted": 18,
+    "completed": 18,
+    "failed": 0
+  },
+  "predictions": {
+    "path": "predictions.parquet",
+    "sha256": "dc4b6b88d18b37aa2135e2b777541d6c1705eca91a8996bf71f716d0d9fb1714",
+    "rows": 18
+  },
+  "traces": null,
+  "started_at": "2026-09-27T02:47:30+00:00",
+  "finished_at": "2026-09-27T02:47:30+00:00"
+}

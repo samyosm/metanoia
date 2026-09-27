@@ -1,0 +1,9 @@
+run_id = "direct_hashing_v0_reasoning_v0"
+suite = "suites/reasoning_v0"
+dataset = "artifacts/datasets/microworld_v0"
+output_root = "artifacts/runs"
+
+[predictor]
+kind = "bundle"
+path = "artifacts/predictors/direct_hashing_v0"
+device = "cpu"

@@ -1,0 +1,17 @@
+# Stage-1 direct scorer on the offline hashed-token encoder (CPU smoke/control).
+name = "direct_hashing"
+
+[encoder]
+kind = "hashing"
+buckets = 4096
+dim = 64
+layers = 2
+heads = 4
+max_length = 512
+
+[scorer]
+kind = "direct"
+latent_dim = 64
+heads = 4
+hidden_dim = 128
+dropout = 0.0

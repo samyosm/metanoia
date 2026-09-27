@@ -1,0 +1,8 @@
+spec_id = "fixture"
+revision = 1
+splits = ["dev", "calibration", "test"]
+metrics = ["accuracy", "nll", "brier", "ece"]
+ece_bins = 10
+slice_by = ["depth"]
+bootstrap_resamples = 200
+bootstrap_seed = 0

@@ -1,0 +1,57 @@
+{
+  "dataset_version": 1,
+  "dataset_id": "microworld_tiny",
+  "task": "exclusive_choice",
+  "generator": {
+    "revision": "microworld/1",
+    "config": {
+      "generator": "microworld",
+      "dataset_id": "microworld_tiny",
+      "seed": 7,
+      "n_worlds": 10,
+      "examples_per_world": 3,
+      "entities_per_world": 8,
+      "predicates_per_world": 44,
+      "n_candidates": 4,
+      "depths": [
+        1,
+        2
+      ],
+      "heldout_depths": [
+        3
+      ],
+      "heldout_depth_splits": [
+        "test"
+      ],
+      "conjunction_probability": 0.4,
+      "splits": {
+        "train": 0.4,
+        "dev": 0.2,
+        "calibration": 0.2,
+        "test": 0.2
+      }
+    }
+  },
+  "splits": {
+    "calibration": 6,
+    "dev": 6,
+    "test": 6,
+    "train": 12
+  },
+  "cases": {
+    "path": "cases.jsonl",
+    "sha256": "0b212420bef862cf4b99167d05f64c0933de140ae0d4800daf5ee48328751e65",
+    "rows": 30
+  },
+  "labels": {
+    "path": "labels.parquet",
+    "sha256": "00385c41aa6403b0922d3f2271dba723b6599e3c6c30e3cd50a162f03badc77d",
+    "rows": 30
+  },
+  "proofs": {
+    "path": "proofs.jsonl",
+    "sha256": "565bb37fadd1d35e6404bade66045d131e4f53a5e298cbf171f2758358fdf774",
+    "rows": 30
+  },
+  "created_at": "2026-09-27T02:47:29+00:00"
+}

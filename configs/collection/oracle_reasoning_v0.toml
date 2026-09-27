@@ -1,0 +1,7 @@
+run_id = "oracle_reasoning_v0"
+suite = "suites/reasoning_v0"
+dataset = "artifacts/datasets/microworld_v0"
+output_root = "artifacts/runs"
+
+[predictor]
+kind = "oracle"

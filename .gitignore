@@ -1,0 +1,8 @@
+# Bulk datasets, predictors, runs, calibrations, and analyses (see data/manifests for provenance).
+artifacts/
+*.incomplete/
+.venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
