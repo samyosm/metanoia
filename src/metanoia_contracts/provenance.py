@@ -60,7 +60,9 @@ _RELEVANT_PACKAGES = (
 )
 
 
-def environment_snapshot() -> dict[str, Any]:
+def environment_snapshot(accelerator: Mapping[str, Any] | None = None) -> dict[str, Any]:
+    """``accelerator`` is supplied by callers that own the numerical backend (contracts
+    never import torch); ``None`` records that no accelerator description was given."""
     packages: dict[str, str] = {}
     for name in _RELEVANT_PACKAGES:
         try:
@@ -73,6 +75,7 @@ def environment_snapshot() -> dict[str, Any]:
         "platform": platform.platform(),
         "machine": platform.machine(),
         "packages": packages,
+        "accelerator": dict(accelerator) if accelerator is not None else None,
     }
 
 

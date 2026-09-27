@@ -14,3 +14,8 @@ def render_input(request: DecisionRequest) -> str:
         )
         parts.append(f"observations: {items}")
     return "\n".join(parts)
+
+
+def render_candidate_joint(candidate_text: str, rendered_input: str) -> str:
+    """Candidate first, so truncation of a long context never removes the candidate."""
+    return f"answer: {candidate_text}\n{rendered_input}"

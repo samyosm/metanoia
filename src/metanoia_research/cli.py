@@ -19,19 +19,32 @@ def _toml(path: str) -> dict:
 
 def prepare(args: argparse.Namespace) -> None:
     from metanoia_research.data.bundle import write_dataset
-    from metanoia_research.data.microworld import GENERATOR_REVISION, MicroworldConfig, generate
 
-    config = load_strict(MicroworldConfig, _toml(args.config))
-    cases, labels, proofs = generate(config)
+    raw = _toml(args.config)
+    generator = raw.get("generator", "microworld")
+    if generator == "microworld":
+        from metanoia_research.data import microworld
+
+        config = load_strict(microworld.MicroworldConfig, raw)
+        cases, labels, proofs = microworld.generate(config)
+        info = {"revision": microworld.GENERATOR_REVISION, "config": config.model_dump(mode="json")}
+    elif generator == "mcqa":
+        from metanoia_research.data import mcqa
+
+        mc_config = load_strict(mcqa.McqaConfig, raw)
+        cases, labels, skipped = mcqa.generate(mc_config)
+        proofs = []
+        info = {
+            "revision": mcqa.GENERATOR_REVISION,
+            "config": mc_config.model_dump(mode="json"),
+            "sources": mcqa.source_revisions(mc_config),
+            "skipped": skipped,
+        }
+        config = mc_config  # type: ignore[assignment]
+    else:
+        raise ValueError(f"unknown generator {generator!r}")
     out = Path(args.out or f"artifacts/datasets/{config.dataset_id}")
-    manifest = write_dataset(
-        out,
-        config.dataset_id,
-        {"revision": GENERATOR_REVISION, "config": config.model_dump(mode="json")},
-        cases,
-        labels,
-        proofs,
-    )
+    manifest = write_dataset(out, config.dataset_id, info, cases, labels, proofs)
     print(f"wrote {out}: {manifest.splits}")
     print(
         json.dumps(

@@ -1,0 +1,30 @@
+# Promoted suites are immutable: fix a bug by adding a new revision, not by editing.
+suite_id = "mcqa_v0"
+revision = 1
+task = "exclusive_choice"
+question = """
+Stage-1 realistic instrument: how well does a direct predictor choose the correct option
+of human-written multiple-choice reading-comprehension questions (RACE all + SciQ), and
+are its probabilities reliable? Dev and calibration come from the sources' validation
+splits (grouped by passage); test is the sources' test splits.
+"""
+analysis_specification = "analysis/specifications/mcqa_v0.toml"
+
+[dataset]
+# Regenerate with: metanoia-research prepare --config configs/data/mcqa_v0.toml
+dataset_id = "mcqa_v0"
+cases_sha256 = "03fa885ea3d3b2a7450287d68532723268a071ac21da21ccec3033f4ef5510e0"
+labels_sha256 = "aabdd466f6702dcf30e47d7ee708249281b7c6f02b5bad9196be05c9b29f4cc5"
+
+[evaluation]
+splits = ["dev", "calibration", "test"]
+batch_size = 8
+repeats = 1
+base_seed = 0
+trace = "off"
+failure_policy = "uniform"
+timing_scope = "decide_call"
+
+[[budgets]]
+id = "b0"
+# All limits zero: the direct scorer without graph work.

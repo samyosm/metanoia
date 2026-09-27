@@ -1,0 +1,17 @@
+# Stage-1 direct scorer on a frozen BERT-family baseline encoder (PLAN.md §3), matched
+# to direct_modernbert except for the encoder.
+name = "direct_bert"
+
+[encoder]
+kind = "hf"
+model = "google-bert/bert-base-uncased"
+revision = "86b5e0934494bd15c9632b12f734a8a67f723594"
+max_length = 512
+pooling = "mean"
+
+[scorer]
+kind = "direct"
+latent_dim = 128
+heads = 4
+hidden_dim = 256
+dropout = 0.1

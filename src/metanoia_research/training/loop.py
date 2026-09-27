@@ -6,6 +6,7 @@ predictions scored by ``metanoia_analysis`` (PLAN.md §7.2).
 """
 
 import json
+import math
 import random
 from collections.abc import Callable, Sequence
 from pathlib import Path
@@ -29,6 +30,7 @@ from metanoia_contracts.provenance import (
     utc_now,
 )
 from metanoia_research.artifacts import (
+    accelerator_snapshot,
     discard_incomplete,
     finalize_directory,
     new_incomplete_directory,
@@ -39,7 +41,13 @@ from metanoia_research.training.config import TrainingConfig
 Example = tuple[DecisionRequest, int]
 
 
-def load_examples(dataset_dir: Path, split: str, limit: int | None = None) -> list[Example]:
+def load_examples(
+    dataset_dir: Path,
+    split: str,
+    limit: int | None = None,
+    subset: str = "head",
+    seed: int = 0,
+) -> list[Example]:
     _, cases = read_cases(dataset_dir)
     labels = {label.example_id: label.label_id for label in read_labels(dataset_dir)}
     examples = [
@@ -49,28 +57,55 @@ def load_examples(dataset_dir: Path, split: str, limit: int | None = None) -> li
     ]
     if not examples:
         raise ValueError(f"split {split!r} is empty in {dataset_dir}")
+    if limit and subset == "random":
+        return random.Random(f"{seed}:{split}").sample(examples, min(limit, len(examples)))
     return examples[:limit] if limit else examples
 
 
-def batch_loss(model: DirectDecisionModel, batch: Sequence[Example]) -> torch.Tensor:
-    output = model([request for request, _ in batch])
+def batch_loss(
+    model: DirectDecisionModel, batch: Sequence[Example], precision: str = "fp32"
+) -> torch.Tensor:
+    device_type = model.device.type
+    with torch.autocast(device_type, dtype=torch.float16, enabled=precision == "fp16-mixed"):
+        output = model([request for request, _ in batch])
     targets = torch.tensor([target for _, target in batch], device=output.logits.device)
-    return F.cross_entropy(output.logits, targets)
+    # The loss is computed in fp32 regardless of autocast.
+    return F.cross_entropy(output.logits.float(), targets)
 
 
-def mean_loss(model: DirectDecisionModel, examples: Sequence[Example], batch_size: int) -> float:
+def mean_loss(
+    model: DirectDecisionModel,
+    examples: Sequence[Example],
+    batch_size: int,
+    precision: str = "fp32",
+) -> float:
     model.eval()
     total = 0.0
     with torch.no_grad():
         for start in range(0, len(examples), batch_size):
             batch = examples[start : start + batch_size]
-            total += batch_loss(model, batch).item() * len(batch)
+            total += batch_loss(model, batch, precision).item() * len(batch)
     return total / len(examples)
 
 
 def grad_norm(parameters: Sequence[torch.nn.Parameter]) -> float:
     norms = [p.grad.norm() for p in parameters if p.grad is not None]
     return float(torch.stack(norms).norm()) if norms else 0.0
+
+
+def _finite_mean(values: list[float]) -> float:
+    """Mean over finite values: fp16 steps skipped by the grad scaler have inf norms."""
+    finite = [v for v in values if math.isfinite(v)]
+    return sum(finite) / len(finite) if finite else float("nan")
+
+
+def _lr_factor(config: TrainingConfig, step: int, total: int) -> float:
+    warmup = int(config.warmup_fraction * total)
+    if step < warmup:
+        return (step + 1) / warmup
+    if config.schedule == "linear":
+        return max(0.0, (total - step) / max(1, total - warmup))
+    return 1.0
 
 
 def fit(
@@ -84,9 +119,18 @@ def fit(
     trainable = [p for p in model.parameters() if p.requires_grad]
     encoder_params = [p for p in model.encoder.parameters() if p.requires_grad]
     scorer_params = [p for p in model.scorer.parameters() if p.requires_grad]
-    optimizer = torch.optim.AdamW(
-        trainable, lr=config.learning_rate, weight_decay=config.weight_decay
-    )
+    groups = [{"params": scorer_params, "lr": config.learning_rate}]
+    if encoder_params:
+        groups.append(
+            {"params": encoder_params, "lr": config.encoder_learning_rate or config.learning_rate}
+        )
+    optimizer = torch.optim.AdamW(groups, weight_decay=config.weight_decay)
+    base_lrs = [g["lr"] for g in optimizer.param_groups]
+    scaler = torch.amp.GradScaler(model.device.type, enabled=config.precision == "fp16-mixed")
+    micro = config.micro_batch_size or config.batch_size
+    steps_per_epoch = -(-len(train) // config.batch_size)
+    total_steps = steps_per_epoch * config.epochs
+    step = 0
     log = []
     for epoch in range(config.epochs):
         model.train()
@@ -95,21 +139,44 @@ def fit(
         losses, encoder_norms, scorer_norms = [], [], []
         for start in range(0, len(order), config.batch_size):
             batch = [train[i] for i in order[start : start + config.batch_size]]
-            loss = batch_loss(model, batch)
+            for group, base in zip(optimizer.param_groups, base_lrs, strict=True):
+                group["lr"] = base * _lr_factor(config, step, total_steps)
             optimizer.zero_grad()
-            loss.backward()
+            batch_total = 0.0
+            for m in range(0, len(batch), micro):
+                part = batch[m : m + micro]
+                loss = batch_loss(model, part, config.precision) * (len(part) / len(batch))
+                scaler.scale(loss).backward()
+                batch_total += loss.item()
+            scaler.unscale_(optimizer)
             encoder_norms.append(grad_norm(encoder_params))
             scorer_norms.append(grad_norm(scorer_params))
             if config.grad_clip is not None:
                 torch.nn.utils.clip_grad_norm_(trainable, config.grad_clip)
-            optimizer.step()
-            losses.append(loss.item())
+            scaler.step(optimizer)
+            scaler.update()
+            losses.append(batch_total)
+            step += 1
+            if config.log_every_steps and step % config.log_every_steps == 0:
+                recent = losses[-config.log_every_steps :]
+                print(
+                    json.dumps(
+                        {
+                            "epoch": epoch,
+                            "step": step,
+                            "of": total_steps,
+                            "train_loss": sum(recent) / len(recent),
+                        }
+                    ),
+                    flush=True,
+                )
         record = {
             "epoch": epoch,
             "train_loss": sum(losses) / len(losses),
-            "dev_loss": mean_loss(model, dev, config.batch_size),
-            "grad_norm_encoder": sum(encoder_norms) / len(encoder_norms),
-            "grad_norm_scorer": sum(scorer_norms) / len(scorer_norms),
+            "dev_loss": mean_loss(model, dev, micro, config.precision),
+            "grad_norm_encoder": _finite_mean(encoder_norms),
+            "grad_norm_scorer": _finite_mean(scorer_norms),
+            "nonfinite_grad_steps": sum(not math.isfinite(v) for v in scorer_norms + encoder_norms),
         }
         log.append(record)
         on_epoch(record)
@@ -125,8 +192,12 @@ def train(
     """Train and write a predictor bundle. Refuses to overwrite ``out_dir``."""
     dataset_dir = Path(config.dataset)
     dataset_manifest, _ = read_cases(dataset_dir)
-    train_examples = load_examples(dataset_dir, config.train_split, config.max_train_examples)
-    dev_examples = load_examples(dataset_dir, config.dev_split)
+    train_examples = load_examples(
+        dataset_dir, config.train_split, config.max_train_examples, config.subset, config.seed
+    )
+    dev_examples = load_examples(
+        dataset_dir, config.dev_split, config.max_dev_examples, config.subset, config.seed
+    )
 
     model = build_model(model_config, seed=config.seed).to(config.device)
     work = new_incomplete_directory(out_dir)
@@ -193,7 +264,7 @@ def _train_into(
             "parameters_trainable": sum(p.numel() for p in model.parameters() if p.requires_grad),
             "final_epoch": log[-1],
         },
-        environment=environment_snapshot(),
+        environment=environment_snapshot(accelerator_snapshot(config.device)),
         source=source_revision(),
         created_at=utc_now(),
     )

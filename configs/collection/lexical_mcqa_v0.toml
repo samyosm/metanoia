@@ -1,0 +1,7 @@
+run_id = "lexical_mcqa_v0"
+suite = "suites/mcqa_v0"
+dataset = "artifacts/datasets/mcqa_v0"
+output_root = "artifacts/runs"
+
+[predictor]
+kind = "lexical"

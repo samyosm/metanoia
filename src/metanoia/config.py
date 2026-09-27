@@ -23,14 +23,19 @@ class HashingEncoderConfig(StrictModel):
 
 
 class HFEncoderConfig(StrictModel):
-    """Frozen pretrained Hugging Face encoder. Pin ``revision`` to a commit hash."""
+    """Pretrained Hugging Face encoder. Pin ``revision`` to a commit hash.
+
+    ``frozen = false`` fine-tunes the encoder; its weights are then stored in the
+    predictor bundle instead of being referenced by revision only.
+    """
 
     kind: Literal["hf"] = "hf"
     model: str
     revision: str
     max_length: int = Field(default=512, ge=8)
     pooling: Literal["mean", "cls"] = "mean"
-    frozen: Literal[True] = True
+    frozen: bool = True
+    gradient_checkpointing: bool = False
 
 
 EncoderConfig = Annotated[HashingEncoderConfig | HFEncoderConfig, Field(discriminator="kind")]
@@ -42,6 +47,10 @@ class DirectScorerConfig(StrictModel):
     heads: int = Field(default=4, ge=1)
     hidden_dim: int = Field(default=128, ge=8)
     dropout: float = Field(default=0.0, ge=0.0, lt=1.0)
+    # ``separate``: each candidate text is encoded alone (a_i ignores the input).
+    # ``joint``: each candidate is encoded together with the rendered input, so a_i is
+    # contextual (N encoder passes per request instead of one).
+    candidate_encoding: Literal["separate", "joint"] = "separate"
 
 
 class ModelConfig(StrictModel):

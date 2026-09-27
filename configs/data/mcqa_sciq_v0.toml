@@ -1,0 +1,7 @@
+# SciQ only (same conversion and split policy as mcqa_v0). A small, easy training set
+# for quick checks; evaluate on suites/mcqa_v0.
+generator = "mcqa"
+dataset_id = "mcqa_sciq_v0"
+seed = 20260926
+sources = ["sciq"]
+dev_fraction = 0.5

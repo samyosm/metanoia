@@ -33,11 +33,19 @@ class TorchPredictor:
     """Wraps a trained :class:`~metanoia.model.DirectDecisionModel` and a calibrator."""
 
     def __init__(
-        self, model: Any, predictor_id: str, config: dict[str, Any], calibrator: Any = None
+        self,
+        model: Any,
+        predictor_id: str,
+        config: dict[str, Any],
+        calibrator: Any = None,
+        precision: str = "fp32",
     ):
         from metanoia.calibration import Calibrator
 
+        if precision not in ("fp32", "fp16"):
+            raise ValueError(f"unsupported precision {precision!r}")
         self.model = model.eval()
+        self.precision = precision
         self._predictor_id = predictor_id
         self._config = config
         self.calibrator = calibrator or Calibrator()
@@ -53,6 +61,7 @@ class TorchPredictor:
             "model_config": self._config,
             "encoder": self.model.encoder.identity(),
             "calibration": self.calibrator.info.model_dump(mode="json"),
+            "precision": self.precision,
         }
 
     def decide(self, request: DecisionRequest) -> DecisionResult:
@@ -64,7 +73,11 @@ class TorchPredictor:
         for request in requests:
             self.calibrator.check_budget(request.budget)
         # Inference disables gradients here, at the boundary, not inside the model.
-        with torch.inference_mode():
+        fp16 = self.precision == "fp16"
+        with (
+            torch.inference_mode(),
+            torch.autocast(self.model.device.type, dtype=torch.float16, enabled=fp16),
+        ):
             output = self.model(requests)
             if output.logits.is_cuda:
                 torch.cuda.synchronize()
@@ -105,7 +118,7 @@ BUNDLE_MANIFEST = "bundle.json"
 
 
 def load_predictor(
-    bundle_dir: Path, calibration: Path | None = None, device: str = "cpu"
+    bundle_dir: Path, calibration: Path | None = None, device: str = "cpu", precision: str = "fp32"
 ) -> TorchPredictor:
     """Load a predictor bundle, verify weight hashes and encoder identity."""
     import torch
@@ -129,5 +142,9 @@ def load_predictor(
     model.to(device)
     calibrator = Calibrator.load(calibration, manifest.predictor_id) if calibration else None
     return TorchPredictor(
-        model, manifest.predictor_id, manifest.resolved_config, calibrator=calibrator
+        model,
+        manifest.predictor_id,
+        manifest.resolved_config,
+        calibrator=calibrator,
+        precision=precision,
     )

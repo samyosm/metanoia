@@ -6,12 +6,13 @@ Inference callers select eval mode and disable gradients at the boundary
 
 from collections.abc import Sequence
 from dataclasses import dataclass
+from typing import Literal
 
 import torch
 from torch import nn
 
 from metanoia.decision import CandidateScorer
-from metanoia.encoding.inputs import render_input
+from metanoia.encoding.inputs import render_candidate_joint, render_input
 from metanoia.interfaces import TextEncoder
 from metanoia_contracts import DecisionRequest
 
@@ -25,12 +26,18 @@ class DecisionOutput:
 class DirectDecisionModel(nn.Module):
     """Depth-zero decision: encode once, score every original candidate."""
 
-    def __init__(self, encoder: TextEncoder, scorer: CandidateScorer) -> None:
+    def __init__(
+        self,
+        encoder: TextEncoder,
+        scorer: CandidateScorer,
+        candidate_encoding: Literal["separate", "joint"] = "separate",
+    ) -> None:
         super().__init__()
         if not isinstance(encoder, nn.Module):
             raise TypeError("encoders must be torch.nn.Module instances")
         self.encoder = encoder
         self.scorer = scorer
+        self.candidate_encoding = candidate_encoding
 
     @property
     def device(self) -> torch.device:
@@ -39,9 +46,18 @@ class DirectDecisionModel(nn.Module):
     def forward(self, requests: Sequence[DecisionRequest]) -> DecisionOutput:
         if not requests:
             raise ValueError("empty batch")
-        context = self.encoder.encode([render_input(r) for r in requests])
+        rendered = [render_input(r) for r in requests]
+        context = self.encoder.encode(rendered)
         counts = [len(r.candidates) for r in requests]
-        flat = self.encoder.encode([c.text for r in requests for c in r.candidates]).pooled
+        if self.candidate_encoding == "joint":
+            texts = [
+                render_candidate_joint(c.text, text)
+                for r, text in zip(requests, rendered, strict=True)
+                for c in r.candidates
+            ]
+        else:
+            texts = [c.text for r in requests for c in r.candidates]
+        flat = self.encoder.encode(texts).pooled
         candidates = flat.new_zeros(len(requests), max(counts), flat.shape[-1])
         mask = torch.zeros(len(requests), max(counts), dtype=torch.bool, device=flat.device)
         start = 0

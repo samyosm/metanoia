@@ -22,3 +22,14 @@ class TrainingConfig(StrictModel):
     seed: int = 0
     device: str = "cpu"
     max_train_examples: int | None = Field(default=None, ge=1)
+    max_dev_examples: int | None = Field(default=None, ge=1)
+    # How ``max_*_examples`` selects: the first rows, or a seeded random sample.
+    subset: Literal["head", "random"] = "head"
+    # Defaults reproduce the original loop: constant LR, fp32, no accumulation.
+    encoder_learning_rate: float | None = Field(default=None, gt=0)
+    warmup_fraction: float = Field(default=0.0, ge=0.0, lt=1.0)
+    schedule: Literal["constant", "linear"] = "constant"
+    precision: Literal["fp32", "fp16-mixed"] = "fp32"
+    # Examples per forward pass; gradients accumulate to ``batch_size``.
+    micro_batch_size: int | None = Field(default=None, ge=1)
+    log_every_steps: int | None = Field(default=None, ge=1)

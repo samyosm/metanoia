@@ -23,7 +23,14 @@ def build_encoder(config: HashingEncoderConfig | HFEncoderConfig) -> TextEncoder
         )
     from metanoia.encoding.hf import HFEncoder
 
-    return HFEncoder(config.model, config.revision, config.max_length, config.pooling)
+    return HFEncoder(
+        config.model,
+        config.revision,
+        config.max_length,
+        config.pooling,
+        frozen=config.frozen,
+        gradient_checkpointing=config.gradient_checkpointing,
+    )
 
 
 def build_model(config: ModelConfig, seed: int | None = None) -> DirectDecisionModel:
@@ -38,7 +45,7 @@ def build_model(config: ModelConfig, seed: int | None = None) -> DirectDecisionM
         hidden_dim=config.scorer.hidden_dim,
         dropout=config.scorer.dropout,
     )
-    return DirectDecisionModel(encoder, scorer)
+    return DirectDecisionModel(encoder, scorer, config.scorer.candidate_encoding)
 
 
 def check_encoder_identity(model: DirectDecisionModel, recorded: dict[str, Any]) -> None:

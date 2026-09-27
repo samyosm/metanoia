@@ -16,6 +16,7 @@ analysis = ["numpy>=1.26", "scipy>=1.13", "pyarrow>=17", "matplotlib>=3.9"]
 [project.scripts]
 metanoia-research = "metanoia_research.cli:main"
 metanoia-analysis = "metanoia_analysis.cli:main"
+metanoia = "metanoia.cli:main"
 
 [dependency-groups]
 dev = ["pytest>=8", "ruff>=0.6", "mypy>=1.11"]
@@ -32,13 +33,14 @@ packages = [
     "src/metanoia_analysis",
 ]
 
-# CPU wheels by default: no GPU is assumed (see docs/decisions).
+# CUDA 12.8 wheels (decision 0004 supersedes the CPU-only index of 0002). CPU-only
+# machines still run these wheels; CUDA is simply unavailable there.
 [tool.uv.sources]
-torch = [{ index = "pytorch-cpu" }]
+torch = [{ index = "pytorch-cu128" }]
 
 [[tool.uv.index]]
-name = "pytorch-cpu"
-url = "https://download.pytorch.org/whl/cpu"
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
 explicit = true
 
 [tool.pytest.ini_options]

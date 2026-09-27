@@ -1,12 +1,12 @@
 # Stage-1 direct scorer on a frozen pretrained encoder. Requires `uv sync --extra hf`
-# and a network download. Replace `revision` with a commit hash before any promoted
-# experiment; the resolved revision is recorded in the bundle either way.
+# and a network download. `revision` is pinned to a commit hash; the resolved
+# revision is recorded in the bundle as well.
 name = "direct_modernbert"
 
 [encoder]
 kind = "hf"
 model = "answerdotai/ModernBERT-base"
-revision = "main"
+revision = "8949b909ec900327062f0ebf497f51aef5e6f0c8"
 max_length = 512
 pooling = "mean"
 

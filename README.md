@@ -22,23 +22,28 @@ Local decisions are recorded in [`docs/decisions/`](docs/decisions/).
   - an independent artifact scorer;
   - import-boundary checks;
   - analysis that runs without ML dependencies.
-- **Stage 1 is partly implemented.** It includes:
+- **Stage 1 is mostly implemented.** It includes:
   - a shared, permutation-equivariant candidate scorer;
-  - a hashed-token encoder and a frozen Hugging Face adapter (not yet run);
-  - an explicit training loop;
-  - the controlled micro-world dataset;
-  - a calibration split and temperature fitting.
-- **Stage 1 has not produced a result yet.** Nothing has been trained with a pretrained
-  encoder, and resuming training is not wired up. On `reasoning_v0`, the hashed-token
-  direct scorer stays at chance on held-out worlds (see decision 0003).
+  - hashed-token, frozen and fine-tunable Hugging Face encoders, with `separate` or
+    `joint` (candidate + input) candidate encoding;
+  - an explicit training loop (fp16 mixed precision, accumulation, warmup/linear LR);
+  - the controlled micro-world suite `reasoning_v0` and the realistic RACE + SciQ suite
+    `mcqa_v0`;
+  - a calibration split and temperature fitting;
+  - `metanoia decide`, a CLI that returns candidate probabilities for one request.
+- **Results so far** (one seed, untuned; decisions 0003 and 0005): every direct scorer
+  (hashed, frozen ModernBERT, frozen BERT) stays at chance on `reasoning_v0`. On
+  `mcqa_v0`, a quick fine-tuned ModernBERT (2,400 SciQ examples) reaches 0.91 test
+  accuracy on SciQ but only 0.33 on RACE, against 0.82 / 0.31 for the lexical fixture.
+  The full RACE + SciQ run has not been done yet (about 5 h on an RTX 2060).
+- **Missing from Stage 1:** checkpoint resume and dev-based checkpoint selection.
 - **Not started:** memory and retrieval, the reasoning operations (expand, connect,
   compose, aggregate) and budget sweeps.
 
 ## Setup
 
 ```sh
-uv sync --extra research --extra analysis   # CPU PyTorch, pyarrow, scipy, dev tools
-uv sync --extra research --extra analysis --extra hf   # + transformers for the hf encoder
+uv sync --extra research --extra analysis --extra hf   # CUDA 12.8 PyTorch (decision 0004)
 ```
 
 Run every command from this folder. Paths in the configurations are relative to it.
@@ -58,7 +63,20 @@ print(LexicalOverlapPredictor().decide(request).probabilities)
 ```
 
 A trained bundle loads with `metanoia.api.load_predictor(path)`, which offers the same
-`decide` and `decide_batch` methods.
+`decide` and `decide_batch` methods. From the shell:
+
+```sh
+.venv/bin/metanoia decide --bundle artifacts/predictors/mbft_joint_sciq_quick \
+    --calibration artifacts/calibrations/mbft_joint_sciq_quick_b0.json \
+    --context "Photosynthesis takes place in the chloroplasts of plant cells." \
+    --question "Where does photosynthesis happen?" \
+    --candidate mitochondria --candidate chloroplasts --candidate nucleus
+# --context-file PATH, --request request.json (or - for stdin), --json, --trace,
+# --device cpu|cuda|auto, --precision fp32|fp16
+```
+
+Probabilities are marked `uncalibrated` unless `--calibration` names a temperature
+fitted for that predictor on its calibration split.
 
 ## Workflow: prepare → train → collect → calibrate → analyze → compare
 
@@ -85,6 +103,21 @@ $A compare --run-a artifacts/runs/lexical_reasoning_v0 \
   and then renamed.
 - The runner passes only request fields to the predictor. It never reads labels.
 
+### Realistic suite (`mcqa_v0`) with a fine-tuned encoder
+
+```sh
+D=artifacts/datasets/mcqa_v0; S=analysis/specifications/mcqa_v0.toml
+$R prepare --config configs/data/mcqa_v0.toml       # downloads pinned RACE + SciQ
+$R prepare --config configs/data/mcqa_sciq_v0.toml  # SciQ only, for the quick predictor
+$R train   --config configs/training/mbft_joint_sciq_quick.toml   # ~8 min, RTX 2060
+$R train   --config configs/training/mbft_joint_mcqa_v0.toml      # ~5 h, full RACE + SciQ
+$R collect --config configs/collection/mbft_joint_mcqa_v0_mcqa_v0.toml   # ~10 min
+$A calibrate --run artifacts/runs/mbft_joint_mcqa_v0_mcqa_v0 --dataset $D --budget b0 \
+             --out artifacts/calibrations/mbft_joint_mcqa_v0_b0.json
+$A analyze --run artifacts/runs/mbft_joint_mcqa_v0_mcqa_v0 --dataset $D --spec $S \
+           --calibration artifacts/calibrations/mbft_joint_mcqa_v0_b0.json
+```
+
 ## Layout and boundaries
 
 | Package | Owns | May import |
@@ -108,7 +141,7 @@ Other locations:
 ## Checks
 
 ```sh
-uv run pytest            # 56 tests, ~5 s (slow-marked learning smoke tests included)
+uv run pytest            # 67 tests, ~10 s (slow-marked learning smoke tests included)
 uv run pytest -m "not slow"
 uv run ruff check src tests && uv run ruff format --check src tests && uv run mypy
 ```

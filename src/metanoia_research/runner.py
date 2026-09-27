@@ -39,6 +39,7 @@ from metanoia_contracts.provenance import (
 )
 from metanoia_contracts.suites import NamedBudget, SuiteProtocol
 from metanoia_research.artifacts import (
+    accelerator_snapshot,
     discard_incomplete,
     finalize_directory,
     new_incomplete_directory,
@@ -53,6 +54,8 @@ class PredictorSpec(StrictModel):
     path: str | None = None
     calibration: str | None = None
     device: str = "cpu"
+    # Inference precision for bundle predictors; part of the predictor's identity.
+    precision: Literal["fp32", "fp16"] = "fp32"
 
 
 class CollectionConfig(StrictModel):
@@ -83,7 +86,9 @@ def build_predictor(spec: PredictorSpec) -> Predictor:
     from metanoia.api import load_predictor
 
     calibration = Path(spec.calibration) if spec.calibration else None
-    return load_predictor(Path(spec.path), calibration=calibration, device=spec.device)
+    return load_predictor(
+        Path(spec.path), calibration=calibration, device=spec.device, precision=spec.precision
+    )
 
 
 def derive_seed(base_seed: int, example_id: str, budget_id: str, repeat: int) -> int:
@@ -299,7 +304,7 @@ def collect(config: CollectionConfig, predictor: Predictor | None = None) -> Pat
             labels_sha256=dataset_manifest.labels.sha256,
             predictor={**predictor.describe(), "spec": config.predictor.model_dump(mode="json")},
             runner_revision=f"{RUNNER_REVISION}+metanoia_research-{metanoia_research.__version__}",
-            environment=environment_snapshot(),
+            environment=environment_snapshot(accelerator_snapshot(config.predictor.device)),
             source=source_revision(),
             counts=RunCounts(
                 expected=len(expected),
