@@ -1,0 +1,21 @@
+name = "mbft_joint_reasoning_v0_e3"
+# Fine-tuned joint ModernBERT direct baseline on reasoning_v0 (PLAN §10): same model
+# and optimizer settings as mbft_joint_mcqa_v0, 3 epochs (~10 min on an RTX 2060).
+model_config_path = "configs/models/direct_modernbert_ft_joint.toml"
+dataset = "artifacts/datasets/microworld_v0"
+train_split = "train"
+dev_split = "dev"
+batch_size = 16
+micro_batch_size = 4
+learning_rate = 1e-4
+encoder_learning_rate = 2e-5
+weight_decay = 0.01
+warmup_fraction = 0.06
+schedule = "linear"
+precision = "fp16-mixed"
+grad_clip = 1.0
+seed = 0
+device = "cuda"
+log_every_steps = 25
+epochs = 3
+checkpoint_each_epoch = true

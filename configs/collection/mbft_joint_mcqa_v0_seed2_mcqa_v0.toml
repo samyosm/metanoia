@@ -1,0 +1,10 @@
+run_id = "mbft_joint_mcqa_v0_seed2_mcqa_v0"
+suite = "suites/mcqa_v0"
+dataset = "artifacts/datasets/mcqa_v0"
+output_root = "artifacts/runs"
+
+[predictor]
+kind = "bundle"
+path = "artifacts/predictors/mbft_joint_mcqa_v0_seed2"
+device = "cuda"
+precision = "fp16"

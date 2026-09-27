@@ -1,0 +1,23 @@
+name = "mbft_joint_mcqa_v0_seed2"
+# Seed replicate 2 of mbft_joint_mcqa_v0 (R005); identical otherwise. ~5 h on an RTX 2060.
+model_config_path = "configs/models/direct_modernbert_ft_joint.toml"
+dataset = "artifacts/datasets/mcqa_v0"
+train_split = "train"
+dev_split = "dev"
+batch_size = 16
+micro_batch_size = 4
+learning_rate = 1e-4
+encoder_learning_rate = 2e-5
+weight_decay = 0.01
+warmup_fraction = 0.06
+schedule = "linear"
+precision = "fp16-mixed"
+grad_clip = 1.0
+seed = 2
+device = "cuda"
+log_every_steps = 50
+epochs = 1
+subset = "random"
+max_dev_examples = 1000
+# Checkpoints only add resume/selection points; they do not change the computation.
+checkpoint_every_steps = 1000

@@ -12,6 +12,9 @@ class TrainingConfig(StrictModel):
     name: str = Field(min_length=1)
     model_config_path: str
     dataset: str
+    # Dev examples come from ``dataset`` unless a separate bundle is named, e.g. a large
+    # train-only dataset evaluated against a suite's dev split.
+    dev_dataset: str | None = None
     train_split: str = "train"
     dev_split: str = "dev"
     epochs: int = Field(ge=1)

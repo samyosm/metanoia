@@ -287,8 +287,9 @@ def train(
     train_examples = load_examples(
         dataset_dir, config.train_split, config.max_train_examples, config.subset, config.seed
     )
+    dev_dir = Path(config.dev_dataset) if config.dev_dataset else dataset_dir
     dev_examples = load_examples(
-        dataset_dir, config.dev_split, config.max_dev_examples, config.subset, config.seed
+        dev_dir, config.dev_split, config.max_dev_examples, config.subset, config.seed
     )
 
     model = build_model(model_config, seed=config.seed).to(config.device)

@@ -31,12 +31,14 @@ Local decisions are recorded in [`docs/decisions/`](docs/decisions/).
     `mcqa_v0`;
   - a calibration split and temperature fitting;
   - `metanoia decide`, a CLI that returns candidate probabilities for one request.
-- **Results so far** (one seed, untuned; decisions 0003 and 0005): every direct scorer
-  (hashed, frozen ModernBERT, frozen BERT) stays at chance on `reasoning_v0`. On
-  `mcqa_v0`, a quick fine-tuned ModernBERT (2,400 SciQ examples) reaches 0.91 test
-  accuracy on SciQ but only 0.33 on RACE, against 0.82 / 0.31 for the lexical fixture.
-  The full RACE + SciQ run has not been done yet (about 5 h on an RTX 2060).
-- **Missing from Stage 1:** checkpoint resume and dev-based checkpoint selection.
+- **Results so far** (one seed, untuned; see [`../RESULT_LOG.md`](../RESULT_LOG.md)):
+  every frozen or hashed direct scorer stays at chance on `reasoning_v0` (R000–R001).
+  On `mcqa_v0`, fine-tuned ModernBERT with joint candidate encoding reaches 0.768 test
+  accuracy and NLL 0.608, with calibration error 0.016 (R005); the lexical fixture gets
+  0.399.
+- **Missing from Stage 1:** multiple training seeds. Checkpointing, resume and dev-based
+  checkpoint selection exist (see below). Every result is logged in
+  [`../RESULT_LOG.md`](../RESULT_LOG.md).
 - **Not started:** memory and retrieval, the reasoning operations (expand, connect,
   compose, aggregate) and budget sweeps.
 
@@ -118,6 +120,25 @@ $A analyze --run artifacts/runs/mbft_joint_mcqa_v0_mcqa_v0 --dataset $D --spec $
            --calibration artifacts/calibrations/mbft_joint_mcqa_v0_b0.json
 ```
 
+### Checkpoints, resume and selection
+
+Set `checkpoint_every_steps = N` or `checkpoint_each_epoch = true` in a training config.
+Each checkpoint `<bundle>/checkpoints/step_NNNNNNN/` is a loadable predictor bundle; only
+the latest keeps optimizer state. An interrupted run keeps `<bundle>.incomplete/`:
+
+```sh
+$R train --config CONFIG --resume      # same config and dataset, checked
+$R collect-checkpoints --bundle artifacts/predictors/NAME --suite suites/SUITE \
+    --dataset $D --splits dev --device cuda --precision fp16
+$A select --run artifacts/runs/NAME__dev__step_0000100 --run artifacts/runs/NAME__dev__final \
+    --dataset $D --split dev --budget b0 --metric nll     # writes artifacts/selections/*.json
+```
+
+Then collect the chosen checkpoint on the full suite with an ordinary collection config
+whose `path` is the chosen checkpoint directory. `select` refuses the `test` and
+`calibration` splits. Dev-only runs record `suite.splits`, so `compare` never mixes them
+with full-protocol runs.
+
 ## Layout and boundaries
 
 | Package | Owns | May import |
@@ -141,7 +162,7 @@ Other locations:
 ## Checks
 
 ```sh
-uv run pytest            # 67 tests, ~10 s (slow-marked learning smoke tests included)
+uv run pytest            # 68 tests, ~10 s (slow-marked learning smoke tests included)
 uv run pytest -m "not slow"
 uv run ruff check src tests && uv run ruff format --check src tests && uv run mypy
 ```

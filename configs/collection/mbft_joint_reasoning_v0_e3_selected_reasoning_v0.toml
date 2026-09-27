@@ -1,0 +1,11 @@
+# The checkpoint chosen by artifacts/selections/select-fabdcde80081.json (dev NLL).
+run_id = "mbft_joint_reasoning_v0_e3_selected_reasoning_v0"
+suite = "suites/reasoning_v0"
+dataset = "artifacts/datasets/microworld_v0"
+output_root = "artifacts/runs"
+
+[predictor]
+kind = "bundle"
+path = "artifacts/predictors/mbft_joint_reasoning_v0_e3/checkpoints/step_0000113"
+device = "cuda"
+precision = "fp16"
