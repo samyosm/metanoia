@@ -8,7 +8,11 @@ predictions scored by ``metanoia_analysis`` (PLAN.md §7.2).
 import json
 import math
 import random
+import shutil
+import sys
+import time
 from collections.abc import Callable, Sequence
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -16,12 +20,13 @@ import torch
 import torch.nn.functional as F
 
 from metanoia.api import BUNDLE_MANIFEST
-from metanoia.build import build_model
+from metanoia.build import build_model, check_encoder_identity
 from metanoia.config import ModelConfig
 from metanoia.encoding.inputs import RENDERING_REVISION
 from metanoia.model import DirectDecisionModel
 from metanoia_contracts import DecisionRequest
 from metanoia_contracts.artifacts import DatasetManifest, FileRef, PredictorBundleManifest
+from metanoia_contracts.base import load_strict
 from metanoia_contracts.provenance import (
     canonical_json,
     environment_snapshot,
@@ -30,6 +35,7 @@ from metanoia_contracts.provenance import (
     utc_now,
 )
 from metanoia_research.artifacts import (
+    INCOMPLETE_SUFFIX,
     accelerator_snapshot,
     discard_incomplete,
     finalize_directory,
@@ -108,13 +114,41 @@ def _lr_factor(config: TrainingConfig, step: int, total: int) -> float:
     return 1.0
 
 
+@dataclass
+class Progress:
+    """Everything, besides weights and optimizer state, needed to continue training.
+
+    ``order`` is the current epoch's example order (``None`` between epochs) and
+    ``position`` the index of the next batch in it. ``python_rng`` is the shuffling RNG
+    state after the current epoch's shuffle.
+    """
+
+    epoch: int = 0
+    position: int = 0
+    step: int = 0
+    order: list[int] | None = None
+    python_rng: Any = None
+    losses: list[float] = field(default_factory=list)
+    encoder_norms: list[float] = field(default_factory=list)
+    scorer_norms: list[float] = field(default_factory=list)
+    log: list[dict[str, Any]] = field(default_factory=list)
+    elapsed_seconds: float = 0.0
+
+
+# ``checkpoint(progress, optimizer, scaler)`` is called after a step or an epoch.
+CheckpointFn = Callable[[Progress, torch.optim.Optimizer, torch.amp.GradScaler], None]
+
+
 def fit(
     model: DirectDecisionModel,
     train: Sequence[Example],
     dev: Sequence[Example],
     config: TrainingConfig,
     on_epoch: Callable[[dict[str, Any]], None] = lambda record: None,
-) -> tuple[list[dict[str, Any]], torch.optim.Optimizer]:
+    resume: dict[str, Any] | None = None,
+    checkpoint: CheckpointFn | None = None,
+) -> tuple[Progress, torch.optim.Optimizer, torch.amp.GradScaler]:
+    """Train in place. ``resume`` is a saved train state (see :func:`train_state`)."""
     rng = random.Random(config.seed)
     trainable = [p for p in model.parameters() if p.requires_grad]
     encoder_params = [p for p in model.encoder.parameters() if p.requires_grad]
@@ -127,20 +161,31 @@ def fit(
     optimizer = torch.optim.AdamW(groups, weight_decay=config.weight_decay)
     base_lrs = [g["lr"] for g in optimizer.param_groups]
     scaler = torch.amp.GradScaler(model.device.type, enabled=config.precision == "fp16-mixed")
+    progress = Progress()
+    if resume is not None:
+        optimizer.load_state_dict(resume["optimizer"])
+        scaler.load_state_dict(resume["scaler"])
+        progress = Progress(**resume["progress"])
+        rng.setstate(_as_rng_state(progress.python_rng))
+        torch.set_rng_state(resume["torch_rng"])
+        if resume.get("cuda_rng") is not None and torch.cuda.is_available():
+            torch.cuda.set_rng_state_all(resume["cuda_rng"])
     micro = config.micro_batch_size or config.batch_size
     steps_per_epoch = -(-len(train) // config.batch_size)
     total_steps = steps_per_epoch * config.epochs
-    step = 0
-    log = []
-    for epoch in range(config.epochs):
+    started = time.perf_counter() - progress.elapsed_seconds
+
+    while progress.epoch < config.epochs:
+        if progress.order is None:
+            order = list(range(len(train)))
+            rng.shuffle(order)
+            progress.order, progress.python_rng, progress.position = order, rng.getstate(), 0
         model.train()
-        order = list(range(len(train)))
-        rng.shuffle(order)
-        losses, encoder_norms, scorer_norms = [], [], []
-        for start in range(0, len(order), config.batch_size):
-            batch = [train[i] for i in order[start : start + config.batch_size]]
+        while progress.position < len(progress.order):
+            indices = progress.order[progress.position : progress.position + config.batch_size]
+            batch = [train[i] for i in indices]
             for group, base in zip(optimizer.param_groups, base_lrs, strict=True):
-                group["lr"] = base * _lr_factor(config, step, total_steps)
+                group["lr"] = base * _lr_factor(config, progress.step, total_steps)
             optimizer.zero_grad()
             batch_total = 0.0
             for m in range(0, len(batch), micro):
@@ -149,38 +194,80 @@ def fit(
                 scaler.scale(loss).backward()
                 batch_total += loss.item()
             scaler.unscale_(optimizer)
-            encoder_norms.append(grad_norm(encoder_params))
-            scorer_norms.append(grad_norm(scorer_params))
+            progress.encoder_norms.append(grad_norm(encoder_params))
+            progress.scorer_norms.append(grad_norm(scorer_params))
             if config.grad_clip is not None:
                 torch.nn.utils.clip_grad_norm_(trainable, config.grad_clip)
             scaler.step(optimizer)
             scaler.update()
-            losses.append(batch_total)
-            step += 1
-            if config.log_every_steps and step % config.log_every_steps == 0:
-                recent = losses[-config.log_every_steps :]
+            progress.losses.append(batch_total)
+            progress.step += 1
+            progress.position += config.batch_size
+            if config.log_every_steps and progress.step % config.log_every_steps == 0:
+                recent = progress.losses[-config.log_every_steps :]
                 print(
                     json.dumps(
                         {
-                            "epoch": epoch,
-                            "step": step,
+                            "epoch": progress.epoch,
+                            "step": progress.step,
                             "of": total_steps,
                             "train_loss": sum(recent) / len(recent),
+                            "elapsed_seconds": round(time.perf_counter() - started, 1),
                         }
                     ),
                     flush=True,
                 )
+            mid_epoch = progress.position < len(progress.order)
+            every = config.checkpoint_every_steps
+            if checkpoint and mid_epoch and every and progress.step % every == 0:
+                progress.elapsed_seconds = time.perf_counter() - started
+                checkpoint(progress, optimizer, scaler)
+        norms = progress.scorer_norms + progress.encoder_norms
         record = {
-            "epoch": epoch,
-            "train_loss": sum(losses) / len(losses),
+            "epoch": progress.epoch,
+            "step": progress.step,
+            "train_loss": sum(progress.losses) / len(progress.losses),
             "dev_loss": mean_loss(model, dev, micro, config.precision),
-            "grad_norm_encoder": _finite_mean(encoder_norms),
-            "grad_norm_scorer": _finite_mean(scorer_norms),
-            "nonfinite_grad_steps": sum(not math.isfinite(v) for v in scorer_norms + encoder_norms),
+            "grad_norm_encoder": _finite_mean(progress.encoder_norms),
+            "grad_norm_scorer": _finite_mean(progress.scorer_norms),
+            "nonfinite_grad_steps": sum(not math.isfinite(v) for v in norms),
+            "elapsed_seconds": round(time.perf_counter() - started, 1),
         }
-        log.append(record)
+        progress.log.append(record)
         on_epoch(record)
-    return log, optimizer
+        progress.epoch += 1
+        progress.order, progress.position = None, 0
+        progress.losses, progress.encoder_norms, progress.scorer_norms = [], [], []
+        progress.elapsed_seconds = time.perf_counter() - started
+        wanted = config.checkpoint_each_epoch or (
+            config.checkpoint_every_steps is not None
+            and progress.step % config.checkpoint_every_steps == 0
+        )
+        if checkpoint and wanted and progress.epoch < config.epochs:
+            checkpoint(progress, optimizer, scaler)
+    progress.elapsed_seconds = time.perf_counter() - started
+    return progress, optimizer, scaler
+
+
+def _as_rng_state(state: Any) -> tuple[Any, ...]:
+    """``random.Random`` states are nested tuples; serialization may turn them into lists."""
+    return (state[0], tuple(state[1]), state[2])
+
+
+def train_state(
+    progress: Progress, optimizer: torch.optim.Optimizer, scaler: torch.amp.GradScaler
+) -> dict[str, Any]:
+    return {
+        "optimizer": optimizer.state_dict(),
+        "scaler": scaler.state_dict(),
+        "progress": asdict(progress),
+        "torch_rng": torch.get_rng_state(),
+        "cuda_rng": torch.cuda.get_rng_state_all() if torch.cuda.is_available() else None,
+    }
+
+
+CHECKPOINTS = "checkpoints"
+LATEST = "latest"
 
 
 def train(
@@ -188,8 +275,13 @@ def train(
     model_config: ModelConfig,
     out_dir: Path,
     on_epoch: Callable[[dict[str, Any]], None] = lambda record: None,
+    resume: bool = False,
 ) -> PredictorBundleManifest:
-    """Train and write a predictor bundle. Refuses to overwrite ``out_dir``."""
+    """Train and write a predictor bundle. Refuses to overwrite ``out_dir``.
+
+    With checkpointing enabled, an interrupted run keeps ``<out_dir>.incomplete/`` and
+    continues from its latest checkpoint when called again with ``resume=True``.
+    """
     dataset_dir = Path(config.dataset)
     dataset_manifest, _ = read_cases(dataset_dir)
     train_examples = load_examples(
@@ -200,75 +292,171 @@ def train(
     )
 
     model = build_model(model_config, seed=config.seed).to(config.device)
-    work = new_incomplete_directory(out_dir)
+    state = None
+    if resume:
+        work, state = _load_resume_state(out_dir, model, model_config, config, dataset_manifest)
+    else:
+        work = new_incomplete_directory(out_dir)
+    context = _BundleContext(
+        model, model_config, config, dataset_manifest, len(train_examples), len(dev_examples)
+    )
+
+    def checkpoint(
+        progress: Progress, optimizer: torch.optim.Optimizer, scaler: torch.amp.GradScaler
+    ) -> None:
+        _write_checkpoint(work, context, progress, optimizer, scaler)
+
     try:
-        manifest = _train_into(
-            work,
-            model,
-            model_config,
-            config,
-            dataset_manifest,
-            train_examples,
-            dev_examples,
-            on_epoch,
+        progress, optimizer, scaler = fit(
+            model, train_examples, dev_examples, config, on_epoch, state, checkpoint
         )
+        manifest = context.write_bundle(work, progress, train_state(progress, optimizer, scaler))
     except BaseException:
-        discard_incomplete(work)
+        if (work / CHECKPOINTS / LATEST).exists():
+            print(
+                f"training interrupted; {work} is kept. Continue with --resume.",
+                file=sys.stderr,
+            )
+        else:
+            discard_incomplete(work)
         raise
     finalize_directory(work, out_dir)
     return manifest
 
 
-def _train_into(
-    work: Path,
+def _load_resume_state(
+    out_dir: Path,
     model: DirectDecisionModel,
     model_config: ModelConfig,
     config: TrainingConfig,
     dataset_manifest: DatasetManifest,
-    train_examples: list[Example],
-    dev_examples: list[Example],
-    on_epoch: Callable[[dict[str, Any]], None],
-) -> PredictorBundleManifest:
-    log, optimizer = fit(model, train_examples, dev_examples, config, on_epoch)
+) -> tuple[Path, dict[str, Any]]:
+    if out_dir.exists():
+        raise FileExistsError(f"{out_dir} is already complete")
+    work = out_dir.with_name(out_dir.name + INCOMPLETE_SUFFIX)
+    latest = work / CHECKPOINTS / LATEST
+    if not latest.exists():
+        raise FileNotFoundError(f"no checkpoint to resume from in {work}")
+    directory = work / CHECKPOINTS / latest.read_text().strip()
+    manifest = load_strict(
+        PredictorBundleManifest, json.loads((directory / BUNDLE_MANIFEST).read_text())
+    )
+    recorded = manifest.training
+    if recorded["config"] != config.model_dump(mode="json"):
+        raise ValueError("training configuration differs from the interrupted run")
+    if manifest.resolved_config["model"] != model_config.model_dump(mode="json"):
+        raise ValueError("model configuration differs from the interrupted run")
+    if (recorded["cases_sha256"], recorded["labels_sha256"]) != (
+        dataset_manifest.cases.sha256,
+        dataset_manifest.labels.sha256,
+    ):
+        raise ValueError("dataset differs from the interrupted run")
+    check_encoder_identity(model, manifest.resolved_config["encoder_identity"])
+    weights = directory / manifest.weights.path
+    if sha256_file(weights) != manifest.weights.sha256:
+        raise ValueError(f"checkpoint weights hash mismatch in {directory}")
+    model.load_persistent_state_dict(torch.load(weights, map_location="cpu", weights_only=True))
+    state = torch.load(directory / TRAIN_STATE, map_location="cpu", weights_only=False)
+    print(f"resuming from {directory} (step {state['progress']['step']})", file=sys.stderr)
+    return work, state
 
-    weights = work / "weights.pt"
-    torch.save(model.persistent_state_dict(), weights)
-    weights_sha = sha256_file(weights)
-    # Resume state (not yet consumed by a resume command): optimizer, epoch, RNG.
-    torch.save(
-        {
-            "optimizer": optimizer.state_dict(),
-            "epochs_completed": config.epochs,
-            "torch_rng": torch.get_rng_state(),
-        },
-        work / "train_state.pt",
-    )
-    (work / "training_log.jsonl").write_text("".join(canonical_json(r) + "\n" for r in log))
 
-    manifest = PredictorBundleManifest(
-        predictor_id=f"{model_config.name}@{weights_sha[:12]}",
-        resolved_config={
-            "model": model_config.model_dump(mode="json"),
-            "encoder_identity": model.encoder.identity(),
-            "input_rendering": RENDERING_REVISION,
-        },
-        weights=FileRef(path="weights.pt", sha256=weights_sha, rows=0),
-        training={
-            "config": config.model_dump(mode="json"),
-            "dataset_id": dataset_manifest.dataset_id,
-            "cases_sha256": dataset_manifest.cases.sha256,
-            "labels_sha256": dataset_manifest.labels.sha256,
-            "train_examples": len(train_examples),
-            "dev_examples": len(dev_examples),
-            "parameters_total": sum(p.numel() for p in model.parameters()),
-            "parameters_trainable": sum(p.numel() for p in model.parameters() if p.requires_grad),
-            "final_epoch": log[-1],
-        },
-        environment=environment_snapshot(accelerator_snapshot(config.device)),
-        source=source_revision(),
-        created_at=utc_now(),
+TRAIN_STATE = "train_state.pt"
+
+
+@dataclass
+class _BundleContext:
+    model: DirectDecisionModel
+    model_config: ModelConfig
+    config: TrainingConfig
+    dataset_manifest: DatasetManifest
+    n_train: int
+    n_dev: int
+
+    def write_bundle(
+        self,
+        directory: Path,
+        progress: Progress,
+        state: dict[str, Any],
+        checkpoint: dict[str, Any] | None = None,
+    ) -> PredictorBundleManifest:
+        """Weights, train state, log and manifest: a loadable predictor bundle."""
+        weights = directory / "weights.pt"
+        torch.save(self.model.persistent_state_dict(), weights)
+        weights_sha = sha256_file(weights)
+        torch.save(state, directory / TRAIN_STATE)
+        (directory / "training_log.jsonl").write_text(
+            "".join(canonical_json(r) + "\n" for r in progress.log)
+        )
+        # Examples processed so far (the last batch of an epoch may be smaller).
+        seen = progress.epoch * self.n_train + (
+            min(progress.position, self.n_train) if progress.order is not None else 0
+        )
+        training: dict[str, Any] = {
+            "config": self.config.model_dump(mode="json"),
+            "dataset_id": self.dataset_manifest.dataset_id,
+            "cases_sha256": self.dataset_manifest.cases.sha256,
+            "labels_sha256": self.dataset_manifest.labels.sha256,
+            "train_examples": self.n_train,
+            "dev_examples": self.n_dev,
+            "parameters_total": sum(p.numel() for p in self.model.parameters()),
+            "parameters_trainable": sum(
+                p.numel() for p in self.model.parameters() if p.requires_grad
+            ),
+            "steps": progress.step,
+            "final_epoch": progress.log[-1] if progress.log else None,
+            "wall_time_seconds": round(progress.elapsed_seconds, 1),
+            "train_examples_per_second": round(seen / max(progress.elapsed_seconds, 1e-9), 2),
+        }
+        if checkpoint is not None:
+            training["checkpoint"] = checkpoint
+        manifest = PredictorBundleManifest(
+            predictor_id=f"{self.model_config.name}@{weights_sha[:12]}",
+            resolved_config={
+                "model": self.model_config.model_dump(mode="json"),
+                "encoder_identity": self.model.encoder.identity(),
+                "input_rendering": RENDERING_REVISION,
+            },
+            weights=FileRef(path="weights.pt", sha256=weights_sha, rows=0),
+            training=training,
+            environment=environment_snapshot(accelerator_snapshot(self.config.device)),
+            source=source_revision(),
+            created_at=utc_now(),
+        )
+        (directory / BUNDLE_MANIFEST).write_text(
+            json.dumps(manifest.model_dump(mode="json"), indent=2) + "\n"
+        )
+        return manifest
+
+
+def _write_checkpoint(
+    work: Path,
+    context: _BundleContext,
+    progress: Progress,
+    optimizer: torch.optim.Optimizer,
+    scaler: torch.amp.GradScaler,
+) -> None:
+    """Write ``checkpoints/step_N`` atomically, then drop older checkpoints' train state."""
+    root = work / CHECKPOINTS
+    name = f"step_{progress.step:07d}"
+    final = root / name
+    if final.exists():
+        return
+    temporary = root / (name + INCOMPLETE_SUFFIX)
+    if temporary.exists():
+        shutil.rmtree(temporary)
+    temporary.mkdir(parents=True)
+    context.write_bundle(
+        temporary,
+        progress,
+        train_state(progress, optimizer, scaler),
+        checkpoint={"step": progress.step, "epoch": progress.epoch, "position": progress.position},
     )
-    (work / BUNDLE_MANIFEST).write_text(
-        json.dumps(manifest.model_dump(mode="json"), indent=2) + "\n"
-    )
-    return manifest
+    temporary.rename(final)
+    pointer = root / (LATEST + ".tmp")
+    pointer.write_text(name + "\n")
+    pointer.replace(root / LATEST)
+    for older in root.glob("step_*"):
+        if older.name != name and (older / TRAIN_STATE).exists():
+            (older / TRAIN_STATE).unlink()
+    print(f"checkpoint {final}", file=sys.stderr, flush=True)

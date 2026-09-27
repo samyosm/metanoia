@@ -99,6 +99,24 @@ def compare(args: argparse.Namespace) -> None:
     print(f"wrote {path}")
 
 
+def select(args: argparse.Namespace) -> None:
+    from metanoia_analysis.select import select as run_select
+
+    artifact = run_select(
+        [Path(r) for r in args.run], Path(args.dataset), args.split, args.budget, args.metric
+    )
+    out = Path(args.out or f"artifacts/selections/{artifact.selection_id}.json")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    if out.exists():
+        raise FileExistsError(f"{out} exists")
+    out.write_text(json.dumps(artifact.model_dump(mode="json"), indent=2) + "\n")
+    for c in artifact.candidates:
+        mark = "*" if c == artifact.chosen else " "
+        print(f"{mark} {c.run_id:<60} {artifact.metric} {c.value:.4f}  n={c.n}")
+    print(f"chose {artifact.chosen.predictor_id} ({artifact.chosen.predictor_path})")
+    print(f"wrote {out}")
+
+
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(prog="metanoia-analysis", description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
@@ -128,6 +146,15 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--accept-mismatch", action="append", default=[])
     p.add_argument("--out-root", default="artifacts/analyses")
     p.set_defaults(func=compare)
+
+    p = commands.add_parser("select", help="choose a checkpoint from saved dev predictions")
+    p.add_argument("--run", action="append", required=True, help="repeat once per candidate")
+    p.add_argument("--dataset", required=True)
+    p.add_argument("--split", default="dev")
+    p.add_argument("--budget", required=True)
+    p.add_argument("--metric", default="nll", choices=["nll", "brier", "accuracy"])
+    p.add_argument("--out")
+    p.set_defaults(func=select)
 
     args = parser.parse_args(argv)
     try:

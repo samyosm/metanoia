@@ -219,3 +219,35 @@ class AnalysisResult(StrictModel):
     tables: dict[str, list[dict[str, Any]]] = Field(default_factory=dict)
     limitations: list[str]
     created_at: str
+
+
+# --- Checkpoint selection ---------------------------------------------------------
+
+
+class SelectionCandidate(StrictModel):
+    run_id: str
+    predictor_id: str
+    predictor_path: str | None
+    predictions_sha256: str
+    value: float
+    n: int = Field(ge=1)
+
+
+class SelectionArtifact(StrictModel):
+    """Which predictor (e.g. training checkpoint) a rule chose from saved predictions.
+
+    Written by the analysis process; training and collection consume only the chosen
+    identity, never the metric implementation (PLAN.md §7.2).
+    """
+
+    selection_version: Literal[1] = 1
+    selection_id: str
+    split: str
+    budget_id: str
+    metric: str
+    rule: Literal["min", "max"]
+    labels_sha256: str
+    candidates: tuple[SelectionCandidate, ...] = Field(min_length=1)
+    chosen: SelectionCandidate
+    analysis_revision: str
+    created_at: str

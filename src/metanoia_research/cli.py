@@ -67,7 +67,11 @@ def train(args: argparse.Namespace) -> None:
     model_config = load_strict(ModelConfig, _toml(config.model_config_path))
     out = Path(args.out or f"artifacts/predictors/{config.name}")
     manifest = run_training(
-        config, model_config, out, on_epoch=lambda record: print(json.dumps(record), flush=True)
+        config,
+        model_config,
+        out,
+        on_epoch=lambda record: print(json.dumps(record), flush=True),
+        resume=args.resume,
     )
     print(f"wrote {out}: {manifest.predictor_id}")
 
@@ -84,6 +88,34 @@ def collect(args: argparse.Namespace) -> None:
     print(f"wrote {run_dir}: {manifest['counts']}")
 
 
+def collect_checkpoints(args: argparse.Namespace) -> None:
+    """Collect every checkpoint of a bundle (and the final weights) on a few splits."""
+    from metanoia_research.runner import CollectionConfig, PredictorSpec
+    from metanoia_research.runner import collect as run_collection
+
+    bundle = Path(args.bundle)
+    targets = sorted((bundle / "checkpoints").glob("step_*"))
+    targets = [t for t in targets if not t.name.endswith(".incomplete")] + [bundle]
+    prefix = args.run_prefix or f"{bundle.name}__{'-'.join(args.splits)}"
+    for target in targets:
+        label = target.name if target != bundle else "final"
+        config = CollectionConfig(
+            run_id=f"{prefix}__{label}",
+            suite=args.suite,
+            dataset=args.dataset,
+            predictor=PredictorSpec(
+                kind="bundle", path=str(target), device=args.device, precision=args.precision
+            ),
+            output_root=args.output_root,
+            splits=tuple(args.splits),
+        )
+        if (Path(config.output_root) / config.run_id).exists():
+            print(f"skip {config.run_id}: already collected")
+            continue
+        run_dir = run_collection(config)
+        print(f"wrote {run_dir}", flush=True)
+
+
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(prog="metanoia-research", description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
@@ -96,12 +128,30 @@ def main(argv: list[str] | None = None) -> None:
     p = commands.add_parser("train", help="train a predictor and write a bundle")
     p.add_argument("--config", required=True)
     p.add_argument("--out", help="default: artifacts/predictors/<name>")
+    p.add_argument(
+        "--resume",
+        action="store_true",
+        help="continue an interrupted run from <out>.incomplete/checkpoints/latest",
+    )
     p.set_defaults(func=train)
 
     p = commands.add_parser("collect", help="run a suite with a predictor and save predictions")
     p.add_argument("--config", required=True)
     p.add_argument("--run-id", help="override the run_id in the configuration")
     p.set_defaults(func=collect)
+
+    p = commands.add_parser(
+        "collect-checkpoints", help="collect each checkpoint of a bundle, e.g. on dev only"
+    )
+    p.add_argument("--bundle", required=True)
+    p.add_argument("--suite", required=True)
+    p.add_argument("--dataset", required=True)
+    p.add_argument("--splits", nargs="+", default=["dev"])
+    p.add_argument("--device", default="cpu")
+    p.add_argument("--precision", default="fp32", choices=["fp32", "fp16"])
+    p.add_argument("--run-prefix")
+    p.add_argument("--output-root", default="artifacts/runs")
+    p.set_defaults(func=collect_checkpoints)
 
     args = parser.parse_args(argv)
     try:

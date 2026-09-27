@@ -65,6 +65,10 @@ class CollectionConfig(StrictModel):
     dataset: str
     predictor: PredictorSpec
     output_root: str = "artifacts/runs"
+    # A subset of the protocol's splits, e.g. ``["dev"]`` for checkpoint selection. The
+    # subset is recorded in the run's suite identity, so such a run is never compared
+    # with a full-protocol run by accident.
+    splits: tuple[str, ...] | None = None
 
 
 def load_protocol(suite_dir: Path) -> tuple[SuiteProtocol, dict[str, Any], str]:
@@ -233,9 +237,13 @@ def collect(config: CollectionConfig, predictor: Predictor | None = None) -> Pat
             f"content pinned by suite {protocol.suite_id} r{protocol.revision}"
         )
     rules = protocol.evaluation
-    selected = [c for split in rules.splits for c in cases if c.split == split]
+    splits = config.splits or rules.splits
+    unknown = set(splits) - set(rules.splits)
+    if unknown:
+        raise ValueError(f"splits {sorted(unknown)} are not in the protocol {rules.splits}")
+    selected = [c for split in splits for c in cases if c.split == split]
     if not selected:
-        raise ValueError(f"no cases in splits {rules.splits}")
+        raise ValueError(f"no cases in splits {splits}")
 
     predictor = predictor or build_predictor(config.predictor)
     run_dir = Path(config.output_root) / config.run_id
@@ -296,6 +304,7 @@ def collect(config: CollectionConfig, predictor: Predictor | None = None) -> Pat
                 "suite_id": protocol.suite_id,
                 "revision": protocol.revision,
                 "path": config.suite,
+                **({"splits": list(config.splits)} if config.splits else {}),
             },
             protocol_sha256=protocol_sha,
             protocol=protocol_raw,

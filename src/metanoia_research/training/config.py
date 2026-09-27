@@ -33,3 +33,8 @@ class TrainingConfig(StrictModel):
     # Examples per forward pass; gradients accumulate to ``batch_size``.
     micro_batch_size: int | None = Field(default=None, ge=1)
     log_every_steps: int | None = Field(default=None, ge=1)
+    # Intermediate checkpoints, each a loadable predictor bundle under
+    # ``<bundle>/checkpoints/step_NNNNNNN/`` (for dev-based selection and resume).
+    # Only the latest checkpoint keeps its optimizer state.
+    checkpoint_every_steps: int | None = Field(default=None, ge=1)
+    checkpoint_each_epoch: bool = False
