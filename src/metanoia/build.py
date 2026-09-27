@@ -45,6 +45,12 @@ def build_model(config: ModelConfig, seed: int | None = None) -> DirectDecisionM
         hidden_dim=config.scorer.hidden_dim,
         dropout=config.scorer.dropout,
     )
+    if config.workspace is not None:
+        from metanoia.engine import WorkspaceDecisionModel
+
+        return WorkspaceDecisionModel(
+            encoder, scorer, config.scorer.candidate_encoding, config.workspace
+        )
     return DirectDecisionModel(encoder, scorer, config.scorer.candidate_encoding)
 
 

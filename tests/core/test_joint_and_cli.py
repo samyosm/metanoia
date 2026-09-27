@@ -43,7 +43,7 @@ def test_joint_differs_from_separate() -> None:
 
 def args(**kw) -> argparse.Namespace:
     base = dict(request=None, question=None, candidate=None, context=None, context_file=None)
-    return argparse.Namespace(**{**base, "trace": False, **kw})
+    return argparse.Namespace(**{**base, "trace": False, "rounds": 0, **kw})
 
 
 def test_cli_builds_request_with_unique_ids() -> None:
@@ -91,3 +91,9 @@ def test_serve_answers_json_lines(tmp_path, monkeypatch, capsys) -> None:
     assert lines[0]["ready"] is True
     assert lines[1]["id"] == 1 and len(lines[1]["result"]["probabilities"]) == 2
     assert lines[2]["id"] == 2 and "error" in lines[2]
+
+
+def test_cli_rounds_set_the_suite_budget() -> None:
+    request = build_request(args(question="Q?", candidate=["a", "b"], context="", rounds=4))
+    assert request.budget.max_rounds == 4 and request.budget.max_pairs == 4 * 4096
+    assert build_request(args(question="Q?", candidate=["a", "b"])).budget.is_direct

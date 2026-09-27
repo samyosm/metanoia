@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 from metanoia.api import load_predictor
-from metanoia.config import HashingEncoderConfig, ModelConfig
+from metanoia.config import HashingEncoderConfig, ModelConfig, WorkspaceConfig
 from metanoia_research.training.config import TrainingConfig
 from metanoia_research.training.loop import train
 
@@ -152,3 +152,119 @@ def test_hf_max_length_is_not_part_of_the_weight_layout() -> None:
     assert _weight_layout(hashing) != _weight_layout(
         {**hashing, "encoder": {"kind": "hashing", "max_length": 640}}
     )
+
+
+WORKSPACE = MODEL.model_copy(update={"workspace": WorkspaceConfig(dim=16, heads=2, hidden_dim=16)})
+
+
+def test_workspace_warm_starts_from_a_direct_bundle(fixtures, tmp_path) -> None:
+    from metanoia_contracts import Budget, Candidate, DecisionRequest
+
+    direct = train(config(fixtures), MODEL, tmp_path / "direct")
+    warm = config(
+        fixtures,
+        init_from=str(tmp_path / "direct"),
+        learning_rate=1e-12,
+        epochs=1,
+        train_rounds=(1, 2),
+    )
+    manifest = train(warm, WORKSPACE, tmp_path / "ws")
+    assert manifest.training["initialized_from"] == direct.predictor_id
+    request = DecisionRequest(
+        context="Alpha is bright. Beta is dim.",
+        question="Which one is bright?",
+        candidates=(Candidate(id="a", text="Alpha"), Candidate(id="b", text="Beta")),
+        budget=Budget(max_nodes=64, max_pairs=10**6, max_rounds=4),
+    )
+    expected = load_predictor(tmp_path / "direct").decide(request).logits
+    got = load_predictor(tmp_path / "ws").decide(request)
+    assert got.usage.rounds == 4
+    assert got.logits == pytest.approx(expected, abs=1e-5)  # zero-started workspace head
+
+
+def test_workspace_training_resumes_to_identical_weights(fixtures, tmp_path) -> None:
+    ws_config = config(fixtures, train_rounds=(1, 3))
+    straight = train(ws_config, WORKSPACE, tmp_path / "straight")
+
+    def stop(record: dict) -> None:
+        if record["epoch"] == 0:
+            raise Interrupt
+
+    with pytest.raises(Interrupt):
+        train(ws_config, WORKSPACE, tmp_path / "r", on_epoch=stop)
+    resumed = train(ws_config, WORKSPACE, tmp_path / "r", resume=True)
+    assert resumed.predictor_id == straight.predictor_id
+
+
+def test_train_rounds_must_match_the_model(fixtures, tmp_path) -> None:
+    with pytest.raises(ValueError, match="train_rounds"):
+        train(config(fixtures), WORKSPACE, tmp_path / "a")
+    with pytest.raises(ValueError, match="train_rounds"):
+        train(config(fixtures, train_rounds=(1, 2)), MODEL, tmp_path / "b")
+
+
+def test_bundles_without_a_workspace_key_match_direct_configs() -> None:
+    from metanoia_research.training.loop import _weight_layout
+
+    old = {"name": "a", "encoder": {"kind": "hf", "model": "m"}}
+    new = {"name": "b", "encoder": {"kind": "hf", "model": "m"}, "workspace": None}
+    assert _weight_layout(old) == _weight_layout(new)
+
+
+def test_workspace_parameters_are_trained(fixtures, tmp_path) -> None:
+    import torch
+
+    from metanoia.build import build_model
+
+    train(config(fixtures, train_rounds=(1, 2)), WORKSPACE, tmp_path / "ws")
+    trained = torch.load(tmp_path / "ws" / "weights.pt", weights_only=True)
+    fresh = build_model(WORKSPACE, seed=0).state_dict()
+    assert not torch.equal(trained["workspace.out.weight"], fresh["workspace.out.weight"])
+    log = json.loads((tmp_path / "ws" / "training_log.jsonl").read_text().splitlines()[-1])
+    assert log["grad_norm_workspace"] > 0
+
+
+def test_budget_subset_and_collect_from_selection(fixtures, tmp_path) -> None:
+    from metanoia_analysis.cli import main as analysis
+    from metanoia_research.cli import main
+
+    train(config(fixtures), MODEL, tmp_path / "b")
+    runs = tmp_path / "runs"
+    common = ["--suite", str(fixtures / "suite"), "--dataset", str(fixtures / "dataset")]
+    main(
+        [
+            "collect-checkpoints",
+            "--bundle",
+            str(tmp_path / "b"),
+            *common,
+            "--budgets",
+            "b0",
+            "--output-root",
+            str(runs),
+        ]
+    )
+    manifest = json.loads((runs / "b__dev-b0__final" / "run.json").read_text())
+    assert manifest["suite"]["budgets"] == ["b0"]
+    selection = tmp_path / "selection.json"
+    analysis(
+        [
+            "select",
+            "--dataset",
+            str(fixtures / "dataset"),
+            "--budget",
+            "b0",
+            "--out",
+            str(selection),
+            *[a for r in sorted(runs.iterdir()) for a in ("--run", str(r))],
+        ]
+    )
+    chosen = json.loads(selection.read_text())["chosen"]
+    collection = tmp_path / "collect.toml"
+    collection.write_text(
+        f'run_id = "full"\nsuite = "{fixtures / "suite"}"\ndataset = "{fixtures / "dataset"}"\n'
+        f'output_root = "{runs}"\n[predictor]\nkind = "bundle"\npath = "placeholder"\n'
+    )
+    main(["collect", "--config", str(collection), "--from-selection", str(selection)])
+    full = json.loads((runs / "full" / "run.json").read_text())
+    assert full["predictor"]["predictor_id"] == chosen["predictor_id"]
+    assert full["predictor"]["spec"]["path"] == chosen["predictor_path"]

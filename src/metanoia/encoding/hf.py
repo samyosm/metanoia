@@ -59,11 +59,13 @@ class HFEncoder(nn.Module):
             truncation=True,
             max_length=self.max_length,
             return_tensors="pt",
+            return_offsets_mapping=True,
         ).to(device)
+        offsets = batch.pop("offset_mapping").long()
         states = self.model(**batch).last_hidden_state
         mask = batch["attention_mask"].bool()
         pooled = states[:, 0] if self.pooling == "cls" else masked_mean(states, mask)
-        return EncodedText(states=states, mask=mask, pooled=pooled)
+        return EncodedText(states=states, mask=mask, pooled=pooled, offsets=offsets)
 
     def identity(self) -> dict[str, object]:
         identity: dict[str, object] = {

@@ -17,6 +17,9 @@ class EncodedText:
     states: torch.Tensor  # [B, L, D] float
     mask: torch.Tensor  # [B, L] bool, True for real tokens
     pooled: torch.Tensor  # [B, D] float
+    # [B, L, 2] long: each token's (start, end) character offsets in its text; (0, 0)
+    # for padding and special tokens. Lets later operations pool arbitrary text spans.
+    offsets: torch.Tensor | None = None
 
 
 class TextEncoder(Protocol):

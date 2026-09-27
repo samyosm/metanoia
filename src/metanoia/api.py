@@ -6,10 +6,18 @@ Single-request and batch entry points share semantics.
 
 import json
 from collections.abc import Sequence
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol, runtime_checkable
 
-from metanoia_contracts import DecisionRequest, DecisionResult, TraceEvent, TraceMode
+from metanoia_contracts import (
+    DecisionRequest,
+    DecisionResult,
+    ResourceUsage,
+    Termination,
+    TraceEvent,
+    TraceMode,
+)
 from metanoia_contracts.artifacts import PredictorBundleManifest
 from metanoia_contracts.base import load_strict
 from metanoia_contracts.provenance import sha256_file
@@ -57,7 +65,9 @@ class TorchPredictor:
     def describe(self) -> dict[str, Any]:
         return {
             "predictor_id": self.predictor_id,
-            "kind": "torch_direct",
+            "kind": "torch_workspace"
+            if self._config.get("model", {}).get("workspace")
+            else "torch_direct",
             "model_config": self._config,
             "encoder": self.model.encoder.identity(),
             "calibration": self.calibrator.info.model_dump(mode="json"),
@@ -83,9 +93,9 @@ class TorchPredictor:
                 torch.cuda.synchronize()
             rows = output.logits.double().cpu().tolist()
         results = []
-        for request, row in zip(requests, rows, strict=True):
+        for i, (request, row) in enumerate(zip(requests, rows, strict=True)):
             logits = row[: len(request.candidates)]
-            results.append(self._result(request, logits))
+            results.append(self._result(request, logits, _workspace_record(output, i)))
         return results
 
     def _trace(
@@ -93,6 +103,7 @@ class TorchPredictor:
         request: DecisionRequest,
         logits: list[float],
         probabilities: tuple[float, ...],
+        workspace: "WorkspaceRecord | None" = None,
     ) -> tuple[TraceEvent, ...]:
         """What the direct model computed, as detached summaries. Tracing never feeds
         back into the prediction (the logits above were computed without it)."""
@@ -102,7 +113,7 @@ class TorchPredictor:
         rendered = render_input(request)
         tokens = encoder.token_count(rendered)
         info = self.calibrator.info
-        return (
+        events = [
             TraceEvent(
                 seq=0,
                 op="render",
@@ -135,8 +146,12 @@ class TorchPredictor:
                 outputs=request.candidate_ids,
                 details={"logits": list(logits)},
             ),
+        ]
+        if workspace is not None:
+            events += _workspace_events(request, workspace, len(events))
+        events.append(
             TraceEvent(
-                seq=3,
+                seq=len(events),
                 op="calibrate",
                 inputs=request.candidate_ids,
                 outputs=request.candidate_ids,
@@ -148,16 +163,29 @@ class TorchPredictor:
                 },
             ),
         )
+        return tuple(events)
 
-    def _result(self, request: DecisionRequest, logits: list[float]) -> DecisionResult:
+    def _result(
+        self,
+        request: DecisionRequest,
+        logits: list[float],
+        workspace: "WorkspaceRecord | None" = None,
+    ) -> DecisionResult:
         # The direct model performs no graph work, so it consumes none of the reasoning
         # budget; the budget is a cap, not a quota.
         probabilities = tuple(self.calibrator.probabilities(logits))
         trace = (
-            self._trace(request, logits, probabilities)
+            self._trace(request, logits, probabilities, workspace)
             if request.trace is TraceMode.EVENTS
             else None
         )
+        usage = ResourceUsage()
+        termination = Termination.COMPLETED
+        if workspace is not None:
+            usage = ResourceUsage(
+                nodes=workspace.nodes, pairs=workspace.pairs, rounds=workspace.rounds
+            )
+            termination = workspace.termination
         return DecisionResult(
             request_id=request.request_id,
             predictor_id=self.predictor_id,
@@ -166,8 +194,89 @@ class TorchPredictor:
             probabilities=probabilities,
             calibration=self.calibrator.info,
             budget=request.budget,
+            usage=usage,
+            termination=termination,
             trace=trace,
         )
+
+
+@dataclass(frozen=True)
+class WorkspaceRecord:
+    """One example's detached workspace summary, for results and traces."""
+
+    mode: str
+    rounds: int
+    nodes: int
+    pairs: int
+    termination: Termination
+    statements: list[str]
+    round_logits: list[list[float]]  # after rounds 1..rounds
+    attention: list[list[list[float]]]  # per round: candidate -> sentence weights
+
+
+def _workspace_record(output: Any, i: int) -> WorkspaceRecord | None:
+    from metanoia.engine import WorkspaceOutput
+
+    if not isinstance(output, WorkspaceOutput):
+        return None
+    k = output.rounds[i]
+    n = int(output.candidate_mask[i].sum())
+    return WorkspaceRecord(
+        mode=str(output.mode),
+        rounds=k,
+        nodes=output.nodes[i],
+        pairs=output.pairs[i],
+        termination=output.termination[i],
+        statements=output.statements[i],
+        round_logits=[r[i, :n].double().cpu().tolist() for r in output.round_logits[:k]],
+        attention=[a[i, :n].double().cpu().tolist() for a in output.attention[:k]],
+    )
+
+
+_TOP_STATEMENTS = 3
+
+
+def _workspace_events(
+    request: DecisionRequest, workspace: WorkspaceRecord, start: int
+) -> list[TraceEvent]:
+    """A ``workspace`` event, then one ``aggregate`` event per executed round, each with
+    the candidates' logits after the round and their most-attended sentences. Attention
+    weights describe the computation; they are not an explanation (decision 0008)."""
+    candidates = [f"a:{cid}" for cid in request.candidate_ids]
+    events = [
+        TraceEvent(
+            seq=start,
+            op="workspace",
+            inputs=("input", *candidates),
+            outputs=("workspace",),
+            details={
+                "mode": workspace.mode,
+                "statement_nodes": len(workspace.statements),
+                "rounds_requested": request.budget.max_rounds,
+                "rounds": workspace.rounds,
+                "termination": workspace.termination.value,
+            },
+        )
+    ]
+    for r, (logits, weights) in enumerate(
+        zip(workspace.round_logits, workspace.attention, strict=True), start=1
+    ):
+        attended = []
+        for cid, row in zip(request.candidate_ids, weights, strict=True):
+            ranked = sorted(range(len(row)), key=lambda j: -row[j])[:_TOP_STATEMENTS]
+            for j in ranked:
+                text = workspace.statements[j] if j < len(workspace.statements) else f"#{j}"
+                attended.append(f"{cid}|{j}|{row[j]:.3f}|{text[:120]}")
+        events.append(
+            TraceEvent(
+                seq=start + r,
+                op="aggregate",
+                inputs=("workspace",),
+                outputs=("workspace", *request.candidate_ids),
+                details={"round": r, "logits": logits, "attended": attended},
+            )
+        )
+    return events
 
 
 BUNDLE_MANIFEST = "bundle.json"

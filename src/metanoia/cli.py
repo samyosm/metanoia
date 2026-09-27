@@ -17,7 +17,7 @@ import re
 import sys
 from pathlib import Path
 
-from metanoia_contracts import Candidate, DecisionRequest, TraceMode
+from metanoia_contracts import Budget, Candidate, DecisionRequest, TraceMode
 from metanoia_contracts.base import load_strict
 
 
@@ -30,6 +30,13 @@ def _candidate_id(text: str, taken: set[str]) -> str:
     return cid
 
 
+def reasoning_budget(rounds: int) -> Budget:
+    """The budget ``reasoning_v1`` revision 2 uses for ``rounds`` workspace rounds."""
+    if rounds <= 0:
+        return Budget()
+    return Budget(max_rounds=rounds, max_nodes=64, max_pairs=rounds * 4096)
+
+
 def build_request(args: argparse.Namespace) -> DecisionRequest:
     if args.request:
         raw = sys.stdin.read() if args.request == "-" else Path(args.request).read_text()
@@ -40,7 +47,9 @@ def build_request(args: argparse.Namespace) -> DecisionRequest:
     if args.context_file:
         context = Path(args.context_file).read_text()
     taken: set[str] = set()
+    rounds = getattr(args, "rounds", 0) or 0
     return DecisionRequest(
+        budget=reasoning_budget(rounds),
         context=context,
         question=args.question,
         candidates=tuple(Candidate(id=_candidate_id(t, taken), text=t) for t in args.candidate),
@@ -87,6 +96,9 @@ def decide(args: argparse.Namespace) -> None:
         bar = "#" * round(40 * p)
         print(f"{texts[cid]:<{width}}  {p:7.2%}  logit {logit:+7.3f}  {bar}")
     print(f"calibration: {result.calibration.status.value}  predictor: {result.predictor_id}")
+    if result.usage.rounds or request.budget.max_rounds:
+        used, wanted = result.usage.rounds, request.budget.max_rounds
+        print(f"rounds: {used}/{wanted}  ({result.termination.value})")
 
 
 def serve(args: argparse.Namespace) -> None:
@@ -139,6 +151,12 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--question")
     p.add_argument("--candidate", action="append", help="repeat once per candidate")
     p.add_argument("--request", help="DecisionRequest JSON file, or - for stdin")
+    p.add_argument(
+        "--rounds",
+        type=int,
+        default=0,
+        help="workspace reasoning rounds (workspace models; 0 = direct scorer)",
+    )
     p.add_argument("--trace", action="store_true", help="include trace events")
     p.add_argument("--json", action="store_true", help="print the DecisionResult as JSON")
     p.set_defaults(func=decide)

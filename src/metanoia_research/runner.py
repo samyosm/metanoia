@@ -69,6 +69,9 @@ class CollectionConfig(StrictModel):
     # subset is recorded in the run's suite identity, so such a run is never compared
     # with a full-protocol run by accident.
     splits: tuple[str, ...] | None = None
+    # A subset of the protocol's budget ids (e.g. one budget for checkpoint selection),
+    # recorded in the suite identity like ``splits``.
+    budgets: tuple[str, ...] | None = None
 
 
 def load_protocol(suite_dir: Path) -> tuple[SuiteProtocol, dict[str, Any], str]:
@@ -244,6 +247,13 @@ def collect(config: CollectionConfig, predictor: Predictor | None = None) -> Pat
     selected = [c for split in splits for c in cases if c.split == split]
     if not selected:
         raise ValueError(f"no cases in splits {splits}")
+    budgets = list(protocol.budgets)
+    if config.budgets:
+        known = {b.id for b in protocol.budgets}
+        unknown = set(config.budgets) - known
+        if unknown:
+            raise ValueError(f"budgets {sorted(unknown)} are not in the protocol")
+        budgets = [b for b in protocol.budgets if b.id in config.budgets]
 
     predictor = predictor or build_predictor(config.predictor)
     run_dir = Path(config.output_root) / config.run_id
@@ -253,7 +263,7 @@ def collect(config: CollectionConfig, predictor: Predictor | None = None) -> Pat
         records: list[PredictionRecord] = []
         traces: list[dict[str, Any]] = []
         batch_index = 0
-        for named in protocol.budgets:
+        for named in budgets:
             for repeat in range(rules.repeats):
                 for start in range(0, len(selected), rules.batch_size):
                     batch = selected[start : start + rules.batch_size]
@@ -291,10 +301,7 @@ def collect(config: CollectionConfig, predictor: Predictor | None = None) -> Pat
             )
 
         expected = {
-            (c.example_id, b.id, r)
-            for c in selected
-            for b in protocol.budgets
-            for r in range(rules.repeats)
+            (c.example_id, b.id, r) for c in selected for b in budgets for r in range(rules.repeats)
         }
         _validate_written(work / "predictions.parquet", expected)
         failed = sum(r.status is PredictionStatus.FAILED for r in records)
@@ -305,6 +312,7 @@ def collect(config: CollectionConfig, predictor: Predictor | None = None) -> Pat
                 "revision": protocol.revision,
                 "path": config.suite,
                 **({"splits": list(config.splits)} if config.splits else {}),
+                **({"budgets": list(config.budgets)} if config.budgets else {}),
             },
             protocol_sha256=protocol_sha,
             protocol=protocol_raw,

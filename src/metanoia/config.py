@@ -53,8 +53,29 @@ class DirectScorerConfig(StrictModel):
     candidate_encoding: Literal["separate", "joint"] = "separate"
 
 
+class WorkspaceConfig(StrictModel):
+    """Stage-3a budgeted workspace (decision 0008).
+
+    ``statements``: nodes are the input's sentences plus the candidates, all updated each
+    round. ``latent``: the equal-cost control, where ``latent_slots`` learned nodes plus the
+    candidates are updated and the sentence embeddings are read-only memory.
+    """
+
+    kind: Literal["workspace"] = "workspace"
+    mode: Literal["statements", "latent"] = "statements"
+    dim: int = Field(default=256, ge=8)
+    heads: int = Field(default=4, ge=1)
+    hidden_dim: int = Field(default=512, ge=8)
+    dropout: float = Field(default=0.0, ge=0.0, lt=1.0)
+    latent_slots: int = Field(default=16, ge=1)
+    # Hard cap on rounds, whatever the request's budget allows.
+    max_rounds: int = Field(default=32, ge=1)
+
+
 class ModelConfig(StrictModel):
     config_version: Literal[1] = 1
     name: str = Field(min_length=1)
     encoder: EncoderConfig
     scorer: DirectScorerConfig = Field(default_factory=DirectScorerConfig)
+    # None: the direct scorer only (Stage 1). Set: the Stage-3a workspace on top of it.
+    workspace: WorkspaceConfig | None = None

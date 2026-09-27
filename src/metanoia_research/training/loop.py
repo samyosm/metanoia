@@ -69,14 +69,30 @@ def load_examples(
 
 
 def batch_loss(
-    model: DirectDecisionModel, batch: Sequence[Example], precision: str = "fp32"
+    model: DirectDecisionModel,
+    batch: Sequence[Example],
+    precision: str = "fp32",
+    rounds: int | None = None,
 ) -> torch.Tensor:
-    device_type = model.device.type
-    with torch.autocast(device_type, dtype=torch.float16, enabled=precision == "fp16-mixed"):
-        output = model([request for request, _ in batch])
+    """Cross-entropy of the correct candidate. With ``rounds`` (workspace models), the
+    mean over every round's readout: deep supervision, so each budget is trained."""
+    output = _forward(model, batch, precision, rounds)
     targets = torch.tensor([target for _, target in batch], device=output.logits.device)
     # The loss is computed in fp32 regardless of autocast.
+    stages = getattr(output, "round_logits", None) if rounds else None
+    if stages:
+        return torch.stack([F.cross_entropy(s.float(), targets) for s in stages]).mean()
     return F.cross_entropy(output.logits.float(), targets)
+
+
+def _forward(
+    model: DirectDecisionModel, batch: Sequence[Example], precision: str, rounds: int | None
+) -> Any:
+    requests = [request for request, _ in batch]
+    with torch.autocast(model.device.type, dtype=torch.float16, enabled=precision == "fp16-mixed"):
+        if rounds is None:
+            return model(requests)
+        return model(requests, rounds=rounds)  # type: ignore[call-arg]
 
 
 def evaluate(
@@ -84,6 +100,7 @@ def evaluate(
     examples: Sequence[Example],
     batch_size: int,
     precision: str = "fp32",
+    rounds: int | None = None,
 ) -> tuple[float, float]:
     """Mean loss and mean per-example standard deviation of candidate logits.
 
@@ -95,10 +112,7 @@ def evaluate(
     with torch.no_grad():
         for start in range(0, len(examples), batch_size):
             batch = examples[start : start + batch_size]
-            with torch.autocast(
-                model.device.type, dtype=torch.float16, enabled=precision == "fp16-mixed"
-            ):
-                output = model([request for request, _ in batch])
+            output = _forward(model, batch, precision, rounds)
             logits = output.logits.float()
             targets = torch.tensor([t for _, t in batch], device=logits.device)
             total += F.cross_entropy(logits, targets).item() * len(batch)
@@ -146,6 +160,8 @@ class Progress:
     scorer_norms: list[float] = field(default_factory=list)
     log: list[dict[str, Any]] = field(default_factory=list)
     elapsed_seconds: float = 0.0
+    rounds_rng: Any = None  # state of the workspace-rounds RNG (workspace models only)
+    workspace_norms: list[float] = field(default_factory=list)
 
 
 # ``checkpoint(progress, optimizer, scaler)`` is called after a step or an epoch.
@@ -163,10 +179,25 @@ def fit(
 ) -> tuple[Progress, torch.optim.Optimizer, torch.amp.GradScaler]:
     """Train in place. ``resume`` is a saved train state (see :func:`train_state`)."""
     rng = random.Random(config.seed)
+    # A separate RNG for workspace rounds, so the data order matches the direct baseline's.
+    rounds_rng = random.Random(f"{config.seed}:rounds")
+    eval_rounds = config.eval_rounds
+    if config.train_rounds is not None and eval_rounds is None:
+        eval_rounds = config.train_rounds[1]
     trainable = [p for p in model.parameters() if p.requires_grad]
     encoder_params = [p for p in model.encoder.parameters() if p.requires_grad]
     scorer_params = [p for p in model.scorer.parameters() if p.requires_grad]
-    groups = [{"params": scorer_params, "lr": config.learning_rate}]
+    # Every trainable parameter outside the encoder (the scorer, and the workspace of a
+    # Stage-3a model) uses the head learning rate. For a direct model this is exactly
+    # the scorer's parameters.
+    encoder_ids = {id(p) for p in encoder_params}
+    head_params = [p for p in trainable if id(p) not in encoder_ids]
+    workspace_params = [
+        p
+        for name, p in model.named_parameters()
+        if p.requires_grad and name.startswith("workspace.")
+    ]
+    groups = [{"params": head_params, "lr": config.learning_rate}]
     if encoder_params:
         groups.append(
             {"params": encoder_params, "lr": config.encoder_learning_rate or config.learning_rate}
@@ -180,6 +211,8 @@ def fit(
         scaler.load_state_dict(resume["scaler"])
         progress = Progress(**resume["progress"])
         rng.setstate(_as_rng_state(progress.python_rng))
+        if progress.rounds_rng is not None:
+            rounds_rng.setstate(_as_rng_state(progress.rounds_rng))
         torch.set_rng_state(resume["torch_rng"])
         if resume.get("cuda_rng") is not None and torch.cuda.is_available():
             torch.cuda.set_rng_state_all(resume["cuda_rng"])
@@ -201,19 +234,25 @@ def fit(
                 group["lr"] = base * _lr_factor(config, progress.step, total_steps)
             optimizer.zero_grad()
             batch_total = 0.0
+            rounds = None
+            if config.train_rounds is not None:
+                rounds = rounds_rng.randint(*config.train_rounds)
             for m in range(0, len(batch), micro):
                 part = batch[m : m + micro]
-                loss = batch_loss(model, part, config.precision) * (len(part) / len(batch))
+                loss = batch_loss(model, part, config.precision, rounds) * (len(part) / len(batch))
                 scaler.scale(loss).backward()
                 batch_total += loss.item()
             scaler.unscale_(optimizer)
             progress.encoder_norms.append(grad_norm(encoder_params))
             progress.scorer_norms.append(grad_norm(scorer_params))
+            if workspace_params:
+                progress.workspace_norms.append(grad_norm(workspace_params))
             if config.grad_clip is not None:
                 torch.nn.utils.clip_grad_norm_(trainable, config.grad_clip)
             scaler.step(optimizer)
             scaler.update()
             progress.losses.append(batch_total)
+            progress.rounds_rng = rounds_rng.getstate()
             progress.step += 1
             progress.position += config.batch_size
             if config.log_every_steps and progress.step % config.log_every_steps == 0:
@@ -236,7 +275,7 @@ def fit(
                 progress.elapsed_seconds = time.perf_counter() - started
                 checkpoint(progress, optimizer, scaler)
         norms = progress.scorer_norms + progress.encoder_norms
-        dev_loss, dev_spread = evaluate(model, dev, micro, config.precision)
+        dev_loss, dev_spread = evaluate(model, dev, micro, config.precision, eval_rounds)
         record = {
             "epoch": progress.epoch,
             "step": progress.step,
@@ -245,6 +284,11 @@ def fit(
             "dev_logit_spread": dev_spread,
             "grad_norm_encoder": _finite_mean(progress.encoder_norms),
             "grad_norm_scorer": _finite_mean(progress.scorer_norms),
+            **(
+                {"grad_norm_workspace": _finite_mean(progress.workspace_norms)}
+                if workspace_params
+                else {}
+            ),
             "nonfinite_grad_steps": sum(not math.isfinite(v) for v in norms),
             "elapsed_seconds": round(time.perf_counter() - started, 1),
         }
@@ -253,6 +297,7 @@ def fit(
         progress.epoch += 1
         progress.order, progress.position = None, 0
         progress.losses, progress.encoder_norms, progress.scorer_norms = [], [], []
+        progress.workspace_norms = []
         progress.elapsed_seconds = time.perf_counter() - started
         wanted = config.checkpoint_each_epoch or (
             config.checkpoint_every_steps is not None
@@ -307,6 +352,8 @@ def train(
         dev_dir, config.dev_split, config.max_dev_examples, config.subset, config.seed
     )
 
+    if (model_config.workspace is None) != (config.train_rounds is None):
+        raise ValueError("train_rounds must be set exactly when the model has a workspace")
     model = build_model(model_config, seed=config.seed)
     init_predictor = _load_initial_weights(model, model_config, config.init_from)
     model = model.to(config.device)
@@ -357,6 +404,9 @@ def _weight_layout(model_config: dict[str, Any]) -> dict[str, Any]:
     """
     layout = json.loads(json.dumps(model_config))
     layout.pop("name", None)
+    # Bundles written before workspaces existed have no "workspace" key at all.
+    if layout.get("workspace") is None:
+        layout.pop("workspace", None)
     encoder = layout.get("encoder", {})
     encoder.pop("gradient_checkpointing", None)
     if encoder.get("kind") == "hf":
@@ -374,9 +424,14 @@ def _load_initial_weights(
     manifest = load_strict(
         PredictorBundleManifest, json.loads((directory / BUNDLE_MANIFEST).read_text())
     )
-    if _weight_layout(manifest.resolved_config["model"]) != _weight_layout(
-        model_config.model_dump(mode="json")
-    ):
+    source_layout = _weight_layout(manifest.resolved_config["model"])
+    target_layout = _weight_layout(model_config.model_dump(mode="json"))
+    # A workspace model may start from a direct bundle: its encoder and scorer come from
+    # the bundle and only the workspace starts fresh (decision 0008).
+    fresh_workspace = "workspace" not in source_layout and "workspace" in target_layout
+    if fresh_workspace:
+        del target_layout["workspace"]
+    if source_layout != target_layout:
         raise ValueError(f"model configuration differs from the one in {directory}")
     recorded = dict(manifest.resolved_config["encoder_identity"])
     current = dict(model.encoder.identity())
@@ -388,7 +443,17 @@ def _load_initial_weights(
     weights = directory / manifest.weights.path
     if sha256_file(weights) != manifest.weights.sha256:
         raise ValueError(f"weights hash mismatch in {directory}")
-    model.load_persistent_state_dict(torch.load(weights, map_location="cpu", weights_only=True))
+    state = torch.load(weights, map_location="cpu", weights_only=True)
+    if fresh_workspace:
+        result = model.load_state_dict(state, strict=False)
+        external = tuple(f"encoder.{p}" for p in model.encoder.external_prefixes)
+        missing = [k for k in result.missing_keys if not k.startswith(("workspace.", *external))]
+        if missing or result.unexpected_keys:
+            raise ValueError(
+                f"incompatible weights: missing {missing}, unexpected {result.unexpected_keys}"
+            )
+    else:
+        model.load_persistent_state_dict(state)
     return manifest.predictor_id
 
 

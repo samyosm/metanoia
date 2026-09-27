@@ -13,13 +13,21 @@ from torch import nn
 
 from metanoia.decision import CandidateScorer
 from metanoia.encoding.inputs import render_candidate_joint, render_input
-from metanoia.interfaces import TextEncoder
+from metanoia.interfaces import EncodedText, TextEncoder
 from metanoia_contracts import DecisionRequest
 
 
 @dataclass(frozen=True)
 class DecisionOutput:
     logits: torch.Tensor  # [B, N_max]; -inf at padded positions
+    candidate_mask: torch.Tensor  # [B, N_max] bool
+
+
+@dataclass(frozen=True)
+class EncodedInputs:
+    rendered: list[str]  # the rendered input text per request
+    context: EncodedText  # token states of the rendered inputs
+    candidates: torch.Tensor  # [B, N_max, D] candidate representations a_i
     candidate_mask: torch.Tensor  # [B, N_max] bool
 
 
@@ -44,6 +52,12 @@ class DirectDecisionModel(nn.Module):
         return next(self.scorer.parameters()).device
 
     def forward(self, requests: Sequence[DecisionRequest]) -> DecisionOutput:
+        inputs = self.encode_inputs(requests)
+        logits = self.scorer(inputs.context, inputs.candidates, inputs.candidate_mask)
+        return DecisionOutput(logits=logits, candidate_mask=inputs.candidate_mask)
+
+    def encode_inputs(self, requests: Sequence[DecisionRequest]) -> "EncodedInputs":
+        """Encode the rendered input once and every candidate; shared by all predictors."""
         if not requests:
             raise ValueError("empty batch")
         rendered = [render_input(r) for r in requests]
@@ -65,7 +79,9 @@ class DirectDecisionModel(nn.Module):
             candidates[i, :count] = flat[start : start + count]
             mask[i, :count] = True
             start += count
-        return DecisionOutput(logits=self.scorer(context, candidates, mask), candidate_mask=mask)
+        return EncodedInputs(
+            rendered=rendered, context=context, candidates=candidates, candidate_mask=mask
+        )
 
     def persistent_state_dict(self) -> dict[str, torch.Tensor]:
         """Weights to store in a bundle, excluding externally pinned encoder weights."""

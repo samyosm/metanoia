@@ -86,6 +86,16 @@ def collect(args: argparse.Namespace) -> None:
     raw = _toml(args.config)
     if args.run_id:
         raw["run_id"] = args.run_id
+    if args.from_selection:
+        from metanoia_contracts.artifacts import SelectionArtifact
+
+        selection = load_strict(
+            SelectionArtifact, json.loads(Path(args.from_selection).read_text())
+        )
+        if selection.chosen.predictor_path is None:
+            raise ValueError(f"{args.from_selection} names no predictor path")
+        raw["predictor"]["path"] = selection.chosen.predictor_path
+        print(f"collecting {selection.chosen.predictor_id} chosen by {selection.selection_id}")
     run_dir = run_collection(load_strict(CollectionConfig, raw))
     manifest = json.loads((run_dir / "run.json").read_text())
     print(f"wrote {run_dir}: {manifest['counts']}")
@@ -99,7 +109,8 @@ def collect_checkpoints(args: argparse.Namespace) -> None:
     bundle = Path(args.bundle)
     targets = sorted((bundle / "checkpoints").glob("step_*"))
     targets = [t for t in targets if not t.name.endswith(".incomplete")] + [bundle]
-    prefix = args.run_prefix or f"{bundle.name}__{'-'.join(args.splits)}"
+    parts = [*args.splits, *(args.budgets or [])]
+    prefix = args.run_prefix or f"{bundle.name}__{'-'.join(parts)}"
     for target in targets:
         label = target.name if target != bundle else "final"
         config = CollectionConfig(
@@ -111,6 +122,7 @@ def collect_checkpoints(args: argparse.Namespace) -> None:
             ),
             output_root=args.output_root,
             splits=tuple(args.splits),
+            budgets=tuple(args.budgets) if args.budgets else None,
         )
         if (Path(config.output_root) / config.run_id).exists():
             print(f"skip {config.run_id}: already collected")
@@ -141,6 +153,10 @@ def main(argv: list[str] | None = None) -> None:
     p = commands.add_parser("collect", help="run a suite with a predictor and save predictions")
     p.add_argument("--config", required=True)
     p.add_argument("--run-id", help="override the run_id in the configuration")
+    p.add_argument(
+        "--from-selection",
+        help="a selection artifact (metanoia-analysis select); collect its chosen predictor",
+    )
     p.set_defaults(func=collect)
 
     p = commands.add_parser(
@@ -150,6 +166,7 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--suite", required=True)
     p.add_argument("--dataset", required=True)
     p.add_argument("--splits", nargs="+", default=["dev"])
+    p.add_argument("--budgets", nargs="+", help="a subset of the protocol's budget ids")
     p.add_argument("--device", default="cpu")
     p.add_argument("--precision", default="fp32", choices=["fp32", "fp16"])
     p.add_argument("--run-prefix")

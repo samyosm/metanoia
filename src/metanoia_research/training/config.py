@@ -44,3 +44,8 @@ class TrainingConfig(StrictModel):
     # Only the latest checkpoint keeps its optimizer state.
     checkpoint_every_steps: int | None = Field(default=None, ge=1)
     checkpoint_each_epoch: bool = False
+    # Workspace models (decision 0008): rounds sampled uniformly from [min, max] per
+    # batch, with the loss averaged over every round's readout (deep supervision); the
+    # dev loss uses ``eval_rounds`` (default: the maximum). Direct models leave these unset.
+    train_rounds: tuple[int, int] | None = None
+    eval_rounds: int | None = Field(default=None, ge=0)

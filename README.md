@@ -145,6 +145,30 @@ whose `path` is the chosen checkpoint directory. `select` refuses the `test` and
 `calibration` splits. Dev-only runs record `suite.splits`, so `compare` never mixes them
 with full-protocol runs.
 
+### Stage 3a: the budgeted workspace (decision 0008)
+
+A model config with a `[workspace]` table adds a reasoning workspace on top of the
+direct scorer. Its nodes are the input's sentences plus the candidates, updated for R
+rounds by one shared attention block.
+- `mode = "latent"` is the equal-cost control: learned slots instead of sentences.
+- The request budget's `max_rounds` sets R. Budget 0 is exactly the direct scorer.
+- Training samples R from `train_rounds` with deep supervision.
+- Traces contain one `aggregate` event per round: candidate logits and most-attended
+  sentences.
+
+```sh
+scripts/stage3a_reasoning_v1.sh     # ~8 h: baseline + statement workspace + latent control,
+                                    # each trained, dev-selected and collected on the
+                                    # reasoning_v1 revision-2 budget grid (0-16 rounds)
+.venv/bin/metanoia decide --bundle artifacts/predictors/NAME --rounds 8 ...
+```
+
+Collection options for this workflow:
+- `collect --from-selection <artifact>` collects exactly the checkpoint a selection
+  chose.
+- `collect-checkpoints --budgets r4` collects on a subset of the protocol's budgets
+  (recorded in the run's suite identity).
+
 ## Layout and boundaries
 
 | Package | Owns | May import |

@@ -58,7 +58,14 @@ class HashingEncoder(nn.Module):
         states = self.embedding(padded) + self.position(positions)[None]
         if self.layers is not None:
             states = self.layers(states, src_key_padding_mask=~mask)
-        return EncodedText(states=states, mask=mask, pooled=masked_mean(states, mask))
+        offsets = torch.zeros(len(ids), length, 2, dtype=torch.long, device=device)
+        for i, text in enumerate(texts):
+            spans = [m.span() for m in _TOKEN.finditer(text)][: self.max_length]
+            if spans:
+                offsets[i, : len(spans)] = torch.tensor(spans, device=device)
+        return EncodedText(
+            states=states, mask=mask, pooled=masked_mean(states, mask), offsets=offsets
+        )
 
     def identity(self) -> dict[str, object]:
         return {"kind": "hashing", "tokenizer": TOKENIZER_REVISION}

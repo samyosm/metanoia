@@ -1,0 +1,13 @@
+# Full reasoning_v1 revision-2 collection (budget grid 0-16 rounds). Run with
+# --from-selection <artifact> so the dev-selected checkpoint is collected; the path
+# below is only the default (final weights).
+run_id = "ws_latent_reasoning_v1_warm20k_reasoning_v1_r2"
+suite = "suites/reasoning_v1_r2"
+dataset = "artifacts/datasets/microworld_v1"
+output_root = "artifacts/runs"
+
+[predictor]
+kind = "bundle"
+path = "artifacts/predictors/ws_latent_reasoning_v1_warm20k"
+device = "cuda"
+precision = "fp16"
