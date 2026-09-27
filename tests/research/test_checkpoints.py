@@ -43,6 +43,7 @@ def test_checkpoints_are_bundles_and_only_latest_keeps_state(fixtures, tmp_path)
     recorded = json.loads((root / "step_0000002" / "bundle.json").read_text())["training"]
     assert recorded["checkpoint"] == {"step": 2, "epoch": 0, "position": 8}
     assert manifest.training["steps"] == 6 and manifest.training["wall_time_seconds"] >= 0
+    assert manifest.training["final_epoch"]["dev_logit_spread"] >= 0
 
 
 def test_interrupted_run_resumes_to_identical_weights(fixtures, tmp_path) -> None:

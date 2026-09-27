@@ -79,19 +79,32 @@ def batch_loss(
     return F.cross_entropy(output.logits.float(), targets)
 
 
-def mean_loss(
+def evaluate(
     model: DirectDecisionModel,
     examples: Sequence[Example],
     batch_size: int,
     precision: str = "fp32",
-) -> float:
+) -> tuple[float, float]:
+    """Mean loss and mean per-example standard deviation of candidate logits.
+
+    A logit spread near 0 with a loss near ln N means the model has collapsed to
+    uniform output, which is different from slow learning (PLAN.md §13, lesson 8).
+    """
     model.eval()
-    total = 0.0
+    total, spread = 0.0, 0.0
     with torch.no_grad():
         for start in range(0, len(examples), batch_size):
             batch = examples[start : start + batch_size]
-            total += batch_loss(model, batch, precision).item() * len(batch)
-    return total / len(examples)
+            with torch.autocast(
+                model.device.type, dtype=torch.float16, enabled=precision == "fp16-mixed"
+            ):
+                output = model([request for request, _ in batch])
+            logits = output.logits.float()
+            targets = torch.tensor([t for _, t in batch], device=logits.device)
+            total += F.cross_entropy(logits, targets).item() * len(batch)
+            for row, mask in zip(logits, output.candidate_mask, strict=True):
+                spread += row[mask].std().item()
+    return total / len(examples), spread / len(examples)
 
 
 def grad_norm(parameters: Sequence[torch.nn.Parameter]) -> float:
@@ -223,11 +236,13 @@ def fit(
                 progress.elapsed_seconds = time.perf_counter() - started
                 checkpoint(progress, optimizer, scaler)
         norms = progress.scorer_norms + progress.encoder_norms
+        dev_loss, dev_spread = evaluate(model, dev, micro, config.precision)
         record = {
             "epoch": progress.epoch,
             "step": progress.step,
             "train_loss": sum(progress.losses) / len(progress.losses),
-            "dev_loss": mean_loss(model, dev, micro, config.precision),
+            "dev_loss": dev_loss,
+            "dev_logit_spread": dev_spread,
             "grad_norm_encoder": _finite_mean(progress.encoder_norms),
             "grad_norm_scorer": _finite_mean(progress.scorer_norms),
             "nonfinite_grad_steps": sum(not math.isfinite(v) for v in norms),
