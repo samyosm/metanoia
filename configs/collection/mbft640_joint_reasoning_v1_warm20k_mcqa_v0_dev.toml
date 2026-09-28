@@ -1,0 +1,12 @@
+# Reading-comprehension retention check of the reasoning_v1 baseline (R012): mcqa_v0 dev only.
+run_id = "mbft640_joint_reasoning_v1_warm20k_mcqa_v0_dev"
+suite = "suites/mcqa_v0"
+dataset = "artifacts/datasets/mcqa_v0"
+output_root = "artifacts/runs"
+splits = ["dev"]
+
+[predictor]
+kind = "bundle"
+path = "artifacts/predictors/mbft640_joint_reasoning_v1_warm20k"
+device = "cuda"
+precision = "fp16"
