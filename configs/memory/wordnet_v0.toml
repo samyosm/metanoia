@@ -1,0 +1,15 @@
+# Concept memory v0 (decision 0010): every WordNet 3.0 synset, keyed by a frozen
+# retrieval encoder (BAAI/bge-small-en-v1.5, CLS pooling, normalized) over "name: gloss".
+memory_id = "wordnet_v0"
+source = "wordnet"
+nltk_data = "artifacts/nltk_data"
+wordnet_zip_sha256 = "cbda5ea6eef7f36a97a43d4a75f85e07fccbb4f23657d27b4ccbc93e2646ab59"
+device = "cuda"
+batch_size = 512
+
+[encoder]
+model = "BAAI/bge-small-en-v1.5"
+revision = "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a"
+pooling = "cls"
+max_length = 128
+query_prefix = "Represent this sentence for searching relevant passages: "

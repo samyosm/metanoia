@@ -1,0 +1,8 @@
+# Science multiple choice without a passage (decision 0010): OpenBookQA (with its gold
+# core facts as proofs, never as input), ARC-Easy and ARC-Challenge. Pinned by
+# suites/knowledge_v0.
+generator = "mcqa"
+dataset_id = "knowledge_v0"
+seed = 20260928
+sources = ["obqa", "arc_easy", "arc_challenge"]
+dev_fraction = 0.5

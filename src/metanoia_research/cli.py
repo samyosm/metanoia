@@ -35,8 +35,7 @@ def prepare(args: argparse.Namespace) -> None:
         from metanoia_research.data import mcqa
 
         mc_config = load_strict(mcqa.McqaConfig, raw)
-        cases, labels, skipped = mcqa.generate(mc_config)
-        proofs = []
+        cases, labels, skipped, proofs = mcqa.generate(mc_config)
         info = {
             "revision": mcqa.GENERATOR_REVISION,
             "config": mc_config.model_dump(mode="json"),
@@ -131,6 +130,47 @@ def collect_checkpoints(args: argparse.Namespace) -> None:
         print(f"wrote {run_dir}", flush=True)
 
 
+def build_memory(args: argparse.Namespace) -> None:
+    from metanoia_research.memory_build import MemoryConfig
+    from metanoia_research.memory_build import build_memory as run_build
+
+    config = load_strict(MemoryConfig, _toml(args.config))
+    out = Path(args.out or f"artifacts/memories/{config.memory_id}")
+    manifest = run_build(config, out)
+    print(f"wrote {out}: {manifest.concepts.rows} concepts, dim {manifest.dim}")
+
+
+def memory_recall(args: argparse.Namespace) -> None:
+    from metanoia.memory.encoder import RetrievalEncoder
+    from metanoia.memory.store import ConceptMemory
+    from metanoia_contracts.provenance import utc_now
+    from metanoia_research.memory_eval import access_recall
+
+    memory = ConceptMemory(Path(args.memory), device=args.device)
+    spec = memory.manifest.encoder
+    encoder = RetrievalEncoder(
+        spec["model"],
+        spec["requested_revision"],
+        spec["pooling"],
+        spec["max_length"],
+        spec["query_prefix"],
+    ).to(args.device)
+    if encoder.identity() != spec:
+        raise ValueError(f"retrieval encoder {encoder.identity()} differs from the memory's {spec}")
+    report = access_recall(
+        Path(args.dataset), memory, encoder, tuple(args.k), tuple(args.splits), args.seed
+    )
+    report["created_at"] = utc_now()
+    out = Path(args.out)
+    if out.exists():
+        raise FileExistsError(f"{out} exists")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(report, indent=2) + "\n")
+    for key, values in report["recall"].items():
+        print(f"{key:>10}: retrieved {values['retrieved']:.3f}  random {values['random']:.3f}")
+    print(f"wrote {out}")
+
+
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(prog="metanoia-research", description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
@@ -172,6 +212,21 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--run-prefix")
     p.add_argument("--output-root", default="artifacts/runs")
     p.set_defaults(func=collect_checkpoints)
+
+    p = commands.add_parser("build-memory", help="build a versioned concept memory bundle")
+    p.add_argument("--config", required=True)
+    p.add_argument("--out", help="default: artifacts/memories/<memory_id>")
+    p.set_defaults(func=build_memory)
+
+    p = commands.add_parser("memory-recall", help="access recall of a memory against gold facts")
+    p.add_argument("--memory", required=True)
+    p.add_argument("--dataset", required=True)
+    p.add_argument("--splits", nargs="+", default=["train", "dev"])
+    p.add_argument("--k", type=int, nargs="+", default=[4, 8, 16, 32])
+    p.add_argument("--seed", type=int, default=0)
+    p.add_argument("--device", default="cuda")
+    p.add_argument("--out", required=True)
+    p.set_defaults(func=memory_recall)
 
     args = parser.parse_args(argv)
     try:

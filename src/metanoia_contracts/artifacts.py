@@ -64,6 +64,31 @@ class DatasetManifest(StrictModel):
     created_at: str
 
 
+# --- Concept memory bundle ---------------------------------------------------------
+
+
+class MemoryManifest(StrictModel):
+    """A versioned concept memory (PLAN §6.4, decision 0010).
+
+    ``concepts.jsonl`` holds one concept per line (id, name, names, pos, text); the
+    vectors file holds their L2-normalized keys, in the same order, produced by the
+    frozen ``encoder`` from ``text``. Any change of source, text template or encoder
+    makes a new memory identity.
+    """
+
+    memory_version: Literal[1] = 1
+    memory_id: str
+    source: dict[str, Any]
+    text_template: str
+    encoder: dict[str, Any]
+    concepts: FileRef
+    vectors: FileRef
+    dim: int = Field(ge=1)
+    environment: dict[str, Any]
+    code_source: dict[str, Any]
+    created_at: str
+
+
 # --- Predictor bundle -------------------------------------------------------------
 
 

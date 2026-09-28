@@ -10,7 +10,7 @@ dependencies = ["pydantic>=2.8"]
 [project.optional-dependencies]
 model = ["torch>=2.4", "numpy>=1.26"]
 hf = ["transformers>=4.48"]
-research = ["metanoia[model]", "pyarrow>=17"]
+research = ["metanoia[model]", "pyarrow>=17", "nltk>=3.9"]
 analysis = ["numpy>=1.26", "scipy>=1.13", "pyarrow>=17", "matplotlib>=3.9"]
 
 [project.scripts]

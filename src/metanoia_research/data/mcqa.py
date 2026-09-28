@@ -29,7 +29,7 @@ from metanoia_contracts.base import StrictModel
 
 GENERATOR_REVISION = "mcqa/1"
 
-SourceName = Literal["race", "sciq"]
+SourceName = Literal["race", "sciq", "obqa", "arc_easy", "arc_challenge"]
 
 # Pinned dataset revisions and Parquet files per split.
 _SOURCES: dict[str, dict[str, object]] = {
@@ -40,6 +40,34 @@ _SOURCES: dict[str, dict[str, object]] = {
             "train": "all/train-00000-of-00001.parquet",
             "validation": "all/validation-00000-of-00001.parquet",
             "test": "all/test-00000-of-00001.parquet",
+        },
+    },
+    "obqa": {
+        # The "additional" config adds fact1, the gold open-book core fact per question.
+        "repo": "allenai/openbookqa",
+        "revision": "388097ea7776314e93a529163e0fea805b8a6454",
+        "files": {
+            "train": "additional/train-00000-of-00001.parquet",
+            "validation": "additional/validation-00000-of-00001.parquet",
+            "test": "additional/test-00000-of-00001.parquet",
+        },
+    },
+    "arc_easy": {
+        "repo": "allenai/ai2_arc",
+        "revision": "210d026faf9955653af8916fad021475a3f00453",
+        "files": {
+            "train": "ARC-Easy/train-00000-of-00001.parquet",
+            "validation": "ARC-Easy/validation-00000-of-00001.parquet",
+            "test": "ARC-Easy/test-00000-of-00001.parquet",
+        },
+    },
+    "arc_challenge": {
+        "repo": "allenai/ai2_arc",
+        "revision": "210d026faf9955653af8916fad021475a3f00453",
+        "files": {
+            "train": "ARC-Challenge/train-00000-of-00001.parquet",
+            "validation": "ARC-Challenge/validation-00000-of-00001.parquet",
+            "test": "ARC-Challenge/test-00000-of-00001.parquet",
         },
     },
     "sciq": {
@@ -73,6 +101,9 @@ class RawItem:
     question: str
     options: list[str]
     answer: int
+    # Benchmark-only gold evidence (OpenBookQA fact1). Written to proofs.jsonl; never
+    # part of the request.
+    core_fact: str | None = None
 
 
 def _race_items(split: str, rows: list[dict]) -> Iterator[RawItem]:
@@ -108,6 +139,30 @@ def _sciq_items(split: str, rows: list[dict], seed: int) -> Iterator[RawItem]:
             r["question"],
             [options[j] for j in order],
             order.index(0),
+        )
+
+
+def _choice_items(source: str, split: str, rows: list[dict]) -> Iterator[RawItem]:
+    """OpenBookQA and ARC: a question, labelled choices and an answer key; no passage.
+    Each question is its own group (they share no passage)."""
+    for i, r in enumerate(rows):
+        choices = r["choices"]
+        if isinstance(choices, str):
+            choices = ast.literal_eval(choices)
+        keys = [str(k) for k in choices["label"]]
+        answer = str(r["answerKey"]).strip()
+        if answer not in keys:
+            raise ValueError(f"{source} {split} row {i}: answer {answer!r} not in {keys}")
+        yield RawItem(
+            source,
+            split,
+            i,
+            f"{source}:{r['id']}",
+            "",
+            r["question_stem"] if source == "obqa" else r["question"],
+            list(choices["text"]),
+            keys.index(answer),
+            core_fact=r.get("fact1") if source == "obqa" else None,
         )
 
 
@@ -150,7 +205,7 @@ def build_cases(
             continue
         ids = [chr(ord("a") + k) for k in range(len(texts))]
         split = _assign_split(item, config)
-        example_id = f"{config.dataset_id}-{item.source}-{item.source_split}-{item.row:06d}"
+        example_id = _example_id(config, item)
         request = DecisionRequest(
             context=item.context.strip(),
             question=item.question.strip(),
@@ -171,17 +226,33 @@ def build_cases(
     return cases, labels, skipped
 
 
-def generate(config: McqaConfig) -> tuple[list[CaseRecord], list[LabelRecord], dict[str, int]]:
-    """Download (cached) pinned sources and convert them. Deterministic given the config."""
+def generate(
+    config: McqaConfig,
+) -> tuple[list[CaseRecord], list[LabelRecord], dict[str, int], list[dict]]:
+    """Download (cached) pinned sources and convert them. Deterministic given the config.
+    Returns cases, labels, skip counts and proofs (gold core facts, where the source has them)."""
     items: list[RawItem] = []
     for source in config.sources:
         for split in ("train", "validation", "test"):
             rows = _load_rows(source, split)
             if source == "race":
                 items.extend(_race_items(split, rows))
-            else:
+            elif source == "sciq":
                 items.extend(_sciq_items(split, rows, config.seed))
-    return build_cases(config, items)
+            else:
+                items.extend(_choice_items(source, split, rows))
+    cases, labels, skipped = build_cases(config, items)
+    facts = {_example_id(config, i): i.core_fact for i in items if i.core_fact}
+    proofs = [
+        {"example_id": c.example_id, "core_fact": facts[c.example_id]}
+        for c in cases
+        if c.example_id in facts
+    ]
+    return cases, labels, skipped, proofs
+
+
+def _example_id(config: McqaConfig, item: RawItem) -> str:
+    return f"{config.dataset_id}-{item.source}-{item.source_split}-{item.row:06d}"
 
 
 def source_revisions(config: McqaConfig) -> dict[str, object]:
