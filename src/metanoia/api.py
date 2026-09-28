@@ -65,9 +65,7 @@ class TorchPredictor:
     def describe(self) -> dict[str, Any]:
         return {
             "predictor_id": self.predictor_id,
-            "kind": "torch_workspace"
-            if self._config.get("model", {}).get("workspace")
-            else "torch_direct",
+            "kind": _predictor_kind(self._config.get("model", {})),
             "model_config": self._config,
             "encoder": self.model.encoder.identity(),
             "calibration": self.calibrator.info.model_dump(mode="json"),
@@ -95,7 +93,8 @@ class TorchPredictor:
         results = []
         for i, (request, row) in enumerate(zip(requests, rows, strict=True)):
             logits = row[: len(request.candidates)]
-            results.append(self._result(request, logits, _workspace_record(output, i)))
+            record = _workspace_record(output, i) or _expansion_record(self.model, output, i)
+            results.append(self._result(request, logits, record))
         return results
 
     def _trace(
@@ -103,7 +102,7 @@ class TorchPredictor:
         request: DecisionRequest,
         logits: list[float],
         probabilities: tuple[float, ...],
-        workspace: "WorkspaceRecord | None" = None,
+        workspace: "WorkspaceRecord | ExpansionRecord | None" = None,
     ) -> tuple[TraceEvent, ...]:
         """What the direct model computed, as detached summaries. Tracing never feeds
         back into the prediction (the logits above were computed without it)."""
@@ -141,8 +140,10 @@ class TorchPredictor:
             ),
             _first_score(request, logits, workspace),
         ]
-        if workspace is not None:
+        if isinstance(workspace, WorkspaceRecord):
             events += _workspace_events(request, workspace, len(events))
+        elif isinstance(workspace, ExpansionRecord):
+            events += _expansion_events(request, workspace, len(events))
         events.append(
             TraceEvent(
                 seq=len(events),
@@ -163,7 +164,7 @@ class TorchPredictor:
         self,
         request: DecisionRequest,
         logits: list[float],
-        workspace: "WorkspaceRecord | None" = None,
+        workspace: "WorkspaceRecord | ExpansionRecord | None" = None,
     ) -> DecisionResult:
         # The direct model performs no graph work, so it consumes none of the reasoning
         # budget; the budget is a cap, not a quota.
@@ -175,9 +176,18 @@ class TorchPredictor:
         )
         usage = ResourceUsage()
         termination = Termination.COMPLETED
-        if workspace is not None:
+        if isinstance(workspace, WorkspaceRecord):
             usage = ResourceUsage(
                 nodes=workspace.nodes, pairs=workspace.pairs, rounds=workspace.rounds
+            )
+            termination = workspace.termination
+        elif isinstance(workspace, ExpansionRecord):
+            n = len(request.candidates) if workspace.per_candidate else 0
+            usage = ResourceUsage(
+                queries=n,
+                proposals=n * workspace.per_candidate,
+                nodes=n * workspace.per_candidate,
+                depth=1 if workspace.per_candidate else 0,
             )
             termination = workspace.termination
         return DecisionResult(
@@ -232,7 +242,9 @@ def _workspace_record(output: Any, i: int) -> WorkspaceRecord | None:
 
 
 def _first_score(
-    request: DecisionRequest, logits: list[float], workspace: WorkspaceRecord | None
+    request: DecisionRequest,
+    logits: list[float],
+    workspace: "WorkspaceRecord | ExpansionRecord | None",
 ) -> TraceEvent:
     """The decision before any workspace round: the direct scorer's logits, or, for a
     workspace-only readout (decision 0009), the readout of the initial nodes."""
@@ -252,6 +264,100 @@ def _first_score(
         outputs=request.candidate_ids,
         details={"logits": workspace.initial_logits},
     )
+
+
+@dataclass(frozen=True)
+class ExpansionRecord:
+    """One example's detached expansion summary (decision 0011), for results and traces."""
+
+    per_candidate: int  # concepts each candidate expanded into (0: no expansion)
+    termination: Termination
+    initial_logits: list[float]  # the direct scorer's logits
+    has_direct_path: bool
+    # Per candidate: its concepts as (concept id, display text, relevance).
+    concepts: list[list[tuple[str, str, float]]]
+    # Per candidate: its most-attended concepts as (source candidate id, concept, weight).
+    attended: list[list[tuple[str, str, float]]]
+    evidence: list[float]  # added to each candidate's direct logit
+
+
+_TOP_EVIDENCE = 4
+
+
+def _expansion_record(model: Any, output: Any, i: int) -> "ExpansionRecord | None":
+    from metanoia.reasoning.expand import ExpansionOutput
+
+    if not isinstance(output, ExpansionOutput):
+        return None
+    n = int(output.candidate_mask[i].sum())
+    initial = output.initial_logits[i, :n].double().cpu().tolist()
+    k = output.expanded[i]
+    if k == 0 or output.relevance is None or output.attention is None:
+        return ExpansionRecord(0, output.termination[i], initial, True, [], [], [0.0] * n)
+    memory = model.memory()
+    ids = output.concepts[i]
+    concepts = [
+        [
+            (memory.concepts[c].id, memory.concepts[c].text, float(output.relevance[i, j, m]))
+            for m, c in enumerate(ids[j])
+        ]
+        for j in range(len(ids))
+    ]
+    width = output.relevance.shape[-1]
+    attended = []
+    for j in range(n):
+        row = output.attention[i, j].double().cpu().tolist()
+        ranked = sorted(range(len(row)), key=lambda v: -row[v])[:_TOP_EVIDENCE]
+        entries = []
+        for v in ranked:
+            branch, slot = divmod(v, width)
+            if branch < len(ids) and slot < len(ids[branch]) and row[v] > 0:
+                entries.append((str(branch), memory.concepts[ids[branch][slot]].text, row[v]))
+        attended.append(entries)
+    evidence = [] if output.evidence is None else output.evidence[i, :n].double().cpu().tolist()
+    return ExpansionRecord(k, output.termination[i], initial, True, concepts, attended, evidence)
+
+
+def _expansion_events(
+    request: DecisionRequest, record: ExpansionRecord, start: int
+) -> list[TraceEvent]:
+    """An ``expand`` event per candidate (its concepts and their relevance), then one
+    ``aggregate`` event: each candidate's most-attended concepts, from any branch, and
+    the evidence added to its score. Weights describe computation, not proof."""
+    ids = request.candidate_ids
+    events: list[TraceEvent] = []
+    for j, cid in enumerate(ids):
+        if j >= len(record.concepts):
+            break
+        events.append(
+            TraceEvent(
+                seq=start + len(events),
+                op="expand",
+                inputs=(f"a:{cid}",),
+                outputs=tuple(concept for concept, _, _ in record.concepts[j]),
+                details={
+                    "candidate": cid,
+                    "concepts": [text for _, text, _ in record.concepts[j]],
+                    "relevance": [round(r, 4) for _, _, r in record.concepts[j]],
+                },
+            )
+        )
+    if record.per_candidate:
+        attended = [
+            f"{cid}|{ids[int(branch)]}|{weight:.3f}|{text[:120]}"
+            for cid, entries in zip(ids, record.attended, strict=False)
+            for branch, text, weight in entries
+        ]
+        events.append(
+            TraceEvent(
+                seq=start + len(events),
+                op="aggregate",
+                inputs=tuple(f"a:{cid}" for cid in ids),
+                outputs=ids,
+                details={"evidence": record.evidence, "attended": attended},
+            )
+        )
+    return events
 
 
 _TOP_STATEMENTS = 3
@@ -300,6 +406,14 @@ def _workspace_events(
     return events
 
 
+def _predictor_kind(model_config: dict[str, Any]) -> str:
+    if model_config.get("expansion"):
+        return "torch_expansion"
+    if model_config.get("workspace"):
+        return "torch_workspace"
+    return "torch_direct"
+
+
 BUNDLE_MANIFEST = "bundle.json"
 
 
@@ -322,6 +436,11 @@ def load_predictor(
     config = load_strict(ModelConfig, manifest.resolved_config["model"])
     model = build_model(config)
     check_encoder_identity(model, manifest.resolved_config["encoder_identity"])
+    recorded_memory = manifest.resolved_config.get("expansion_identity")
+    if recorded_memory is not None:
+        found = model.expansion_identity()  # type: ignore[operator]
+        if found != recorded_memory:
+            raise ValueError(f"concept memory mismatch: bundle {recorded_memory}, found {found}")
     model.load_persistent_state_dict(
         torch.load(weights_path, map_location="cpu", weights_only=True)
     )

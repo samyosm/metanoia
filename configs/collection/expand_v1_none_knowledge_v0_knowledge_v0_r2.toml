@@ -1,0 +1,12 @@
+# Full knowledge_v0 revision-2 collection (expansion budgets 0-128). Run with
+# --from-selection <artifact>; the path below is only the default (final weights).
+run_id = "expand_v1_none_knowledge_v0_knowledge_v0_r2"
+suite = "suites/knowledge_v0_r2"
+dataset = "artifacts/datasets/knowledge_v0"
+output_root = "artifacts/runs"
+
+[predictor]
+kind = "bundle"
+path = "artifacts/predictors/expand_v1_none_knowledge_v0"
+device = "cuda"
+precision = "fp16"

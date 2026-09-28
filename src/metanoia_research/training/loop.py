@@ -90,6 +90,9 @@ def _forward(
 ) -> Any:
     requests = [request for request, _ in batch]
     with torch.autocast(model.device.type, dtype=torch.float16, enabled=precision == "fp16-mixed"):
+        if hasattr(model, "expansion_config"):
+            # Training and dev evaluation always expand with the configured width.
+            return model(requests, force=True)  # type: ignore[call-arg]
         if rounds is None:
             return model(requests)
         return model(requests, rounds=rounds)  # type: ignore[call-arg]
@@ -404,9 +407,10 @@ def _weight_layout(model_config: dict[str, Any]) -> dict[str, Any]:
     """
     layout = json.loads(json.dumps(model_config))
     layout.pop("name", None)
-    # Bundles written before workspaces existed have no "workspace" key at all.
-    if layout.get("workspace") is None:
-        layout.pop("workspace", None)
+    # Bundles written before workspaces or expansions existed lack those keys entirely.
+    for optional in ("workspace", "expansion"):
+        if layout.get(optional) is None:
+            layout.pop(optional, None)
     encoder = layout.get("encoder", {})
     encoder.pop("gradient_checkpointing", None)
     if encoder.get("kind") == "hf":
@@ -428,9 +432,11 @@ def _load_initial_weights(
     target_layout = _weight_layout(model_config.model_dump(mode="json"))
     # A workspace model may start from a direct bundle: its encoder and scorer come from
     # the bundle and only the workspace starts fresh (decision 0008).
-    fresh_workspace = "workspace" not in source_layout and "workspace" in target_layout
-    if fresh_workspace:
-        del target_layout["workspace"]
+    # A reasoning mechanism absent from the source starts fresh; everything else loads.
+    fresh = [m for m in ("workspace", "expansion") if m not in source_layout and m in target_layout]
+    for mechanism in fresh:
+        del target_layout[mechanism]
+    fresh_workspace = bool(fresh)
     if source_layout != target_layout:
         raise ValueError(f"model configuration differs from the one in {directory}")
     recorded = dict(manifest.resolved_config["encoder_identity"])
@@ -447,7 +453,8 @@ def _load_initial_weights(
     if fresh_workspace:
         result = model.load_state_dict(state, strict=False)
         external = tuple(f"encoder.{p}" for p in model.encoder.external_prefixes)
-        missing = [k for k in result.missing_keys if not k.startswith(("workspace.", *external))]
+        fresh_prefixes = tuple(f"{m}." for m in fresh)
+        missing = [k for k in result.missing_keys if not k.startswith((*fresh_prefixes, *external))]
         if missing or result.unexpected_keys:
             raise ValueError(
                 f"incompatible weights: missing {missing}, unexpected {result.unexpected_keys}"
@@ -495,6 +502,12 @@ def _load_resume_state(
 
 
 TRAIN_STATE = "train_state.pt"
+
+
+def _expansion_identity(model: DirectDecisionModel) -> dict[str, Any]:
+    """The concept memory an expansion model depends on (checked at load time)."""
+    identity = getattr(model, "expansion_identity", None)
+    return {"expansion_identity": identity()} if callable(identity) else {}
 
 
 @dataclass
@@ -551,6 +564,7 @@ class _BundleContext:
             resolved_config={
                 "model": self.model_config.model_dump(mode="json"),
                 "encoder_identity": self.model.encoder.identity(),
+                **_expansion_identity(self.model),
                 "input_rendering": RENDERING_REVISION,
             },
             weights=FileRef(path="weights.pt", sha256=weights_sha, rows=0),

@@ -145,7 +145,35 @@ whose `path` is the chosen checkpoint directory. `select` refuses the `test` and
 `calibration` splits. Dev-only runs record `suite.splits`, so `compare` never mixes them
 with full-protocol runs.
 
-### Stage 3a: the budgeted workspace (decision 0008)
+### Stage 2: concept memory and candidate expansion (decisions 0010, 0011)
+
+The current path is:
+1. Each candidate **expands** into concepts retrieved from a concept memory.
+2. The model reads each concept in the context of the question.
+3. Evidence from all branches **aggregates** back into every candidate's score.
+
+The budget is the total number of concepts read.
+
+```sh
+$R prepare --config configs/data/knowledge_v0.toml          # OpenBookQA + ARC, no passage
+$R build-memory --config configs/memory/wordnet_v0.toml     # 117,659 WordNet concepts (~2 min)
+$R memory-recall --memory artifacts/memories/wordnet_v0 --dataset artifacts/datasets/knowledge_v0 \
+    --out artifacts/memory_evals/NAME.json                   # access recall against gold core facts
+scripts/stage2_expand_v1.sh                                 # ~3.5 h: direct vs expansion vs 2 controls
+```
+
+In a model config, the `[expansion]` table sets the memory, the concept source and the
+training width:
+- `concepts = "retrieved" | "random" | "none"`: the idea, the content control and the
+  capacity control;
+- `proposals`: concepts per candidate in training;
+- `freeze_direct`: keep the direct path frozen.
+
+Traces contain one `expand` event per candidate (its concepts and their relevance) and
+one `aggregate` event (evidence per candidate and its most-attended concepts, from any
+branch).
+
+### Parked: Stage 3a, the budgeted workspace (decision 0008)
 
 A model config with a `[workspace]` table adds a reasoning workspace on top of the
 direct scorer. Its nodes are the input's sentences plus the candidates, updated for R

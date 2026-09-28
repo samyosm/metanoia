@@ -1,0 +1,30 @@
+# EXPAND v1 (decision 0011), concepts = "retrieved": the frozen R005 reader plus trainable
+# expansion over the wordnet_v0 concept memory, 16 concepts per candidate in training.
+name = "expand_v1_retrieved"
+
+[encoder]
+kind = "hf"
+model = "answerdotai/ModernBERT-base"
+revision = "8949b909ec900327062f0ebf497f51aef5e6f0c8"
+max_length = 384
+pooling = "mean"
+frozen = false
+gradient_checkpointing = true
+
+[scorer]
+kind = "direct"
+latent_dim = 256
+heads = 4
+hidden_dim = 512
+dropout = 0.1
+candidate_encoding = "joint"
+
+[expansion]
+kind = "expansion"
+memory = "artifacts/memories/wordnet_v0"
+concepts = "retrieved"
+proposals = 16
+dim = 256
+hidden_dim = 512
+dropout = 0.1
+freeze_direct = true

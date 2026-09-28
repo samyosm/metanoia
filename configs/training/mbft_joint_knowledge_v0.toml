@@ -1,0 +1,23 @@
+name = "mbft_joint_knowledge_v0"
+# Direct baseline for suites/knowledge_v0 (PLAN §10.1): the R005 recipe, warm-started
+# from R005 (mbft_joint_mcqa_v0), on the 8,322 train questions (OpenBookQA + ARC),
+# 3 epochs with a checkpoint per epoch for dev selection.
+model_config_path = "configs/models/direct_modernbert_ft_joint.toml"
+init_from = "artifacts/predictors/mbft_joint_mcqa_v0"
+dataset = "artifacts/datasets/knowledge_v0"
+train_split = "train"
+dev_split = "dev"
+batch_size = 16
+micro_batch_size = 8
+learning_rate = 1e-4
+encoder_learning_rate = 2e-5
+weight_decay = 0.01
+warmup_fraction = 0.06
+schedule = "linear"
+precision = "fp16-mixed"
+grad_clip = 1.0
+seed = 0
+device = "cuda"
+log_every_steps = 50
+epochs = 3
+checkpoint_each_epoch = true

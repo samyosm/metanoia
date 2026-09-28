@@ -268,3 +268,43 @@ def test_budget_subset_and_collect_from_selection(fixtures, tmp_path) -> None:
     full = json.loads((runs / "full" / "run.json").read_text())
     assert full["predictor"]["predictor_id"] == chosen["predictor_id"]
     assert full["predictor"]["spec"]["path"] == chosen["predictor_path"]
+
+
+def test_expansion_warm_starts_from_a_direct_bundle(fixtures, tmp_path) -> None:
+    import numpy as np
+
+    from metanoia.config import ExpansionConfig
+    from tests.core.test_memory import write_memory
+
+    write_memory(tmp_path / "mem", np.random.default_rng(0).normal(size=(10, 8)))
+    direct = train(config(fixtures), MODEL, tmp_path / "direct")
+    expansion = MODEL.model_copy(
+        update={
+            "expansion": ExpansionConfig(
+                memory=str(tmp_path / "mem"), concepts="random", proposals=2, dim=8, hidden_dim=8
+            )
+        }
+    )
+    manifest = train(
+        config(fixtures, init_from=str(tmp_path / "direct")), expansion, tmp_path / "ex"
+    )
+    assert manifest.training["initialized_from"] == direct.predictor_id
+    assert manifest.resolved_config["expansion_identity"]["memory_id"] == "tiny"
+    # The frozen direct path is unchanged by training.
+    before = torch_load(tmp_path / "direct")
+    after = torch_load(tmp_path / "ex")
+    assert all(np_equal(before[k], after[k]) for k in before)
+    assert any(k.startswith("expansion.") for k in after)
+    load_predictor(tmp_path / "ex")
+
+
+def torch_load(bundle):
+    import torch
+
+    return torch.load(bundle / "weights.pt", weights_only=True)
+
+
+def np_equal(a, b) -> bool:
+    import torch
+
+    return torch.equal(a, b)

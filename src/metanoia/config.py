@@ -85,6 +85,24 @@ class WorkspaceConfig(StrictModel):
         return self
 
 
+class ExpansionConfig(StrictModel):
+    """Stage-2 EXPAND v1 (decision 0011): candidates expand into concepts from a memory.
+
+    ``concepts``: "retrieved" (the idea), "random" (equal-cost control: random concepts),
+    or "none" (the same trainable head with no concepts, a capacity control).
+    """
+
+    kind: Literal["expansion"] = "expansion"
+    memory: str  # path to a memory bundle (artifacts/memories/<id>)
+    concepts: Literal["retrieved", "random", "none"] = "retrieved"
+    proposals: int = Field(default=16, ge=1)  # concepts per candidate in training
+    dim: int = Field(default=256, ge=8)
+    hidden_dim: int = Field(default=512, ge=8)
+    dropout: float = Field(default=0.1, ge=0.0, lt=1.0)
+    # v1: the encoder and direct scorer stay frozen; only the expansion trains.
+    freeze_direct: bool = True
+
+
 class ModelConfig(StrictModel):
     config_version: Literal[1] = 1
     name: str = Field(min_length=1)
@@ -92,3 +110,11 @@ class ModelConfig(StrictModel):
     scorer: DirectScorerConfig = Field(default_factory=DirectScorerConfig)
     # None: the direct scorer only (Stage 1). Set: the Stage-3a workspace on top of it.
     workspace: WorkspaceConfig | None = None
+    # Set: EXPAND v1 on top of the direct scorer (decision 0011).
+    expansion: ExpansionConfig | None = None
+
+    @model_validator(mode="after")
+    def _one_mechanism(self) -> "ModelConfig":
+        if self.workspace is not None and self.expansion is not None:
+            raise ValueError("a model has either a workspace or an expansion, not both")
+        return self

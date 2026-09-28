@@ -45,6 +45,12 @@ def build_model(config: ModelConfig, seed: int | None = None) -> DirectDecisionM
         hidden_dim=config.scorer.hidden_dim,
         dropout=config.scorer.dropout,
     )
+    if config.expansion is not None:
+        from metanoia.reasoning.expand import ExpansionDecisionModel
+
+        return ExpansionDecisionModel(
+            encoder, scorer, config.scorer.candidate_encoding, config.expansion
+        )
     if config.workspace is not None:
         from metanoia.engine import WorkspaceDecisionModel
 
