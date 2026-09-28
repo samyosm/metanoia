@@ -1,5 +1,9 @@
 # 0007 — Target depth extrapolation with `reasoning_v1`; build Stage 3a before Stage 2
 
+**Status: the stage reordering is superseded by decision 0010.** The core path is Stage 2
+(concept memory and candidate expansion), then Stage 3. The `reasoning_v1` suite and its
+findings are kept as a parked track (PLAN §10.2).
+
 **Evidence** (RESULT_LOG R006–R009).
 - **Cold start collapses.** A direct scorer fine-tuned from plain ModernBERT on
   `reasoning_v0` collapses to uniform output. Neither 20k examples nor a depth-1-only
