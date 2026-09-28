@@ -6,7 +6,7 @@ or field with an explicit default instead of redefining an old one.
 
 from typing import Annotated, Literal
 
-from pydantic import Field
+from pydantic import Field, model_validator
 
 from metanoia_contracts.base import StrictModel
 
@@ -70,6 +70,19 @@ class WorkspaceConfig(StrictModel):
     latent_slots: int = Field(default=16, ge=1)
     # Hard cap on rounds, whatever the request's budget allows.
     max_rounds: int = Field(default=32, ge=1)
+    # Decision 0009. "context": sentence nodes pooled from the full-context encoding (0008).
+    # "isolated": each sentence and each candidate encoded on its own, so only the
+    # workspace can combine premises.
+    encoding: Literal["context", "isolated"] = "context"
+    # "residual": direct logits + workspace delta (0008). "workspace": the candidate
+    # nodes' readout only, with no direct-path bypass (0009).
+    readout: Literal["residual", "workspace"] = "residual"
+
+    @model_validator(mode="after")
+    def _no_bypass(self) -> "WorkspaceConfig":
+        if self.encoding == "isolated" and self.readout != "workspace":
+            raise ValueError('encoding "isolated" requires readout "workspace"')
+        return self
 
 
 class ModelConfig(StrictModel):

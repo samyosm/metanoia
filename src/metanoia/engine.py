@@ -14,10 +14,11 @@ from torch import nn
 
 from metanoia.config import WorkspaceConfig
 from metanoia.decision import CandidateScorer
+from metanoia.encoding.inputs import render_input
 from metanoia.interfaces import TextEncoder
 from metanoia.model import DecisionOutput, DirectDecisionModel
 from metanoia.reasoning.aggregate import WorkspaceBlock
-from metanoia.reasoning.workspace import statement_nodes
+from metanoia.reasoning.workspace import StatementNodes, sentence_spans, statement_nodes
 from metanoia_contracts import DecisionRequest, Termination
 
 # Node types: the question line, other sentences, candidates, latent slots.
@@ -29,6 +30,8 @@ class WorkspaceOutput(DecisionOutput):
     """``logits`` are each example's logits after its own executed rounds."""
 
     mode: str  # "statements" or "latent"
+    initial_logits: torch.Tensor  # the zero-round decision [B, N]
+    has_direct_path: bool  # True when initial_logits are the direct scorer's
     round_logits: list[torch.Tensor]  # logits after rounds 1..R_run, [B, N] each
     rounds: list[int]  # rounds executed per example
     nodes: list[int]  # statement (or latent) nodes used per example
@@ -52,10 +55,11 @@ class WorkspaceModules(nn.Module):
         )
         self.readout = nn.Sequential(nn.LayerNorm(d), nn.Linear(d, d), nn.GELU())
         self.out = nn.Linear(d, 1)
-        # Zero-initialized output: a warm-started model starts identical to the direct
-        # scorer at every budget, and learns only what the rounds add.
-        nn.init.zeros_(self.out.weight)
-        nn.init.zeros_(self.out.bias)
+        if config.readout == "residual":
+            # Zero-initialized output: a warm-started model starts identical to the
+            # direct scorer at every budget, and learns only what the rounds add.
+            nn.init.zeros_(self.out.weight)
+            nn.init.zeros_(self.out.bias)
         self.slots = (
             nn.Parameter(torch.randn(config.latent_slots, d) * 0.02)
             if config.mode == "latent"
@@ -88,29 +92,37 @@ class WorkspaceDecisionModel(DirectDecisionModel):
     ) -> WorkspaceOutput:
         """``rounds`` (training) runs that many rounds on every example and ignores the
         budgets; ``None`` (inference) runs what each request's budget allows."""
-        inputs = self.encode_inputs(requests)
-        direct = self.scorer(inputs.context, inputs.candidates, inputs.candidate_mask)
-        if inputs.context.offsets is None:
-            raise ValueError("the workspace needs token offsets from the encoder")
-        sentences = statement_nodes(
-            inputs.rendered, inputs.context.states, inputs.context.mask, inputs.context.offsets
-        )
         cfg, ws = self.workspace_config, self.workspace
+        direct: torch.Tensor | None = None
+        if cfg.encoding == "context":
+            inputs = self.encode_inputs(requests)
+            if inputs.context.offsets is None:
+                raise ValueError("the workspace needs token offsets from the encoder")
+            sentences = statement_nodes(
+                inputs.rendered, inputs.context.states, inputs.context.mask, inputs.context.offsets
+            )
+            candidate_states, candidate_mask = inputs.candidates, inputs.candidate_mask
+            if cfg.readout == "residual":
+                direct = self.scorer(inputs.context, inputs.candidates, inputs.candidate_mask)
+        else:
+            sentences, candidate_states, candidate_mask = self._encode_isolated(requests)
         batch, n_statements = sentences.mask.shape
         types = torch.full_like(sentences.mask, _STATEMENT, dtype=torch.long)
         types[:, 0] = _QUESTION  # the rendered input starts with the question line
         statements = ws.statement_proj(sentences.states) + ws.types(types)
-        candidates = ws.candidate_proj(inputs.candidates) + ws.types.weight[_CANDIDATE]
+        candidates = ws.candidate_proj(candidate_states) + ws.types.weight[_CANDIDATE]
         memory = memory_mask = None
         if cfg.mode == "statements":
             first = statements
             first_mask = sentences.mask
         else:
             first = ws.latent_slots(batch) + ws.types.weight[_LATENT]
-            first_mask = torch.ones(batch, cfg.latent_slots, dtype=torch.bool, device=direct.device)
+            first_mask = torch.ones(
+                batch, cfg.latent_slots, dtype=torch.bool, device=candidate_mask.device
+            )
             memory, memory_mask = statements, sentences.mask
         nodes = torch.cat([first, candidates], dim=1)
-        mask = torch.cat([first_mask, inputs.candidate_mask], dim=1)
+        mask = torch.cat([first_mask, candidate_mask], dim=1)
         offset = first.shape[1]
 
         plan = [
@@ -118,26 +130,35 @@ class WorkspaceDecisionModel(DirectDecisionModel):
                 r,
                 int(first_mask[i].sum()),
                 int(sentences.mask[i].sum()),
-                int(inputs.candidate_mask[i].sum()),
+                int(candidate_mask[i].sum()),
                 rounds,
             )
             for i, r in enumerate(requests)
         ]
+
+        def readout(states: torch.Tensor) -> torch.Tensor:
+            scores = ws.head(states[:, offset:]).squeeze(-1)
+            if direct is not None:
+                return direct + scores.masked_fill(~candidate_mask, 0.0)
+            return scores.masked_fill(~candidate_mask, float("-inf"))
+
+        initial = direct if direct is not None else readout(nodes)
         run = max(p[0] for p in plan)
         round_logits, attention = [], []
         for _ in range(run):
             nodes, weights = ws.block(nodes, mask, memory, memory_mask)
-            delta = ws.head(nodes[:, offset:]).squeeze(-1)
-            round_logits.append(direct + delta.masked_fill(~inputs.candidate_mask, 0.0))
+            round_logits.append(readout(nodes))
             columns = weights[:, offset:, :n_statements] if memory is None else weights[:, offset:]
             attention.append(columns.detach())
         final = torch.stack(
-            [direct[i] if k == 0 else round_logits[k - 1][i] for i, (k, *_) in enumerate(plan)]
+            [initial[i] if k == 0 else round_logits[k - 1][i] for i, (k, *_) in enumerate(plan)]
         )
         return WorkspaceOutput(
             mode=cfg.mode,
+            initial_logits=initial,
+            has_direct_path=direct is not None,
             logits=final,
-            candidate_mask=inputs.candidate_mask,
+            candidate_mask=candidate_mask,
             round_logits=round_logits,
             rounds=[p[0] for p in plan],
             nodes=[p[1] for p in plan],
@@ -146,6 +167,35 @@ class WorkspaceDecisionModel(DirectDecisionModel):
             statements=sentences.texts,
             attention=attention,
         )
+
+    def _encode_isolated(
+        self, requests: Sequence[DecisionRequest]
+    ) -> tuple[StatementNodes, torch.Tensor, torch.Tensor]:
+        """Encode every sentence and every candidate on its own (decision 0009): no
+        sequence the encoder reads contains two premises."""
+        rendered = [render_input(r) for r in requests]
+        texts = [[t[a:b] for a, b in sentence_spans(t)] for t in rendered]
+        pooled = self.encoder.encode([s for example in texts for s in example]).pooled
+        width = max(len(example) for example in texts)
+        states = pooled.new_zeros(len(requests), width, pooled.shape[-1])
+        mask = torch.zeros(len(requests), width, dtype=torch.bool, device=pooled.device)
+        start = 0
+        for i, example in enumerate(texts):
+            states[i, : len(example)] = pooled[start : start + len(example)]
+            mask[i, : len(example)] = True
+            start += len(example)
+        counts = [len(r.candidates) for r in requests]
+        flat = self.encoder.encode([c.text for r in requests for c in r.candidates]).pooled
+        candidates = flat.new_zeros(len(requests), max(counts), flat.shape[-1])
+        candidate_mask = torch.zeros(
+            len(requests), max(counts), dtype=torch.bool, device=flat.device
+        )
+        start = 0
+        for i, count in enumerate(counts):
+            candidates[i, :count] = flat[start : start + count]
+            candidate_mask[i, :count] = True
+            start += count
+        return StatementNodes(states=states, mask=mask, texts=texts), candidates, candidate_mask
 
     def _allowed(
         self,

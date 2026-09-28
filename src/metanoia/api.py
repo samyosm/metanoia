@@ -139,13 +139,7 @@ class TorchPredictor:
                     "candidate_encoding": self.model.candidate_encoding,
                 },
             ),
-            TraceEvent(
-                seq=2,
-                op="direct_score",
-                inputs=("context", *(f"a:{cid}" for cid in request.candidate_ids)),
-                outputs=request.candidate_ids,
-                details={"logits": list(logits)},
-            ),
+            _first_score(request, logits, workspace),
         ]
         if workspace is not None:
             events += _workspace_events(request, workspace, len(events))
@@ -210,6 +204,8 @@ class WorkspaceRecord:
     pairs: int
     termination: Termination
     statements: list[str]
+    initial_logits: list[float]  # the zero-round decision
+    has_direct_path: bool  # initial_logits are the direct scorer's
     round_logits: list[list[float]]  # after rounds 1..rounds
     attention: list[list[list[float]]]  # per round: candidate -> sentence weights
 
@@ -228,8 +224,33 @@ def _workspace_record(output: Any, i: int) -> WorkspaceRecord | None:
         pairs=output.pairs[i],
         termination=output.termination[i],
         statements=output.statements[i],
+        initial_logits=output.initial_logits[i, :n].double().cpu().tolist(),
+        has_direct_path=bool(output.has_direct_path),
         round_logits=[r[i, :n].double().cpu().tolist() for r in output.round_logits[:k]],
         attention=[a[i, :n].double().cpu().tolist() for a in output.attention[:k]],
+    )
+
+
+def _first_score(
+    request: DecisionRequest, logits: list[float], workspace: WorkspaceRecord | None
+) -> TraceEvent:
+    """The decision before any workspace round: the direct scorer's logits, or, for a
+    workspace-only readout (decision 0009), the readout of the initial nodes."""
+    inputs = ("context", *(f"a:{cid}" for cid in request.candidate_ids))
+    if workspace is None:
+        return TraceEvent(
+            seq=2,
+            op="direct_score",
+            inputs=inputs,
+            outputs=request.candidate_ids,
+            details={"logits": list(logits)},
+        )
+    return TraceEvent(
+        seq=2,
+        op="direct_score" if workspace.has_direct_path else "initial_readout",
+        inputs=inputs,
+        outputs=request.candidate_ids,
+        details={"logits": workspace.initial_logits},
     )
 
 

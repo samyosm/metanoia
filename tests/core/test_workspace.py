@@ -123,3 +123,49 @@ def test_forced_rounds_return_every_round_for_deep_supervision() -> None:
     out = model([make(["Alpha", "Beta"], Budget())], rounds=4)
     assert len(out.round_logits) == 4 and out.rounds == [4]
     torch.testing.assert_close(out.logits, out.round_logits[-1])
+
+
+ISOLATED = ModelConfig(
+    **BASE,
+    workspace=WorkspaceConfig(dim=32, hidden_dim=32, encoding="isolated", readout="workspace"),
+)
+
+
+def test_isolated_encoding_requires_the_workspace_readout() -> None:
+    with pytest.raises(ValueError, match="isolated"):
+        WorkspaceConfig(encoding="isolated")
+
+
+def test_isolated_encoder_never_sees_two_sentences() -> None:
+    model = build_model(ISOLATED, seed=0).eval()
+    seen: list[str] = []
+    encode = model.encoder.encode
+    model.encoder.encode = lambda texts: (seen.extend(texts), encode(texts))[1]
+    model([make(["Alpha", "Beta"])])
+    assert seen and all(len(sentence_spans(t)) <= 1 for t in seen)
+    assert "Alpha" in seen and "Everything that is dax is also wug." in seen
+
+
+def test_isolated_rounds_change_the_decision_and_stay_equivariant() -> None:
+    model = build_model(ISOLATED, seed=0).eval()
+    names = ["Alpha", "Beta", "Gamma"]
+    zero = model([make(names, Budget())])
+    assert zero.has_direct_path is False and zero.rounds == [0]
+    base = model([make(names)]).logits[0]
+    assert not torch.allclose(base, zero.logits[0])
+    order = [2, 0, 1]
+    permuted = model([make([names[i] for i in order])]).logits[0]
+    torch.testing.assert_close(permuted, base[order], rtol=1e-4, atol=1e-4)
+
+
+def test_trace_first_score_is_the_zero_round_decision() -> None:
+    residual = perturbed(STATEMENTS)
+    request = make(["Alpha", "Beta"]).model_copy(update={"trace": TraceMode.EVENTS})
+    result = TorchPredictor(residual, "ws@x", {}).decide(request)
+    direct = super(type(residual), residual).forward([request]).logits[0].tolist()
+    assert result.trace[2].op == "direct_score"
+    assert result.trace[2].details["logits"] == pytest.approx(direct, abs=1e-5)
+    assert result.trace[2].details["logits"] != pytest.approx(list(result.logits), abs=1e-5)
+    isolated = build_model(ISOLATED, seed=0).eval()
+    result = TorchPredictor(isolated, "iso@x", {}).decide(request)
+    assert result.trace[2].op == "initial_readout"

@@ -1,5 +1,9 @@
 # 0009 — Make the rounds necessary: isolated sentence encoding, workspace-only readout
 
+**Status: implemented (options `encoding`, `readout`), but failed its feasibility check
+(R013). Not run at scale. Keep the code as a selectable control; see PLAN §10 for the
+fork this opens.**
+
 **Evidence (R012).**
 - The residual workspace of decision 0008 was trained on top of a full-context,
   fine-tuned direct path. It stayed switched off:
