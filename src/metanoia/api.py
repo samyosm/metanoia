@@ -86,14 +86,23 @@ class TorchPredictor:
             torch.inference_mode(),
             torch.autocast(self.model.device.type, dtype=torch.float16, enabled=fp16),
         ):
-            output = self.model(requests)
+            if hasattr(self.model, "branch_config"):
+                # Per-node contributions are measured only when a trace is requested.
+                explain = any(r.trace is TraceMode.EVENTS for r in requests)
+                output = self.model(requests, explain=explain)
+            else:
+                output = self.model(requests)
             if output.logits.is_cuda:
                 torch.cuda.synchronize()
             rows = output.logits.double().cpu().tolist()
         results = []
         for i, (request, row) in enumerate(zip(requests, rows, strict=True)):
             logits = row[: len(request.candidates)]
-            record = _workspace_record(output, i) or _expansion_record(self.model, output, i)
+            record = (
+                _workspace_record(output, i)
+                or _expansion_record(self.model, output, i)
+                or _branch_record(self.model, output, i)
+            )
             results.append(self._result(request, logits, record))
         return results
 
@@ -279,6 +288,9 @@ class ExpansionRecord:
     # Per candidate: its most-attended concepts as (source candidate id, concept, weight).
     attended: list[list[tuple[str, str, float]]]
     evidence: list[float]  # added to each candidate's direct logit
+    # "concepts" (v1: weights are attention, relevance a learned score) or "branch" (v2:
+    # a node's weight is its leave-one-out contribution to its candidate's logit).
+    mode: str = "concepts"
 
 
 _TOP_EVIDENCE = 4
@@ -318,6 +330,45 @@ def _expansion_record(model: Any, output: Any, i: int) -> "ExpansionRecord | Non
     return ExpansionRecord(k, output.termination[i], initial, True, concepts, attended, evidence)
 
 
+def _branch_record(model: Any, output: Any, i: int) -> "ExpansionRecord | None":
+    """A branch model's decision as an expansion record (decision 0012): each node's
+    relevance is its leave-one-out contribution to its own candidate's logit when a
+    trace was requested, else its retrieval similarity."""
+    from metanoia.reasoning.branch import BranchOutput
+
+    if not isinstance(output, BranchOutput):
+        return None
+    n = int(output.candidate_mask[i].sum())
+    final = output.logits[i, :n].double().cpu().tolist()
+    initial = (
+        output.initial_logits[i, :n].double().cpu().tolist()
+        if output.initial_logits is not None
+        else final
+    )
+    k = output.width[i]
+    if k == 0:
+        return ExpansionRecord(
+            0, output.termination[i], initial, True, [], [], [0.0] * n, mode="branch"
+        )
+    memory = model.memory()
+    weights = output.contributions[i] if output.contributions is not None else output.similarity[i]
+    concepts = [
+        [
+            (memory.concepts[c].id, memory.concepts[c].text, float(w))
+            for c, w in zip(output.nodes[i][j], weights[j], strict=True)
+        ]
+        for j in range(n)
+    ]
+    attended = []
+    for j in range(n):
+        ranked = sorted(concepts[j], key=lambda node: -abs(node[2]))[:_TOP_EVIDENCE]
+        attended.append([(str(j), text, w) for _, text, w in ranked])
+    evidence = [f - s for f, s in zip(final, initial, strict=True)]
+    return ExpansionRecord(
+        k, output.termination[i], initial, True, concepts, attended, evidence, mode="branch"
+    )
+
+
 def _expansion_events(
     request: DecisionRequest, record: ExpansionRecord, start: int
 ) -> list[TraceEvent]:
@@ -336,6 +387,7 @@ def _expansion_events(
                 inputs=(f"a:{cid}",),
                 outputs=tuple(concept for concept, _, _ in record.concepts[j]),
                 details={
+                    "mode": record.mode,
                     "candidate": cid,
                     "concepts": [text for _, text, _ in record.concepts[j]],
                     "relevance": [round(r, 4) for _, _, r in record.concepts[j]],
@@ -354,7 +406,7 @@ def _expansion_events(
                 op="aggregate",
                 inputs=tuple(f"a:{cid}" for cid in ids),
                 outputs=ids,
-                details={"evidence": record.evidence, "attended": attended},
+                details={"mode": record.mode, "evidence": record.evidence, "attended": attended},
             )
         )
     return events
@@ -407,6 +459,8 @@ def _workspace_events(
 
 
 def _predictor_kind(model_config: dict[str, Any]) -> str:
+    if model_config.get("branch"):
+        return "torch_branch"
     if model_config.get("expansion"):
         return "torch_expansion"
     if model_config.get("workspace"):

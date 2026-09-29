@@ -103,6 +103,33 @@ class ExpansionConfig(StrictModel):
     freeze_direct: bool = True
 
 
+class BranchConfig(StrictModel):
+    """Stage-2 EXPAND v2 (decision 0012): each candidate's branch is read by the reader.
+
+    Each candidate retrieves ``width`` nodes (statements about concepts) from the memory;
+    they are rendered into that candidate's own joint input, and the trainable reader and
+    candidate-conditioned scorer judge the candidates with their branches. No new weights.
+
+    ``nodes``: "retrieved" (the idea), "random" (content control), or "none" (empty
+    branches: the direct model trained on the same schedule).
+    """
+
+    kind: Literal["branch"] = "branch"
+    memory: str  # path to a memory bundle (artifacts/memories/<id>)
+    nodes: Literal["retrieved", "random", "none"] = "retrieved"
+    # Widths (nodes per candidate) sampled per training batch; dev loss uses the largest.
+    train_widths: tuple[int, ...] = (0, 1, 2, 4, 8)
+    max_width: int = Field(default=8, ge=1)  # the most nodes per candidate at inference
+
+    @model_validator(mode="after")
+    def _widths(self) -> "BranchConfig":
+        if not self.train_widths or min(self.train_widths) < 0:
+            raise ValueError("train_widths must be non-negative and non-empty")
+        if max(self.train_widths) > self.max_width:
+            raise ValueError("train_widths cannot exceed max_width")
+        return self
+
+
 class ModelConfig(StrictModel):
     config_version: Literal[1] = 1
     name: str = Field(min_length=1)
@@ -112,9 +139,14 @@ class ModelConfig(StrictModel):
     workspace: WorkspaceConfig | None = None
     # Set: EXPAND v1 on top of the direct scorer (decision 0011).
     expansion: ExpansionConfig | None = None
+    # Set: EXPAND v2, branch reading (decision 0012).
+    branch: BranchConfig | None = None
 
     @model_validator(mode="after")
     def _one_mechanism(self) -> "ModelConfig":
-        if self.workspace is not None and self.expansion is not None:
-            raise ValueError("a model has either a workspace or an expansion, not both")
+        mechanisms = [m for m in (self.workspace, self.expansion, self.branch) if m is not None]
+        if len(mechanisms) > 1:
+            raise ValueError("a model has at most one of workspace, expansion and branch")
+        if self.branch is not None and self.scorer.candidate_encoding != "joint":
+            raise ValueError("branch reading needs joint candidate encoding")
         return self

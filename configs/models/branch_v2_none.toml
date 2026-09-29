@@ -1,0 +1,28 @@
+# EXPAND v2, branch reading (decision 0012), nodes = "none" (direct control: empty branches, the same training schedule).
+# Each candidate reads its own branch of generics_v0 statements in its joint input; the
+# reader (ModernBERT) and scorer are trainable. No weights beyond the direct model's.
+name = "branch_v2_none"
+
+[encoder]
+kind = "hf"
+model = "answerdotai/ModernBERT-base"
+revision = "8949b909ec900327062f0ebf497f51aef5e6f0c8"
+max_length = 384
+pooling = "mean"
+frozen = false
+gradient_checkpointing = true
+
+[scorer]
+kind = "direct"
+latent_dim = 256
+heads = 4
+hidden_dim = 512
+dropout = 0.1
+candidate_encoding = "joint"
+
+[branch]
+kind = "branch"
+memory = "artifacts/memories/generics_v0"
+nodes = "none"
+train_widths = [0, 1, 2, 4, 8]
+max_width = 8

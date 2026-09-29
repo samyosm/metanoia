@@ -180,6 +180,21 @@ reading a relevant fact in the input helps a lot. The next design, EXPAND v2 (de
 0012), reads each candidate's branch in the trainable reader's input, over a memory of
 statements about concepts. The `[expansion]` code above stays, for reproducing R016.
 
+EXPAND v2 (a `[branch]` table in a model config) has no weights beyond the direct
+model's: each candidate's nodes are rendered into its own joint input, and the reader is
+trained with a width sampled per batch from `train_widths`.
+
+```sh
+$R build-memory --config configs/memory/generics_v0.toml    # 1.02M GenericsKB statements (~6 min)
+$R memory-recall --memory artifacts/memories/generics_v0 --dataset artifacts/datasets/knowledge_v0 \
+    --match text --out artifacts/memory_evals/NAME.json      # gate (a); --match names = R015
+scripts/stage2_expand_v2.sh                                 # ~1-1.5 h: retrieved vs random vs none
+```
+
+Traces show one `expand` event per candidate with its statements. Each statement's
+number is its leave-one-out contribution to that candidate's score. The `aggregate`
+event gives each candidate's change from its empty-branch (direct) score.
+
 ### Parked: Stage 3a, the budgeted workspace (decision 0008)
 
 A model config with a `[workspace]` table adds a reasoning workspace on top of the

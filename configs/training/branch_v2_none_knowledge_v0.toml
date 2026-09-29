@@ -1,0 +1,23 @@
+name = "branch_v2_none_knowledge_v0"
+# EXPAND v2 (nodes = "none"), matched across retrieved / random / none: same data,
+# schedule, seed and initialization (R005). Widths per batch from {0, 1, 2, 4, 8}; dev
+# loss at width 8. Two epochs, a checkpoint per epoch (R016: this data overfits fast).
+model_config_path = "configs/models/branch_v2_none.toml"
+init_from = "artifacts/predictors/mbft_joint_mcqa_v0"
+dataset = "artifacts/datasets/knowledge_v0"
+train_split = "train"
+dev_split = "dev"
+batch_size = 16
+micro_batch_size = 8
+learning_rate = 1e-4
+encoder_learning_rate = 2e-5
+weight_decay = 0.01
+warmup_fraction = 0.06
+schedule = "linear"
+precision = "fp16-mixed"
+grad_clip = 1.0
+seed = 0
+device = "cuda"
+log_every_steps = 50
+epochs = 2
+checkpoint_each_epoch = true

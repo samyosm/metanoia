@@ -308,3 +308,37 @@ def np_equal(a, b) -> bool:
     import torch
 
     return torch.equal(a, b)
+
+
+def test_branch_model_warm_starts_and_resumes_identically(fixtures, tmp_path) -> None:
+    import numpy as np
+
+    from metanoia.config import BranchConfig, DirectScorerConfig
+    from tests.core.test_memory import write_memory
+
+    write_memory(tmp_path / "mem", np.random.default_rng(0).normal(size=(10, 8)))
+    joint = MODEL.model_copy(update={"scorer": DirectScorerConfig(candidate_encoding="joint")})
+    direct = train(config(fixtures), joint, tmp_path / "direct")
+    # Branch reading adds no weights: the direct bundle loads completely (decision 0012).
+    branch = joint.model_copy(
+        update={
+            "branch": BranchConfig(
+                memory=str(tmp_path / "mem"), nodes="random", train_widths=(0, 1, 2)
+            )
+        }
+    )
+    warm = config(fixtures, init_from=str(tmp_path / "direct"))
+    straight = train(warm, branch, tmp_path / "straight")
+    assert straight.training["initialized_from"] == direct.predictor_id
+    assert straight.resolved_config["expansion_identity"]["memory_id"] == "tiny"
+
+    def stop(record: dict) -> None:
+        if record["epoch"] == 0:
+            raise Interrupt
+
+    with pytest.raises(Interrupt):
+        train(warm, branch, tmp_path / "r", on_epoch=stop)
+    # Sampled widths are part of the resumed RNG state.
+    resumed = train(warm, branch, tmp_path / "r", resume=True)
+    assert resumed.predictor_id == straight.predictor_id
+    assert load_predictor(tmp_path / "r").describe()["kind"] == "torch_branch"

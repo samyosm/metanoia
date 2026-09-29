@@ -75,7 +75,8 @@ def batch_loss(
     rounds: int | None = None,
 ) -> torch.Tensor:
     """Cross-entropy of the correct candidate. With ``rounds`` (workspace models), the
-    mean over every round's readout: deep supervision, so each budget is trained."""
+    mean over every round's readout: deep supervision, so each budget is trained. For a
+    branch model (decision 0012), ``rounds`` is the number of nodes per candidate."""
     output = _forward(model, batch, precision, rounds)
     targets = torch.tensor([target for _, target in batch], device=output.logits.device)
     # The loss is computed in fp32 regardless of autocast.
@@ -90,6 +91,8 @@ def _forward(
 ) -> Any:
     requests = [request for request, _ in batch]
     with torch.autocast(model.device.type, dtype=torch.float16, enabled=precision == "fp16-mixed"):
+        if hasattr(model, "branch_config"):
+            return model(requests, width=rounds or 0)  # type: ignore[call-arg]
         if hasattr(model, "expansion_config"):
             # Training and dev evaluation always expand with the configured width.
             return model(requests, force=True)  # type: ignore[call-arg]
@@ -187,6 +190,10 @@ def fit(
     eval_rounds = config.eval_rounds
     if config.train_rounds is not None and eval_rounds is None:
         eval_rounds = config.train_rounds[1]
+    # A branch model samples its width per batch; dev loss uses the widest (decision 0012).
+    branch = getattr(model, "branch_config", None)
+    if branch is not None and eval_rounds is None:
+        eval_rounds = max(branch.train_widths)
     trainable = [p for p in model.parameters() if p.requires_grad]
     encoder_params = [p for p in model.encoder.parameters() if p.requires_grad]
     scorer_params = [p for p in model.scorer.parameters() if p.requires_grad]
@@ -240,6 +247,8 @@ def fit(
             rounds = None
             if config.train_rounds is not None:
                 rounds = rounds_rng.randint(*config.train_rounds)
+            elif branch is not None:
+                rounds = rounds_rng.choice(branch.train_widths)
             for m in range(0, len(batch), micro):
                 part = batch[m : m + micro]
                 loss = batch_loss(model, part, config.precision, rounds) * (len(part) / len(batch))
@@ -411,6 +420,8 @@ def _weight_layout(model_config: dict[str, Any]) -> dict[str, Any]:
     for optional in ("workspace", "expansion"):
         if layout.get(optional) is None:
             layout.pop(optional, None)
+    # Branch reading adds no weights: it only changes the reader's input (decision 0012).
+    layout.pop("branch", None)
     encoder = layout.get("encoder", {})
     encoder.pop("gradient_checkpointing", None)
     if encoder.get("kind") == "hf":

@@ -1,0 +1,65 @@
+# Promoted suites are immutable: fix a bug by adding a new revision, not by editing.
+suite_id = "knowledge_v0"
+revision = 3
+task = "exclusive_choice"
+question = """
+Stage-2 testbed (decision 0010): science multiple choice without a passage (OpenBookQA,
+ARC-Easy, ARC-Challenge). The direct model must rely on what it already knows; candidate
+expansion over a concept memory should add evidence it lacks. The main endpoint is test
+accuracy and NLL per source, and (revision 3) their change with the expansion budget:
+the total number of memory nodes the candidates' branches may hold (0, 4, 8, 16, 32,
+about 1, 2, 4, 8 per candidate), at depth 1 (decision 0012). A direct predictor answers
+identically at every budget.
+"""
+analysis_specification = "analysis/specifications/knowledge_v0.toml"
+
+[dataset]
+# Regenerate with: metanoia-research prepare --config configs/data/knowledge_v0.toml
+dataset_id = "knowledge_v0"
+cases_sha256 = "3fd83e1bb8027305b332401e6dce5b9693439591bb8f6bfc5142ee34a25d21b4"
+labels_sha256 = "5bdce011265d6d5cc246c17c2a37fbfd0f91250163825e734c8385f599dc06cf"
+
+[evaluation]
+splits = ["dev", "calibration", "test"]
+batch_size = 16
+repeats = 1
+base_seed = 0
+trace = "off"
+failure_policy = "uniform"
+timing_scope = "decide_call"
+
+[[budgets]]
+id = "b0"
+# All limits zero: the direct scorer without expansion.
+
+[[budgets]]
+id = "p4"
+[budgets.budget]
+max_depth = 1
+max_queries = 8
+max_proposals = 4
+max_nodes = 4
+
+[[budgets]]
+id = "p8"
+[budgets.budget]
+max_depth = 1
+max_queries = 8
+max_proposals = 8
+max_nodes = 8
+
+[[budgets]]
+id = "p16"
+[budgets.budget]
+max_depth = 1
+max_queries = 8
+max_proposals = 16
+max_nodes = 16
+
+[[budgets]]
+id = "p32"
+[budgets.budget]
+max_depth = 1
+max_queries = 8
+max_proposals = 32
+max_nodes = 32

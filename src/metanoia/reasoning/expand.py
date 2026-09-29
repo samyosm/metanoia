@@ -9,12 +9,9 @@ direct scorer.
 """
 
 import contextlib
-import hashlib
 import math
-import random
 from collections.abc import Sequence
 from dataclasses import dataclass
-from pathlib import Path
 from typing import Literal
 
 import torch
@@ -23,8 +20,7 @@ from torch import nn
 from metanoia.config import ExpansionConfig
 from metanoia.decision import CandidateScorer
 from metanoia.interfaces import TextEncoder
-from metanoia.memory.encoder import RetrievalEncoder
-from metanoia.memory.store import ConceptMemory
+from metanoia.memory.access import MemoryAccess
 from metanoia.model import DecisionOutput, DirectDecisionModel
 from metanoia_contracts import DecisionRequest, Termination
 
@@ -69,7 +65,7 @@ class ExpansionModules(nn.Module):
         )
 
 
-class ExpansionDecisionModel(DirectDecisionModel):
+class ExpansionDecisionModel(MemoryAccess, DirectDecisionModel):
     def __init__(
         self,
         encoder: TextEncoder,
@@ -83,11 +79,7 @@ class ExpansionDecisionModel(DirectDecisionModel):
         if config.freeze_direct:
             self.encoder.requires_grad_(False)
             self.scorer.requires_grad_(False)
-        # The memory and its retrieval encoder are frozen external resources, identified
-        # in the bundle, not stored in it (like pretrained encoder weights). They are kept
-        # outside nn.Module registration so they never enter the state dict.
-        object.__setattr__(self, "_memory", None)
-        object.__setattr__(self, "_retriever", None)
+        self._init_memory(config.memory)
 
     def train(self, mode: bool = True) -> "ExpansionDecisionModel":
         super().train(mode)
@@ -95,39 +87,6 @@ class ExpansionDecisionModel(DirectDecisionModel):
             self.encoder.eval()  # frozen parts run deterministically (no dropout)
             self.scorer.eval()
         return self
-
-    def memory(self) -> ConceptMemory:
-        memory: ConceptMemory | None = self.__dict__.get("_memory")
-        if memory is None:
-            memory = ConceptMemory(Path(self.expansion_config.memory), device=str(self.device))
-            object.__setattr__(self, "_memory", memory)
-        return memory
-
-    def retriever(self) -> RetrievalEncoder:
-        existing: RetrievalEncoder | None = self.__dict__.get("_retriever")
-        if existing is None:
-            spec = self.memory().manifest.encoder
-            retriever = RetrievalEncoder(
-                spec["model"],
-                spec["requested_revision"],
-                spec["pooling"],
-                spec["max_length"],
-                spec["query_prefix"],
-            ).to(self.device)
-            if retriever.identity() != spec:
-                raise ValueError("retrieval encoder differs from the memory's encoder")
-            object.__setattr__(self, "_retriever", retriever)
-            existing = retriever
-        return existing
-
-    def expansion_identity(self) -> dict[str, object]:
-        manifest = self.memory().manifest
-        return {
-            "memory_id": manifest.memory_id,
-            "concepts_sha256": manifest.concepts.sha256,
-            "vectors_sha256": manifest.vectors.sha256,
-            "retrieval_encoder": manifest.encoder,
-        }
 
     def forward(  # type: ignore[override]
         self, requests: Sequence[DecisionRequest], force: bool = False
@@ -231,24 +190,19 @@ class ExpansionDecisionModel(DirectDecisionModel):
         )
 
     def _propose(self, requests: Sequence[DecisionRequest], k: int) -> list[list[list[int]]]:
-        """Memory indices [example][candidate][k]: retrieved, or random for the control."""
+        """Memory indices [example][candidate][k]: retrieved, or random for the control.
+        Padded candidate slots repeat the first candidate (they are masked later)."""
         cfg = self.expansion_config
-        memory = self.memory()
         n_max = max(len(r.candidates) for r in requests)
-        queries = [
+        pairs = [
             (r.question, (r.candidates[i] if i < len(r.candidates) else r.candidates[0]).text)
             for r in requests
             for i in range(n_max)
         ]
-        if cfg.concepts == "retrieved":
-            vectors = self.retriever().embed([f"{q} {c}" for q, c in queries], query=True)
-            flat = memory.search(vectors, k)[0].tolist()
-        else:
-            # Deterministic per (question, candidate), so collection runs are reproducible.
-            flat = []
-            for q, c in queries:
-                seed = int.from_bytes(hashlib.sha256(f"{q}\x1f{c}".encode()).digest()[:8], "big")
-                flat.append(random.Random(seed).sample(range(len(memory)), k))
+        source: Literal["retrieved", "random"] = (
+            "retrieved" if cfg.concepts == "retrieved" else "random"
+        )
+        flat, _ = self.propose(pairs, k, source)
         return [flat[b * n_max : (b + 1) * n_max] for b in range(len(requests))]
 
     def _allowed(self, request: DecisionRequest, n: int, force: bool) -> tuple[int, Termination]:
