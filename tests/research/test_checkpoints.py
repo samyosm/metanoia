@@ -342,3 +342,54 @@ def test_branch_model_warm_starts_and_resumes_identically(fixtures, tmp_path) ->
     resumed = train(warm, branch, tmp_path / "r", resume=True)
     assert resumed.predictor_id == straight.predictor_id
     assert load_predictor(tmp_path / "r").describe()["kind"] == "torch_branch"
+
+
+def test_proposal_cache_build_matches_live_ranking(fixtures, tmp_path, monkeypatch) -> None:
+    import numpy as np
+
+    from metanoia.build import build_model
+    from metanoia.config import BranchConfig, DirectScorerConfig, RerankerConfig
+    from metanoia.reasoning.branch import BranchDecisionModel
+    from metanoia_research.data.bundle import read_cases
+    from metanoia_research.proposals_build import build_proposals
+    from tests.core.test_memory import write_memory
+
+    class Stub:
+        def score_pairs(self, pairs):
+            return [float(len(t) + len(q) % 7) for q, t in pairs]
+
+    def propose(self, pairs, k, source):
+        return [list(range(min(k, 10))) for _ in pairs], [[1.0] * min(k, 10) for _ in pairs]
+
+    monkeypatch.setattr(BranchDecisionModel, "reranker", lambda self: Stub())
+    monkeypatch.setattr(BranchDecisionModel, "propose", propose)
+    write_memory(tmp_path / "mem", np.random.default_rng(0).normal(size=(10, 8)))
+    branch = BranchConfig(
+        memory=str(tmp_path / "mem"),
+        proposals="fused",
+        reranker=RerankerConfig(model="stub", revision="r"),
+        proposal_cache=str(tmp_path / "cache"),
+        train_widths=(0, 2),
+        max_width=4,
+    )
+    model_config = MODEL.model_copy(
+        update={"scorer": DirectScorerConfig(candidate_encoding="joint"), "branch": branch}
+    )
+    manifest = build_proposals(
+        model_config, fixtures / "dataset", ("train", "dev"), tmp_path / "cache", "cpu"
+    )
+    assert manifest["width"] == 4 and manifest["entries"]["rows"] == manifest["pairs"]
+    with pytest.raises(FileExistsError):
+        build_proposals(model_config, fixtures / "dataset", ("dev",), tmp_path / "cache", "cpu")
+    cached = build_model(model_config)
+    live_config = model_config.model_copy(
+        update={"branch": branch.model_copy(update={"proposal_cache": None})}
+    )
+    live = build_model(live_config)
+    _, cases = read_cases(fixtures / "dataset")
+    case = next(c for c in cases if c.split == "dev")
+    pairs = [(case.request.question, c.text) for c in case.request.candidates]
+    monkeypatch.setattr(BranchDecisionModel, "reranker", lambda self: pytest.fail("cache miss"))
+    got = cached.fused(pairs, 4)
+    monkeypatch.setattr(BranchDecisionModel, "reranker", lambda self: Stub())
+    assert got[0] == live.fused(pairs, 4)[0]

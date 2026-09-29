@@ -16,7 +16,8 @@ gives empty branches: exactly the direct model's input.
 import re
 from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Literal
+from pathlib import Path
+from typing import Any, Literal
 
 import torch
 
@@ -25,6 +26,8 @@ from metanoia.decision import CandidateScorer
 from metanoia.encoding.inputs import render_candidate_joint, render_input
 from metanoia.interfaces import EncodedText, TextEncoder
 from metanoia.memory.access import MemoryAccess
+from metanoia.memory.proposals import ProposalCache
+from metanoia.memory.rerank import Reranker, reciprocal_rank_fusion, reranker_query
 from metanoia.model import DecisionOutput, DirectDecisionModel
 from metanoia_contracts import DecisionRequest, Termination
 
@@ -67,6 +70,92 @@ class BranchDecisionModel(MemoryAccess, DirectDecisionModel):
         super().__init__(encoder, scorer, candidate_encoding)
         self.branch_config = config
         self._init_memory(config.memory)
+        # Frozen external judges and caches, kept out of the state dict (like the memory).
+        object.__setattr__(self, "_reranker", None)
+        object.__setattr__(self, "_proposal_cache", None)
+
+    def proposal_identity(self) -> dict[str, Any]:
+        """Everything a fused ordering depends on (what a proposal cache must match)."""
+        cfg = self.branch_config
+        assert cfg.reranker is not None
+        manifest = self.memory().manifest
+        return {
+            "method": "fused",
+            "pool": FUSED_POOL,
+            "rrf_k": RRF_K,
+            "memory_id": manifest.memory_id,
+            "vectors_sha256": manifest.vectors.sha256,
+            "retrieval_encoder": manifest.encoder,
+            "reranker": {
+                "model": cfg.reranker.model,
+                "requested_revision": cfg.reranker.revision,
+                "max_length": cfg.reranker.max_length,
+                "query_format": "qa",
+            },
+        }
+
+    def expansion_identity(self) -> dict[str, object]:
+        identity = super().expansion_identity()
+        if self.branch_config.proposals == "fused":
+            cache = self.proposal_cache()
+            identity["proposals"] = self.proposal_identity()
+            identity["proposal_cache"] = cache.cache_id() if cache is not None else None
+        return identity
+
+    def reranker(self) -> Reranker:
+        existing: Reranker | None = self.__dict__.get("_reranker")
+        cfg = self.branch_config.reranker
+        assert cfg is not None
+        if existing is None:
+            existing = Reranker(cfg.model, cfg.revision, cfg.max_length).to(self.device)
+            object.__setattr__(self, "_reranker", existing)
+        elif next(existing.parameters()).device != self.device:
+            existing.to(self.device)
+        return existing
+
+    def proposal_cache(self) -> ProposalCache | None:
+        path = self.branch_config.proposal_cache
+        if path is None:
+            return None
+        cache: ProposalCache | None = self.__dict__.get("_proposal_cache")
+        if cache is None:
+            cache = ProposalCache(Path(path), self.proposal_identity())
+            object.__setattr__(self, "_proposal_cache", cache)
+        return cache
+
+    def fused(
+        self, pairs: Sequence[tuple[str, str]], k: int
+    ) -> tuple[list[list[int]], list[list[float]]]:
+        """The first k nodes of the fused ordering for each (question, candidate): the top
+        ``FUSED_POOL`` by retrieval similarity, reordered by reciprocal-rank fusion of
+        similarity and reranker scores. Cached pairs are read; others are ranked live."""
+        cache = self.proposal_cache()
+        found: dict[int, tuple[list[int], list[float]]] = {}
+        if cache is not None and k <= cache.width:
+            for i, (q, c) in enumerate(pairs):
+                hit = cache.get(q, c)
+                if hit is not None:
+                    found[i] = hit
+        missing = [i for i in range(len(pairs)) if i not in found]
+        if missing:
+            pools, sims = self.propose([pairs[i] for i in missing], FUSED_POOL, "retrieved")
+            memory = self.memory()
+            judged = [
+                (reranker_query(*pairs[i]), memory.concepts[n].text)
+                for i, pool in zip(missing, pools, strict=True)
+                for n in pool
+            ]
+            flat = self.reranker().score_pairs(judged)
+            start = 0
+            for i, pool, pool_sims in zip(missing, pools, sims, strict=True):
+                scores = flat[start : start + len(pool)]
+                start += len(pool)
+                by_reranker = sorted(range(len(pool)), key=lambda m: -scores[m])
+                order = reciprocal_rank_fusion([list(range(len(pool))), by_reranker], RRF_K)
+                found[i] = ([pool[m] for m in order], [pool_sims[m] for m in order])
+        return [found[i][0][:k] for i in range(len(pairs))], [
+            found[i][1][:k] for i in range(len(pairs))
+        ]
 
     def forward(  # type: ignore[override]
         self,
@@ -153,8 +242,11 @@ class BranchDecisionModel(MemoryAccess, DirectDecisionModel):
             "retrieved" if cfg.nodes == "retrieved" else "random"
         )
         focused = source == "retrieved" and cfg.proposals == "focused"
-        pool = max(kmax, FOCUS_POOL) if focused else kmax
-        flat, flat_sims = self.propose(pairs, pool, source)
+        if source == "retrieved" and cfg.proposals == "fused":
+            flat, flat_sims = self.fused(pairs, kmax)
+        else:
+            pool = max(kmax, FOCUS_POOL) if focused else kmax
+            flat, flat_sims = self.propose(pairs, pool, source)
         nodes, sims, row = [], [], 0
         for r, k in zip(requests, widths, strict=True):
             n = len(r.candidates)
@@ -231,6 +323,9 @@ class BranchDecisionModel(MemoryAccess, DirectDecisionModel):
 _WORD = re.compile(r"[a-z]{3,}")
 # Retrieved statements considered per candidate before focused reordering.
 FOCUS_POOL = 64
+# Fused proposals (R025): pool size, and the reciprocal-rank-fusion constant.
+FUSED_POOL = 32
+RRF_K = 60
 
 
 def _stems(text: str) -> set[str]:

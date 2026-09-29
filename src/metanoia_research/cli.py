@@ -140,6 +140,19 @@ def build_memory(args: argparse.Namespace) -> None:
     print(f"wrote {out}: {manifest.concepts.rows} concepts, dim {manifest.dim}")
 
 
+def build_proposals(args: argparse.Namespace) -> None:
+    from metanoia.config import ModelConfig
+    from metanoia_research.proposals_build import build_proposals as run_build
+
+    model_config = load_strict(ModelConfig, _toml(args.model_config))
+    branch = model_config.branch
+    out = Path(args.out or (branch.proposal_cache if branch and branch.proposal_cache else ""))
+    if not str(out):
+        raise ValueError("give --out, or set proposal_cache in the model config")
+    manifest = run_build(model_config, Path(args.dataset), tuple(args.splits), out, args.device)
+    print(f"wrote {out}: {manifest['entries']['rows']} orderings in {manifest['seconds']} s")
+
+
 def memory_recall(args: argparse.Namespace) -> None:
     from metanoia.memory.encoder import RetrievalEncoder
     from metanoia.memory.store import ConceptMemory
@@ -224,6 +237,14 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--config", required=True)
     p.add_argument("--out", help="default: artifacts/memories/<memory_id>")
     p.set_defaults(func=build_memory)
+
+    p = commands.add_parser("build-proposals", help="precompute fused proposal orderings")
+    p.add_argument("--model-config", required=True)
+    p.add_argument("--dataset", required=True)
+    p.add_argument("--splits", nargs="+", default=["train", "dev", "calibration", "test"])
+    p.add_argument("--out", help="default: the model config's proposal_cache")
+    p.add_argument("--device", default="cuda")
+    p.set_defaults(func=build_proposals)
 
     p = commands.add_parser("memory-recall", help="access recall of a memory against gold facts")
     p.add_argument("--memory", required=True)

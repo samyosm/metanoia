@@ -103,6 +103,14 @@ class ExpansionConfig(StrictModel):
     freeze_direct: bool = True
 
 
+class RerankerConfig(StrictModel):
+    """A pinned cross-encoder judge (decision 0014)."""
+
+    model: str
+    revision: str
+    max_length: int = Field(default=192, ge=16)
+
+
 class BranchConfig(StrictModel):
     """Stage-2 EXPAND v2 (decision 0012): each candidate's branch is read by the reader.
 
@@ -120,7 +128,13 @@ class BranchConfig(StrictModel):
     # How retrieved nodes are chosen: "similarity" (top-k for "question candidate",
     # decision 0012) or "focused" (a larger retrieved pool, statements mentioning the
     # candidate first; decision 0013).
-    proposals: Literal["similarity", "focused"] = "similarity"
+    # "fused" (decision 0014, R025): the top 32 for "question candidate", ordered by
+    # reciprocal-rank fusion of retrieval similarity and a cross-encoder reranker.
+    proposals: Literal["similarity", "focused", "fused"] = "similarity"
+    reranker: RerankerConfig | None = None  # required by "fused"
+    # Optional precomputed orderings (a proposal-cache artifact) for speed; a request not
+    # in the cache is ranked live, identically.
+    proposal_cache: str | None = None
     # Widths (nodes per candidate) sampled per training batch; dev loss uses the largest.
     train_widths: tuple[int, ...] = (0, 1, 2, 4, 8)
     max_width: int = Field(default=8, ge=1)  # the most nodes per candidate at inference
@@ -131,6 +145,10 @@ class BranchConfig(StrictModel):
             raise ValueError("train_widths must be non-negative and non-empty")
         if max(self.train_widths) > self.max_width:
             raise ValueError("train_widths cannot exceed max_width")
+        if (self.proposals == "fused") != (self.reranker is not None):
+            raise ValueError("a reranker is set exactly when proposals are fused")
+        if self.proposal_cache is not None and self.proposals != "fused":
+            raise ValueError("proposal caches exist only for fused proposals")
         return self
 
 

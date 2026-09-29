@@ -107,3 +107,22 @@ visible in the trace.
 - no generator raises gold-fact recall over G1, which means the memory is the limit:
   then add another knowledge source, e.g. the ARC corpus or QASC facts;
 - or every judge fails to beat J0 under both readers: then go directly to J3 and J4.
+
+**Round 1 outcome** (R025, 2026-09-29).
+- **Promoted:** G1 with RRF(J0, J2), i.e. similarity retrieval ordered by rank fusion
+  of similarity and the reranker. It adds +2.5 points on OBQA + ARC-Challenge under the
+  focused reader.
+- **Not promoted:**
+  - concept paths (G3): the most candidate-specific branches, but lower accuracy and no
+    gain in gold recall. Lexical concept matching confuses senses;
+  - follow-up search (G4): adds nothing;
+  - the reranker alone: loses gold recall.
+- **Implementation:** `proposals = "fused"`, with a pinned `[branch.reranker]` and an
+  optional proposal-cache artifact (`build-proposals`), so training need not run the
+  reranker.
+  - A cache is refused unless its identity (memory, retrieval encoder, reranker, pool,
+    fusion constant) matches the model's.
+  - Pairs missing from the cache are ranked live by the same code.
+  - Against the screening's branches, the implementation gives the same 8 statements
+    for 89% of candidates and the same top 2 for 93% (half-precision near-ties).
+- **Round 2:** the owner runs `scripts/stage2_expand_v2_fused.sh`.

@@ -191,6 +191,19 @@ $R memory-recall --memory artifacts/memories/generics_v0 --dataset artifacts/dat
 scripts/stage2_expand_v2.sh                                 # ~1-1.5 h: retrieved vs random vs none
 ```
 
+Proposals (decisions 0013 and 0014) are chosen by `proposals` in `[branch]`:
+- `"similarity"`: the top k for "question candidate";
+- `"focused"`: statements mentioning the candidate first;
+- `"fused"`: rank fusion of similarity and a pinned cross-encoder reranker (`[branch.reranker]`).
+
+For fused proposals, precompute the orderings once, so training need not run the reranker:
+
+```sh
+$R build-proposals --model-config configs/models/branch_v2_fused.toml \
+    --dataset artifacts/datasets/knowledge_v0              # ~80 min; writes proposal_cache
+scripts/stage2_expand_v2_fused.sh                          # cache + matched run, ~2 h
+```
+
 Traces show one `expand` event per candidate with its statements. Each statement's
 number is its leave-one-out contribution to that candidate's score. The `aggregate`
 event gives each candidate's change from its empty-branch (direct) score.

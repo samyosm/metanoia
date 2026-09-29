@@ -152,3 +152,62 @@ def test_focused_proposals_put_statements_about_the_candidate_first(memory) -> N
     order = model._focus("What conducts heat best?", "copper", [0, 1, 2, 3])
     assert order == [1, 3, 0, 2]  # mentions of "copper" first, retrieval order kept
     assert _stems("Batteries and wires") == {"battery", "wire"}
+
+
+def fused_model(memory, cache=None):
+    from metanoia.config import RerankerConfig
+
+    cfg = config(memory, nodes="retrieved")
+    branch = cfg.branch.model_copy(
+        update={
+            "proposals": "fused",
+            "reranker": RerankerConfig(model="stub", revision="r"),
+            "proposal_cache": cache,
+        }
+    )
+    model = build_model(cfg.model_copy(update={"branch": branch}), seed=0).eval()
+
+    class Stub:  # prefers later pool positions, the reverse of retrieval order
+        def score_pairs(self, pairs):
+            return [float(int(t.split()[1].rstrip(":"))) for _, t in pairs]
+
+    # Retrieval order 0, 1, ..., 11 with similarity 1, 0.9, ...
+    model.propose = lambda pairs, k, source: (
+        [list(range(min(k, 12))) for _ in pairs],
+        [[1 - 0.1 * m for m in range(min(k, 12))] for _ in pairs],
+    )
+    model.reranker = lambda: Stub()
+    return model
+
+
+def test_fused_proposals_are_reciprocal_rank_fusion(memory) -> None:
+    from metanoia.memory.rerank import reciprocal_rank_fusion
+
+    model = fused_model(memory)
+    nodes, sims = model.fused([("q?", "copper")], 4)
+    expected = reciprocal_rank_fusion([list(range(12)), list(range(11, -1, -1))])[:4]
+    assert nodes == [expected]
+    assert sims == [[1 - 0.1 * m for m in expected]]
+    assert model.expansion_identity()["proposals"]["method"] == "fused"
+
+
+def test_proposal_cache_is_read_checked_and_equivalent(memory, tmp_path) -> None:
+    from metanoia.memory.proposals import proposal_key, write_cache
+
+    live = fused_model(memory)
+    nodes, sims = live.fused([("q?", "copper"), ("q?", "wood")], 8)
+    rows = {proposal_key("q?", "copper"): (nodes[0], sims[0])}  # "wood" left out
+    (tmp_path / "cache").mkdir()
+    write_cache(tmp_path / "cache", live.proposal_identity(), 8, rows, {})
+    cached = fused_model(memory, cache=str(tmp_path / "cache"))
+    cached.reranker = lambda: pytest.fail("a cached pair must not be reranked")
+    assert cached.fused([("q?", "copper")], 8) == ([nodes[0]], [pytest.approx(sims[0])])
+    # A miss is ranked live, identically.
+    cached.reranker = live.reranker
+    assert cached.fused([("q?", "wood")], 8)[0] == [nodes[1]]
+    assert cached.expansion_identity()["proposal_cache"] == cached.proposal_cache().cache_id()
+    # A cache built for another identity is refused.
+    (tmp_path / "other").mkdir()
+    write_cache(tmp_path / "other", {**live.proposal_identity(), "pool": 5}, 8, rows, {})
+    with pytest.raises(ValueError, match="was built for"):
+        fused_model(memory, cache=str(tmp_path / "other")).proposal_cache()
