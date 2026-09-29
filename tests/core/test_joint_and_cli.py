@@ -97,3 +97,20 @@ def test_cli_rounds_set_the_suite_budget() -> None:
     request = build_request(args(question="Q?", candidate=["a", "b"], context="", rounds=4))
     assert request.budget.max_rounds == 4 and request.budget.max_pairs == 4 * 4096
     assert build_request(args(question="Q?", candidate=["a", "b"])).budget.is_direct
+
+
+def test_serve_streams_updates_before_the_result(monkeypatch, capsys) -> None:
+    import io
+    import json
+
+    import metanoia.cli as cli
+    from metanoia.api import TorchPredictor
+
+    model = build_model(JOINT, seed=0).eval()
+    monkeypatch.setattr(cli, "_load", lambda args: TorchPredictor(model, "t@x", {}))
+    message = {"id": 7, "stream": True, "request": make(["A", "B"]).model_dump(mode="json")}
+    monkeypatch.setattr("sys.stdin", io.StringIO(json.dumps(message) + "\n"))
+    cli.main(["serve", "--bundle", "unused"])
+    lines = [json.loads(line) for line in capsys.readouterr().out.splitlines()][1:]
+    assert [line["update"]["stage"] for line in lines[:-1]] == ["render"]
+    assert lines[-1]["id"] == 7 and len(lines[-1]["result"]["probabilities"]) == 2

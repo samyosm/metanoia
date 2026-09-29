@@ -204,6 +204,12 @@ $R build-proposals --model-config configs/models/branch_v2_fused.toml \
 scripts/stage2_expand_v2_fused.sh                          # cache + matched run, ~2 h
 ```
 
+`metanoia serve` streams a decision when a request line carries `"stream": true`: one
+`{"id", "update"}` line per computed stage (direct answer, each candidate's
+statements, the answer after 1, 2, 4, … statements per candidate, each candidate's
+contributions), then the usual `{"id", "result"}`. The interface uses this to show
+answers being built live.
+
 Traces show one `expand` event per candidate with its statements. Each statement's
 number is its leave-one-out contribution to that candidate's score. The `aggregate`
 event gives each candidate's change from its empty-branch (direct) score.

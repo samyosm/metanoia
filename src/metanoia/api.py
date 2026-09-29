@@ -4,8 +4,10 @@ Every predictor (learned model, baseline, fixture, oracle) implements :class:`Pr
 Single-request and batch entry points share semantics.
 """
 
+import dataclasses
 import json
-from collections.abc import Sequence
+import time
+from collections.abc import Iterator, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol, runtime_checkable
@@ -13,6 +15,8 @@ from typing import Any, Protocol, runtime_checkable
 from metanoia_contracts import (
     DecisionRequest,
     DecisionResult,
+    DecisionUpdate,
+    NodeView,
     ResourceUsage,
     Termination,
     TraceEvent,
@@ -74,6 +78,99 @@ class TorchPredictor:
 
     def decide(self, request: DecisionRequest) -> DecisionResult:
         return self.decide_batch([request])[0]
+
+    def decide_stream(self, request: DecisionRequest) -> Iterator[DecisionUpdate | DecisionResult]:
+        """One decision, stage by stage as it is computed, then its result.
+
+        The result is the same as :meth:`decide` would give. For branch models the
+        stages are real computations:
+        1. the rendered input;
+        2. the direct answer (empty branches);
+        3. each candidate's proposed nodes;
+        4. the answer after reading 1, 2, 4, ... nodes per candidate, up to the budget;
+        5. each node's leave-one-out contribution.
+
+        Nodes are proposed once and reused by every stage. Other models compute in one
+        pass, so their stream is the rendered input and the result.
+        """
+        import torch
+
+        from metanoia.calibration import softmax
+        from metanoia.encoding.inputs import render_input
+
+        self.calibrator.check_budget(request.budget)
+        started = time.perf_counter()
+        ids = request.candidate_ids
+        seq = 0
+
+        def update(stage: str, **fields: Any) -> DecisionUpdate:
+            nonlocal seq
+            seq += 1
+            elapsed = (time.perf_counter() - started) * 1000.0
+            return DecisionUpdate.model_validate(
+                {"seq": seq - 1, "stage": stage, "elapsed_ms": elapsed, **fields}
+            )
+
+        yield update("render", text=render_input(request))
+        model: Any = self.model
+        if not hasattr(model, "branch_config"):
+            yield self.decide(request)
+            return
+
+        def scored(output: Any, width: int) -> DecisionUpdate:
+            logits = output.logits[0, : len(ids)].double().cpu().tolist()
+            return update(
+                "score",
+                width=width,
+                candidate_ids=ids,
+                logits=tuple(logits),
+                probabilities=tuple(softmax(logits, 1.0)),
+            )
+
+        fp16 = self.precision == "fp16"
+        with (
+            torch.inference_mode(),
+            torch.autocast(model.device.type, dtype=torch.float16, enabled=fp16),
+        ):
+            k, _ = model.width_for(request)
+            first = None
+            if k:  # the direct answer first; with no nodes it is the final decision below
+                first = model([request], width=0)
+                yield scored(first, 0)
+            proposals = model.propose_nodes(request, k) if k else None
+            if proposals is not None:
+                memory = model.memory()
+                for i, cid in enumerate(ids):
+                    nodes = tuple(
+                        NodeView(
+                            id=memory.concepts[n].id,
+                            concept=memory.concepts[n].name,
+                            text=memory.concepts[n].text,
+                            similarity=float(sim),
+                        )
+                        for n, sim in zip(proposals[0][0][i], proposals[1][0][i], strict=True)
+                    )
+                    yield update("expand", candidate=cid, nodes=nodes)
+                for width in (1, 2, 4, 8, 16, 32, 64):
+                    if width >= k:
+                        break
+                    yield scored(model([request], width=width, proposals=proposals), width)
+            output = model([request], proposals=proposals, keep=True)
+            yield scored(output, k)
+            if request.trace is TraceMode.EVENTS:
+                # Explained one candidate at a time, so each appears as soon as it is known.
+                contributions = []
+                for i, cid in enumerate(ids):
+                    values = model.explain_candidate(output, 0, i)
+                    contributions.append(values)
+                    if k:
+                        yield update("contribution", candidate=cid, contributions=tuple(values))
+                initial = first.logits if first is not None else model.direct_logits(output)
+                output = dataclasses.replace(
+                    output, initial_logits=initial, contributions=[contributions], encoded=None
+                )
+            logits = output.logits[0, : len(ids)].double().cpu().tolist()
+        yield self._result(request, logits, _branch_record(model, output, 0))
 
     def decide_batch(self, requests: Sequence[DecisionRequest]) -> list[DecisionResult]:
         import torch

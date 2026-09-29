@@ -17,7 +17,7 @@ import re
 import sys
 from pathlib import Path
 
-from metanoia_contracts import Budget, Candidate, DecisionRequest, TraceMode
+from metanoia_contracts import Budget, Candidate, DecisionRequest, DecisionResult, TraceMode
 from metanoia_contracts.base import load_strict
 
 
@@ -105,7 +105,9 @@ def serve(args: argparse.Namespace) -> None:
     """JSON-lines worker. Each input line is ``{"id": ..., "request": DecisionRequest}``;
     each output line is ``{"id": ..., "result": DecisionResult}`` or
     ``{"id": ..., "error": "..."}``. The first output line announces readiness.
-    Only stdout carries protocol lines; diagnostics go to stderr."""
+    With ``"stream": true`` the result is preceded by ``{"id": ..., "update":
+    DecisionUpdate}`` lines, one per computed stage. Only stdout carries protocol
+    lines; diagnostics go to stderr."""
     import time
 
     out = sys.stdout
@@ -122,7 +124,16 @@ def serve(args: argparse.Namespace) -> None:
             message_id = message.get("id")
             request = load_strict(DecisionRequest, message["request"])
             start = time.perf_counter()
-            result = predictor.decide(request)
+            if message.get("stream"):
+                for item in predictor.decide_stream(request):
+                    if isinstance(item, DecisionResult):
+                        result = item
+                    else:
+                        update = {"id": message_id, "update": item.model_dump(mode="json")}
+                        out.write(json.dumps(update) + "\n")
+                        out.flush()
+            else:
+                result = predictor.decide(request)
             reply = {
                 "id": message_id,
                 "result": result.model_dump(mode="json"),

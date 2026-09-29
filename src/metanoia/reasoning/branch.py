@@ -42,6 +42,18 @@ class BranchOutput(DecisionOutput):
     # contribution to its own candidate's logit (full branch minus the branch without it).
     initial_logits: torch.Tensor | None = None
     contributions: list[list[list[float]]] | None = None
+    # Only with ``keep``: what leave-one-out needs, to explain candidates one at a time
+    # afterwards (see ``BranchDecisionModel.explain_candidate``).
+    encoded: Any = None
+
+
+@dataclass(frozen=True)
+class _Encoded:
+    requests: Sequence[DecisionRequest]
+    context: EncodedText
+    candidates: torch.Tensor
+    mask: torch.Tensor
+    statements: Any  # (b, i, drop) -> the statements candidate i of example b reads
 
 
 def knowledge_text(statements: Sequence[str]) -> str:
@@ -162,23 +174,32 @@ class BranchDecisionModel(MemoryAccess, DirectDecisionModel):
         requests: Sequence[DecisionRequest],
         width: int | None = None,
         explain: bool = False,
+        proposals: tuple[list[list[list[int]]], list[list[list[float]]]] | None = None,
+        keep: bool = False,
     ) -> BranchOutput:
         """``width`` (training, dev evaluation): read that many nodes per candidate for
         every example; otherwise each request's budget decides. ``explain`` adds the
-        empty-branch logits and per-node leave-one-out contributions (for traces)."""
+        empty-branch logits and per-node leave-one-out contributions (for traces).
+        ``proposals`` (nodes, similarities per example and candidate) reuses nodes
+        proposed earlier, e.g. by :meth:`propose_nodes` in a streamed decision; each
+        branch reads its first ``width`` of them."""
         if not requests:
             raise ValueError("empty batch")
         counts = [len(r.candidates) for r in requests]
         plan = [
-            (width, Termination.COMPLETED) if width is not None else self._allowed(r, n)
-            for r, n in zip(requests, counts, strict=True)
+            (width, Termination.COMPLETED) if width is not None else self.width_for(r)
+            for r in requests
         ]
         if self.branch_config.nodes == "none":
             plan = [(0, term) for _, term in plan]
         if any(k for k, _ in plan):
             size = len(self.memory())
             plan = [(min(k, size), term) for k, term in plan]
-        nodes, sims = self._nodes(requests, [k for k, _ in plan])
+        if proposals is None:
+            nodes, sims = self._nodes(requests, [k for k, _ in plan])
+        else:
+            nodes = [[b[:k] for b in per] for per, (k, _) in zip(proposals[0], plan, strict=True)]
+            sims = [[b[:k] for b in per] for per, (k, _) in zip(proposals[1], plan, strict=True)]
         memory = self.memory() if any(k for k, _ in plan) else None
 
         def statements(b: int, i: int, drop: int | None = None) -> list[str]:
@@ -195,11 +216,14 @@ class BranchDecisionModel(MemoryAccess, DirectDecisionModel):
         ]
         candidates, mask = self._pack(self.encoder.encode(texts).pooled, counts)
         logits = self.scorer(context, candidates, mask)
+        encoded = _Encoded(requests, context, candidates, mask, statements)
         initial, contributions = None, None
         if explain:
-            initial, contributions = self._explain(
-                requests, context, candidates, mask, logits, nodes, statements
-            )
+            initial = self._initial(encoded)
+            contributions = [
+                [self._leave_one_out(encoded, logits, b, i, len(nodes[b][i])) for i in range(n)]
+                for b, n in enumerate(counts)
+            ]
         return BranchOutput(
             logits=logits,
             candidate_mask=mask,
@@ -209,7 +233,23 @@ class BranchDecisionModel(MemoryAccess, DirectDecisionModel):
             termination=[t for _, t in plan],
             initial_logits=initial,
             contributions=contributions,
+            encoded=encoded if keep else None,
         )
+
+    def width_for(self, request: DecisionRequest) -> tuple[int, Termination]:
+        """Nodes per candidate the request's budget allows (0 for the "none" control)."""
+        k, termination = self._allowed(request, len(request.candidates))
+        if self.branch_config.nodes == "none":
+            return 0, termination
+        if k:
+            k = min(k, len(self.memory()))
+        return k, termination
+
+    def propose_nodes(
+        self, request: DecisionRequest, k: int
+    ) -> tuple[list[list[list[int]]], list[list[list[float]]]]:
+        """The first k proposals of each candidate, in the shape ``forward`` reuses."""
+        return self._nodes([request], [k])
 
     def _candidate_text(self, request: DecisionRequest, i: int, statements: list[str]) -> str:
         own = request.model_copy(update={"context": branch_context(statements, request.context)})
@@ -272,39 +312,44 @@ class BranchDecisionModel(MemoryAccess, DirectDecisionModel):
             m for m in range(len(pool)) if not mentions[m]
         ]
 
-    def _explain(
-        self,
-        requests: Sequence[DecisionRequest],
-        context: EncodedText,
-        candidates: torch.Tensor,
-        mask: torch.Tensor,
-        logits: torch.Tensor,
-        nodes: list[list[list[int]]],
-        statements,  # type: ignore[no-untyped-def]
-    ) -> tuple[torch.Tensor, list[list[list[float]]]]:
-        """Empty-branch logits, and for each node the drop in its own candidate's logit
-        when only that node is removed from that branch (other branches unchanged)."""
+    def explain_candidate(self, output: BranchOutput, b: int, i: int) -> list[float]:
+        """Leave-one-out contributions of candidate i's nodes (example b), from an output
+        computed with ``keep=True``: one candidate at a time, for streamed traces."""
+        if output.encoded is None:
+            raise ValueError("explain_candidate needs an output computed with keep=True")
+        return self._leave_one_out(output.encoded, output.logits, b, i, len(output.nodes[b][i]))
+
+    def direct_logits(self, output: BranchOutput) -> torch.Tensor:
+        """The empty-branch (direct) logits for an output computed with ``keep=True``."""
+        if output.encoded is None:
+            raise ValueError("direct_logits needs an output computed with keep=True")
+        return self._initial(output.encoded)
+
+    def _initial(self, encoded: _Encoded) -> torch.Tensor:
+        """Empty-branch logits: the direct decision, with the same question encoding."""
+        requests = encoded.requests
         counts = [len(r.candidates) for r in requests]
         empty = [self._candidate_text(r, i, []) for r in requests for i in range(len(r.candidates))]
         base, _ = self._pack(self.encoder.encode(empty).pooled, counts)
-        initial = self.scorer(context, base, mask)
-        variants = [
-            (b, i, m)
-            for b in range(len(requests))
-            for i in range(counts[b])
-            for m in range(len(nodes[b][i]))
+        return self.scorer(encoded.context, base, encoded.mask)
+
+    def _leave_one_out(
+        self, encoded: _Encoded, logits: torch.Tensor, b: int, i: int, count: int
+    ) -> list[float]:
+        """For each of candidate i's nodes, the drop in its own logit when only that node
+        is removed from its branch (other branches unchanged)."""
+        if count == 0:
+            return []
+        request = encoded.requests[b]
+        texts = [
+            self._candidate_text(request, i, encoded.statements(b, i, m)) for m in range(count)
         ]
-        contributions: list[list[list[float]]] = [[[] for _ in range(n)] for n in counts]
-        if not variants:
-            return initial, contributions
-        texts = [self._candidate_text(requests[b], i, statements(b, i, m)) for b, i, m in variants]
         pooled = self.encoder.encode(texts).pooled
-        for (b, i, _), vector in zip(variants, pooled, strict=True):
-            one = candidates[b : b + 1].clone()
-            one[0, i] = vector
-            without = self.scorer(_row(context, b), one, mask[b : b + 1])
-            contributions[b][i].append(float(logits[b, i] - without[0, i]))
-        return initial, contributions
+        variants = encoded.candidates[b : b + 1].repeat(count, 1, 1)
+        variants[:, i] = pooled
+        context = _repeat(_row(encoded.context, b), count)
+        without = self.scorer(context, variants, encoded.mask[b : b + 1].repeat(count, 1))
+        return [float(logits[b, i] - without[m, i]) for m in range(count)]
 
     def _allowed(self, request: DecisionRequest, n: int) -> tuple[int, Termination]:
         """(nodes per candidate, termination). Expansion needs depth, one query per
@@ -411,6 +456,16 @@ _STOP = frozenset(
         "used",
     ]
 )
+
+
+def _repeat(encoded: EncodedText, count: int) -> EncodedText:
+    """One encoded example repeated ``count`` times along the batch."""
+    return EncodedText(
+        states=encoded.states.repeat(count, 1, 1),
+        mask=encoded.mask.repeat(count, 1),
+        pooled=encoded.pooled.repeat(count, 1),
+        offsets=None if encoded.offsets is None else encoded.offsets.repeat(count, 1, 1),
+    )
 
 
 def _row(encoded: EncodedText, b: int) -> EncodedText:

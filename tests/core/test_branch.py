@@ -211,3 +211,53 @@ def test_proposal_cache_is_read_checked_and_equivalent(memory, tmp_path) -> None
     write_cache(tmp_path / "other", {**live.proposal_identity(), "pool": 5}, 8, rows, {})
     with pytest.raises(ValueError, match="was built for"):
         fused_model(memory, cache=str(tmp_path / "other")).proposal_cache()
+
+
+def test_streamed_decision_shows_real_stages_and_matches_decide(memory) -> None:
+    from metanoia.api import TorchPredictor
+    from metanoia_contracts import DecisionResult, DecisionUpdate
+
+    model = build_model(config(memory, max_width=4), seed=0).eval()
+    budget = EXPAND.model_copy(update={"max_proposals": 8, "max_nodes": 8})  # 4 per candidate
+    request = make(["copper", "wood"], budget).model_copy(update={"trace": TraceMode.EVENTS})
+    predictor = TorchPredictor(model, "br@x", {"model": {"branch": {}}})
+    items = list(predictor.decide_stream(request))
+    updates = [i for i in items if isinstance(i, DecisionUpdate)]
+    result = items[-1]
+    assert isinstance(result, DecisionResult) and len(updates) == len(items) - 1
+    stages = [(u.stage, u.width, u.candidate) for u in updates]
+    assert stages == [
+        ("render", None, None),
+        ("score", 0, None),
+        ("expand", None, "copper"),
+        ("expand", None, "wood"),
+        ("score", 1, None),
+        ("score", 2, None),
+        ("score", 4, None),
+        ("contribution", None, "copper"),
+        ("contribution", None, "wood"),
+    ]
+    assert [u.seq for u in updates] == list(range(len(updates)))
+    assert all(len(u.nodes) == 4 for u in updates if u.stage == "expand")
+    # Stage 0 is the direct answer; the last score is the final decision.
+    direct = direct_twin(model)([request]).logits[0].tolist()
+    assert list(updates[1].logits) == pytest.approx(direct, abs=1e-5)
+    assert list(updates[6].logits) == pytest.approx(list(result.logits), abs=1e-6)
+    # The streamed result is the non-streamed decision.
+    plain = predictor.decide(request)
+    assert list(result.logits) == pytest.approx(list(plain.logits), abs=1e-5)
+    assert result.usage == plain.usage and [e.op for e in result.trace] == [
+        e.op for e in plain.trace
+    ]
+    expand = [e for e in result.trace if e.op == "expand"]
+    assert [round(c, 4) for c in updates[7].contributions] == pytest.approx(
+        expand[0].details["relevance"], abs=1e-4
+    )
+
+
+def test_a_direct_budget_streams_render_then_result(memory) -> None:
+    from metanoia.api import TorchPredictor
+
+    model = build_model(config(memory), seed=0).eval()
+    items = list(TorchPredictor(model, "br@x", {}).decide_stream(make(["a", "b"], Budget())))
+    assert [getattr(i, "stage", "result") for i in items] == ["render", "score", "result"]
