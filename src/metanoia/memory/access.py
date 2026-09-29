@@ -32,6 +32,9 @@ class MemoryAccess:
         if memory is None:
             memory = ConceptMemory(Path(self.__dict__["_memory_path"]), device=str(self.device))
             object.__setattr__(self, "_memory", memory)
+        elif memory.keys.device != self.device:
+            # Loaded before the model moved (e.g. the identity check at load time).
+            memory.keys = memory.keys.to(self.device)
         return memory
 
     def retriever(self) -> RetrievalEncoder:

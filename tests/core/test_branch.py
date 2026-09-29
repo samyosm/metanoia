@@ -129,3 +129,26 @@ def test_branch_config_requires_joint_encoding(memory) -> None:
             scorer=DirectScorerConfig(latent_dim=32, hidden_dim=32, candidate_encoding="separate"),
             branch=BranchConfig(memory=str(memory)),
         )
+
+
+def test_memory_follows_the_model_device(memory) -> None:
+    model = build_model(config(memory), seed=0)
+    model.memory()  # loaded while the model is on the CPU
+    meta = torch.device("meta")
+    model.to(meta)
+    assert model.memory().keys.device == meta
+
+
+def test_focused_proposals_put_statements_about_the_candidate_first(memory) -> None:
+    from metanoia.memory.store import Concept
+    from metanoia.reasoning.branch import _stems
+
+    cfg = config(memory, nodes="retrieved")
+    branch = cfg.branch.model_copy(update={"proposals": "focused"})
+    model = build_model(cfg.model_copy(update={"branch": branch}), seed=0).eval()
+    texts = ["Heat moves by conduction.", "Copper wires conduct heat.", "Wood burns.", "Coppers."]
+    concepts = [Concept(f"c{i}", "x", ("x",), "n", t) for i, t in enumerate(texts)]
+    model.memory().concepts[:4] = concepts
+    order = model._focus("What conducts heat best?", "copper", [0, 1, 2, 3])
+    assert order == [1, 3, 0, 2]  # mentions of "copper" first, retrieval order kept
+    assert _stems("Batteries and wires") == {"battery", "wire"}

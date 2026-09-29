@@ -13,6 +13,7 @@ candidates, so evidence in one branch also moves the others' probabilities. Budg
 gives empty branches: exactly the direct model's input.
 """
 
+import re
 from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import Literal
@@ -138,24 +139,46 @@ class BranchDecisionModel(MemoryAccess, DirectDecisionModel):
     def _nodes(
         self, requests: Sequence[DecisionRequest], widths: list[int]
     ) -> tuple[list[list[list[int]]], list[list[list[float]]]]:
-        """Each candidate's first k_b proposals (retrieved or random)."""
+        """Each candidate's first k_b proposals (retrieved or random). With focused
+        proposals, a pool of ``FOCUS_POOL`` retrieved statements is reordered so those
+        mentioning the candidate come first (decision 0013)."""
         kmax = max(widths)
         if kmax == 0:
             return [[[] for _ in r.candidates] for r in requests], [
                 [[] for _ in r.candidates] for r in requests
             ]
+        cfg = self.branch_config
         pairs = [(r.question, c.text) for r in requests for c in r.candidates]
         source: Literal["retrieved", "random"] = (
-            "retrieved" if self.branch_config.nodes == "retrieved" else "random"
+            "retrieved" if cfg.nodes == "retrieved" else "random"
         )
-        flat, flat_sims = self.propose(pairs, kmax, source)
+        focused = source == "retrieved" and cfg.proposals == "focused"
+        pool = max(kmax, FOCUS_POOL) if focused else kmax
+        flat, flat_sims = self.propose(pairs, pool, source)
         nodes, sims, row = [], [], 0
         for r, k in zip(requests, widths, strict=True):
             n = len(r.candidates)
-            nodes.append([flat[row + i][:k] for i in range(n)])
-            sims.append([flat_sims[row + i][:k] for i in range(n)])
+            per_nodes, per_sims = [], []
+            for i in range(n):
+                order = list(range(len(flat[row + i])))
+                if focused:
+                    order = self._focus(r.question, r.candidates[i].text, flat[row + i])
+                per_nodes.append([flat[row + i][m] for m in order[:k]])
+                per_sims.append([flat_sims[row + i][m] for m in order[:k]])
+            nodes.append(per_nodes)
+            sims.append(per_sims)
             row += n
         return nodes, sims
+
+    def _focus(self, question: str, candidate: str, pool: list[int]) -> list[int]:
+        """Pool positions, statements mentioning the candidate's own words first (words
+        not in the question); retrieval order is kept within each group."""
+        own = _stems(candidate) - _stems(question)
+        memory = self.memory()
+        mentions = [bool(own & _stems(memory.concepts[c].text)) for c in pool]
+        return [m for m in range(len(pool)) if mentions[m]] + [
+            m for m in range(len(pool)) if not mentions[m]
+        ]
 
     def _explain(
         self,
@@ -203,6 +226,96 @@ class BranchDecisionModel(MemoryAccess, DirectDecisionModel):
         if per_candidate > self.branch_config.max_width:
             return self.branch_config.max_width, Termination.POLICY_STOP
         return per_candidate, Termination.COMPLETED
+
+
+_WORD = re.compile(r"[a-z]{3,}")
+# Retrieved statements considered per candidate before focused reordering.
+FOCUS_POOL = 64
+
+
+def _stems(text: str) -> set[str]:
+    """Content-word stems: lower-case words of 3+ letters, plurals made singular."""
+    stems = set()
+    for word in _WORD.findall(text.lower()):
+        if word in _STOP:
+            continue
+        stems.add(_singular(word))
+    return stems
+
+
+def _singular(word: str) -> str:
+    """batteries → battery, boxes → box, wires → wire; "glass" stays."""
+    if len(word) > 4 and word.endswith("ies"):
+        return word[:-3] + "y"
+    if len(word) > 4 and word.endswith(("ses", "xes", "zes", "ches", "shes")):
+        return word[:-2]
+    if len(word) > 3 and word.endswith("s") and not word.endswith(("ss", "us", "is")):
+        return word[:-1]
+    return word
+
+
+_STOP = frozenset(
+    [
+        "the",
+        "and",
+        "for",
+        "from",
+        "with",
+        "that",
+        "this",
+        "these",
+        "those",
+        "are",
+        "was",
+        "were",
+        "been",
+        "being",
+        "has",
+        "have",
+        "had",
+        "not",
+        "but",
+        "its",
+        "into",
+        "than",
+        "then",
+        "there",
+        "their",
+        "them",
+        "they",
+        "which",
+        "what",
+        "who",
+        "how",
+        "why",
+        "when",
+        "can",
+        "will",
+        "would",
+        "should",
+        "could",
+        "may",
+        "might",
+        "most",
+        "more",
+        "less",
+        "some",
+        "any",
+        "all",
+        "each",
+        "other",
+        "such",
+        "only",
+        "also",
+        "very",
+        "much",
+        "many",
+        "one",
+        "two",
+        "use",
+        "used",
+    ]
+)
 
 
 def _row(encoded: EncodedText, b: int) -> EncodedText:

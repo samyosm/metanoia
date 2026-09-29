@@ -117,6 +117,10 @@ class BranchConfig(StrictModel):
     kind: Literal["branch"] = "branch"
     memory: str  # path to a memory bundle (artifacts/memories/<id>)
     nodes: Literal["retrieved", "random", "none"] = "retrieved"
+    # How retrieved nodes are chosen: "similarity" (top-k for "question candidate",
+    # decision 0012) or "focused" (a larger retrieved pool, statements mentioning the
+    # candidate first; decision 0013).
+    proposals: Literal["similarity", "focused"] = "similarity"
     # Widths (nodes per candidate) sampled per training batch; dev loss uses the largest.
     train_widths: tuple[int, ...] = (0, 1, 2, 4, 8)
     max_width: int = Field(default=8, ge=1)  # the most nodes per candidate at inference
