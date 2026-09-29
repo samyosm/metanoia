@@ -145,7 +145,7 @@ whose `path` is the chosen checkpoint directory. `select` refuses the `test` and
 `calibration` splits. Dev-only runs record `suite.splits`, so `compare` never mixes them
 with full-protocol runs.
 
-### Stage 2: concept memory and candidate expansion (decisions 0010, 0011)
+### Stage 2: concept memory and candidate expansion (decisions 0010–0012)
 
 The current path is:
 1. Each candidate **expands** into concepts retrieved from a concept memory.
@@ -172,6 +172,13 @@ training width:
 Traces contain one `expand` event per candidate (its concepts and their relevance) and
 one `aggregate` event (evidence per candidate and its most-attended concepts, from any
 branch).
+
+**EXPAND v1 result** (R016): the model ignored the concepts. Retrieved, random and no
+concepts decide identically, and the fine-tuned direct model is 6 points better. R017
+shows why: a pooled "concept + input" vector barely depends on the concept, while
+reading a relevant fact in the input helps a lot. The next design, EXPAND v2 (decision
+0012), reads each candidate's branch in the trainable reader's input, over a memory of
+statements about concepts. The `[expansion]` code above stays, for reproducing R016.
 
 ### Parked: Stage 3a, the budgeted workspace (decision 0008)
 
