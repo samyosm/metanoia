@@ -8,11 +8,12 @@ equal size is the chance reference. Retrieval quality is not usefulness: EXPAND 
 to select concepts in context.
 """
 
+import functools
 import json
 import random
 import re
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 from metanoia.memory.encoder import RetrievalEncoder
 from metanoia.memory.store import ConceptMemory
@@ -137,12 +138,17 @@ def access_recall(
     ks: tuple[int, ...],
     splits: tuple[str, ...],
     seed: int = 0,
+    match: Literal["names", "text"] = "names",
+    nltk_data: str = "artifacts/nltk_data",
 ) -> dict[str, Any]:
+    """``match``: a fact word is found if it is a word of a retrieved node's names (R015,
+    concepts) or of its text (statements, decision 0012)."""
     import nltk
 
-    nltk.data.path.insert(0, str(Path(memory.manifest.source["config"]["nltk_data"]).resolve()))
+    nltk.data.path.insert(0, str(Path(nltk_data).resolve()))
     from nltk.corpus import wordnet
 
+    @functools.cache
     def morphy(word: str) -> str | None:
         for pos in ("n", "v", "a"):
             if lemma := wordnet.morphy(word, pos):
@@ -159,7 +165,12 @@ def access_recall(
     _, cases = read_cases(dataset_dir)
     cases = [c for c in cases if c.example_id in facts and c.split in splits]
     concept_words = [
-        {morphy(w) or w for name in c.names for w in _WORD.findall(name) if w not in STOPWORDS}
+        {
+            morphy(w) or w
+            for field in (c.names if match == "names" else (c.text,))
+            for w in _WORD.findall(field.lower())
+            if w not in STOPWORDS
+        }
         for c in memory.concepts
     ]
     queries = [f"{c.request.question} {cand.text}" for c in cases for cand in c.request.candidates]
@@ -204,5 +215,6 @@ def access_recall(
         "questions": len(cases),
         "questions_with_novel_fact_words": counted["novel"],
         "ks_per_candidate": list(ks),
+        "match": match,
         "recall": recall,
     }

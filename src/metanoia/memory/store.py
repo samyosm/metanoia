@@ -27,6 +27,10 @@ class Concept:
     text: str  # the text whose embedding is the key
 
 
+# Scores computed per search chunk (about 128 MB in float16).
+SEARCH_SCORES = 64 * 1024 * 1024
+
+
 class ConceptMemory:
     def __init__(self, directory: Path, device: str = "cpu") -> None:
         self.directory = directory
@@ -55,6 +59,16 @@ class ConceptMemory:
     def search(self, queries: torch.Tensor, k: int) -> tuple[torch.Tensor, torch.Tensor]:
         """Exact top-k by cosine similarity: ``queries`` [Q, dim], normalized.
         Returns (indices [Q, k], similarities [Q, k])."""
-        scores = queries.to(self.keys.device, self.keys.dtype) @ self.keys.T
-        top = torch.topk(scores, k=min(k, len(self.concepts)), dim=-1)
-        return top.indices, top.values.float()
+        queries = queries.to(self.keys.device, self.keys.dtype)
+        k = min(k, len(self.concepts))
+        # Score in query chunks so a large memory never needs a [Q, size] matrix at once.
+        chunk = max(1, SEARCH_SCORES // len(self.concepts))
+        indices, values = [], []
+        for start in range(0, len(queries), chunk):
+            top = torch.topk(queries[start : start + chunk] @ self.keys.T, k=k, dim=-1)
+            indices.append(top.indices)
+            values.append(top.values.float())
+        if not indices:
+            empty = torch.zeros(0, k, device=self.keys.device)
+            return empty.long(), empty
+        return torch.cat(indices), torch.cat(values)

@@ -158,7 +158,14 @@ def memory_recall(args: argparse.Namespace) -> None:
     if encoder.identity() != spec:
         raise ValueError(f"retrieval encoder {encoder.identity()} differs from the memory's {spec}")
     report = access_recall(
-        Path(args.dataset), memory, encoder, tuple(args.k), tuple(args.splits), args.seed
+        Path(args.dataset),
+        memory,
+        encoder,
+        tuple(args.k),
+        tuple(args.splits),
+        args.seed,
+        match=args.match,
+        nltk_data=args.nltk_data,
     )
     report["created_at"] = utc_now()
     out = Path(args.out)
@@ -223,6 +230,8 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--dataset", required=True)
     p.add_argument("--splits", nargs="+", default=["train", "dev"])
     p.add_argument("--k", type=int, nargs="+", default=[4, 8, 16, 32])
+    p.add_argument("--match", choices=["names", "text"], default="names")
+    p.add_argument("--nltk-data", default="artifacts/nltk_data")
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--device", default="cuda")
     p.add_argument("--out", required=True)

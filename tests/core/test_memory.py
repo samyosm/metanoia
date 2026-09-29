@@ -7,6 +7,7 @@ import numpy as np
 import pytest
 import torch
 
+from metanoia.memory import store
 from metanoia.memory.store import MEMORY_MANIFEST, ConceptMemory
 from metanoia_contracts.artifacts import FileRef, MemoryManifest
 from metanoia_contracts.provenance import sha256_file, utc_now
@@ -54,6 +55,19 @@ def test_exact_search_returns_nearest_concepts(tmp_path) -> None:
     indices, sims = memory.search(query, k=2)
     assert indices.tolist() == [[1, 2]]
     assert sims[0].tolist() == pytest.approx([0.8, 0.6], abs=1e-3)
+
+
+def test_chunked_search_matches_one_pass(tmp_path, monkeypatch) -> None:
+    rng = np.random.default_rng(0)
+    keys = rng.normal(size=(50, 8))
+    keys /= np.linalg.norm(keys, axis=1, keepdims=True)
+    write_memory(tmp_path / "m", keys)
+    memory = ConceptMemory(tmp_path / "m")
+    queries = torch.nn.functional.normalize(torch.randn(7, 8), dim=-1)
+    whole = memory.search(queries, k=5)
+    monkeypatch.setattr(store, "SEARCH_SCORES", 100)  # two queries per chunk
+    chunked = memory.search(queries, k=5)
+    assert torch.equal(whole[0], chunked[0]) and torch.equal(whole[1], chunked[1])
 
 
 def test_tampered_memory_is_refused(tmp_path) -> None:
