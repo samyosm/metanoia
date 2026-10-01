@@ -12,6 +12,7 @@ from metanoia_analysis import ANALYSIS_REVISION
 from metanoia_analysis.calibration import apply_temperature
 from metanoia_analysis.load import Item, LoadedRun, align, load_labels, load_run
 from metanoia_analysis.metrics import expected_calibration_error, per_example, reliability
+from metanoia_analysis.selective import selective_row
 from metanoia_analysis.spec import AnalysisSpec
 from metanoia_analysis.statistics import group_bootstrap_ci
 from metanoia_contracts.artifacts import AnalysisResult, CalibrationArtifact, MetricValue
@@ -143,6 +144,22 @@ def analyze(
             tables[f"reliability/{split}/{budget_id}/{variant}"] = reliability(
                 scored, spec.ece_bins
             )
+            if spec.selective_precisions:
+                # Thresholds and tertile edges are fixed on the dev split, per slice.
+                reference = (
+                    scored
+                    if split == "dev"
+                    else transform(
+                        [i for i in items if i.split == "dev" and i.budget_id == budget_id]
+                    )
+                )
+                reference_slices = dict(slices(reference, spec.slice_by)) if reference else {}
+                tables[f"selective/{split}/{budget_id}/{variant}"] = [
+                    selective_row(
+                        name, subset, reference_slices.get(name, []), spec.selective_precisions
+                    )
+                    for name, subset in slices(scored, spec.slice_by)
+                ]
 
     failed = sum(i.failed for i in items)
     if failed:
@@ -183,6 +200,10 @@ def write_result(result: AnalysisResult, out_root: Path) -> Path:
     return path
 
 
+def _fmt(value: float | None) -> str:
+    return "-" if value is None else f"{value:.3f}"
+
+
 def format_table(result: AnalysisResult) -> str:
     lines = [f"{result.analysis_id}"]
     for m in result.metrics:
@@ -191,4 +212,20 @@ def format_table(result: AnalysisResult) -> str:
             f"  {m.split:<12} {m.budget_id:<6} {m.variant:<10} {m.slice:<22} "
             f"{m.metric:<16} {m.value:.4f}{ci}  n={m.n}"
         )
+    for key, rows in result.tables.items():
+        if not key.startswith("selective/"):
+            continue
+        lines.append(f"  {key}")
+        for row in rows:
+            cov = "  ".join(
+                f"cov@{p}={v['transfer']['coverage']:.3f}(prec {_fmt(v['transfer']['precision'])})"
+                for p, v in row["coverage_at_precision"].items()
+            )
+            auc = "-" if row["auroc"] is None else f"{row['auroc']:.3f}"
+            tert = "/".join(
+                "-" if t["accuracy"] is None else f"{t['accuracy']:.2f}" for t in row["tertiles"]
+            )
+            lines.append(
+                f"    {row['slice']:<22} n={row['n']:<6} auroc={auc}  {cov}  tertile acc {tert}"
+            )
     return "\n".join(lines)

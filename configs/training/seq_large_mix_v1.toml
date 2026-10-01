@@ -1,0 +1,26 @@
+name = "seq_large_mix_v1"
+# PLAN_V3 stage A on mix_v1 (10 sources, law and medicine included). Each epoch draws
+# 100000 examples with source shares proportional to n ** 0.5 (mix_alpha), three epochs.
+# Marker encoding, ModernBERT-large, sequential positions.
+model_config_path = "configs/models/seq_modernbert_large.toml"
+dataset = "artifacts/datasets/mix_v1"
+train_split = "train"
+dev_split = "dev"
+batch_size = 32
+micro_batch_size = 8
+learning_rate = 1e-4
+encoder_learning_rate = 1.5e-5
+weight_decay = 0.01
+warmup_fraction = 0.06
+schedule = "linear"
+precision = "fp16-mixed"
+grad_clip = 1.0
+seed = 0
+device = "cuda"
+log_every_steps = 100
+epochs = 3
+subset = "random"
+max_dev_examples = 4000
+mix_alpha = 0.5
+epoch_examples = 100000
+checkpoint_each_epoch = true

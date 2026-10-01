@@ -23,6 +23,9 @@ class AnalysisSpec(StrictModel):
     bootstrap_seed: int = 0
     confidence: float = Field(default=0.95, gt=0, lt=1)
     # log(0) is undefined; probabilities are floored here before NLL and declared.
+    # Selective metrics (PLAN_V3 A4): coverage at each target precision, confidence AUROC and
+    # accuracy per confidence tertile, written to the analysis ``tables``. Empty: none.
+    selective_precisions: tuple[float, ...] = ()
     nll_floor: float = Field(default=1e-15, gt=0, lt=1e-3)
 
 

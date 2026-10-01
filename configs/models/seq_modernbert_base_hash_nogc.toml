@@ -1,0 +1,31 @@
+# Cloud variant of seq_modernbert_base_hash: no gradient checkpointing.
+# Single-sequence marker encoding (decision 0015) on a fine-tuned ModernBERT-base: all
+# options in one marked sequence, one encoder pass per request, random option order in
+# training, rotation averaging off (set sequence.rotations for inference).
+name = "seq_modernbert_base_hash_nogc"
+
+[encoder]
+kind = "hf"
+model = "answerdotai/ModernBERT-base"
+revision = "8949b909ec900327062f0ebf497f51aef5e6f0c8"
+max_length = 512
+pooling = "mean"
+frozen = false
+gradient_checkpointing = false
+
+[scorer]
+kind = "direct"
+candidate_encoding = "sequence"
+
+[scorer.sequence]
+head_layers = 2
+head_heads = 8
+head_ff_mult = 2
+dropout = 0.1
+option_max_tokens = 48
+head_max_len = 256
+shuffle_options = true
+rotations = 1
+position_reset = false
+position_hash = true
+position_hash_range = 512

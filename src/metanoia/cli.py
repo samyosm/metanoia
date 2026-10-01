@@ -77,6 +77,7 @@ def _load(args: argparse.Namespace):  # type: ignore[no-untyped-def]
         calibration=Path(args.calibration) if args.calibration else None,
         device=device,
         precision=args.precision,
+        rotations=getattr(args, "rotations", 1),
     )
 
 
@@ -149,6 +150,9 @@ def _model_arguments(p: argparse.ArgumentParser) -> None:
     p.add_argument("--bundle", required=True, help="predictor bundle directory")
     p.add_argument("--calibration", help="fitted calibration JSON for this predictor")
     p.add_argument("--device", default="auto", help="cpu, cuda, or auto (default)")
+    p.add_argument(
+        "--rotations", type=int, default=1, help="marker models: average over K option rotations"
+    )
     p.add_argument("--precision", default="fp32", choices=["fp32", "fp16"])
 
 

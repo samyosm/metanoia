@@ -67,6 +67,10 @@ class SequenceDecisionModel(DirectDecisionModel):
         self.candidate_encoding = "sequence"
         self.config = config
 
+    def set_rotations(self, rotations: int) -> None:
+        """Inference: average over this many cyclic rotations of the option order."""
+        self.config = self.config.model_copy(update={"rotations": rotations})
+
     def build(self, requests: Sequence[DecisionRequest]) -> BuiltSequences:
         return build_sequences(
             self.encoder.tokenizer,

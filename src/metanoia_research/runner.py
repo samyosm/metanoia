@@ -56,6 +56,8 @@ class PredictorSpec(StrictModel):
     device: str = "cpu"
     # Inference precision for bundle predictors; part of the predictor's identity.
     precision: Literal["fp32", "fp16"] = "fp32"
+    # Marker-encoding bundles: average over this many option rotations (identity changes).
+    rotations: int = Field(default=1, ge=1)
 
 
 class CollectionConfig(StrictModel):
@@ -94,7 +96,11 @@ def build_predictor(spec: PredictorSpec) -> Predictor:
 
     calibration = Path(spec.calibration) if spec.calibration else None
     return load_predictor(
-        Path(spec.path), calibration=calibration, device=spec.device, precision=spec.precision
+        Path(spec.path),
+        calibration=calibration,
+        device=spec.device,
+        precision=spec.precision,
+        rotations=spec.rotations,
     )
 
 

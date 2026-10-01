@@ -569,9 +569,18 @@ BUNDLE_MANIFEST = "bundle.json"
 
 
 def load_predictor(
-    bundle_dir: Path, calibration: Path | None = None, device: str = "cpu", precision: str = "fp32"
+    bundle_dir: Path,
+    calibration: Path | None = None,
+    device: str = "cpu",
+    precision: str = "fp32",
+    rotations: int = 1,
 ) -> TorchPredictor:
-    """Load a predictor bundle, verify weight hashes and encoder identity."""
+    """Load a predictor bundle, verify weight hashes and encoder identity.
+
+    ``rotations`` > 1 (single-sequence models only) averages each decision over that many
+    cyclic rotations of the option order. It changes the predictions, so it changes the
+    predictor's identity: ``+rotK`` is appended to the id, and calibrations do not carry over.
+    """
     import torch
 
     from metanoia.build import build_model, check_encoder_identity
@@ -596,10 +605,17 @@ def load_predictor(
         torch.load(weights_path, map_location="cpu", weights_only=True)
     )
     model.to(device)
-    calibrator = Calibrator.load(calibration, manifest.predictor_id) if calibration else None
+    predictor_id = manifest.predictor_id
+    if rotations > 1:
+        set_rotations = getattr(model, "set_rotations", None)
+        if set_rotations is None:
+            raise ValueError("rotations apply to single-sequence (marker) models only")
+        set_rotations(rotations)
+        predictor_id = f"{predictor_id}+rot{rotations}"
+    calibrator = Calibrator.load(calibration, predictor_id) if calibration else None
     return TorchPredictor(
         model,
-        manifest.predictor_id,
+        predictor_id,
         manifest.resolved_config,
         calibrator=calibrator,
         precision=precision,

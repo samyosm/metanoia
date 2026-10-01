@@ -1,0 +1,11 @@
+run_id = "seq_sciq_quick_rot4_mcqa_v0_all"
+suite = "suites/mcqa_v0"
+dataset = "artifacts/datasets/mcqa_v0"
+output_root = "artifacts/runs"
+
+[predictor]
+kind = "bundle"
+path = "artifacts/predictors/seq_sciq_quick"
+device = "cuda"
+precision = "fp16"
+rotations = 4
