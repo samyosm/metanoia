@@ -41,6 +41,26 @@ class HFEncoderConfig(StrictModel):
 EncoderConfig = Annotated[HashingEncoderConfig | HFEncoderConfig, Field(discriminator="kind")]
 
 
+class SequenceConfig(StrictModel):
+    """Single-sequence marker encoding (decision 0015, after Laya).
+
+    ``[CLS] question [SEP] [MASK] opt0 [MASK] opt1 ... [SEP] context [SEP]``; one score per
+    option is read from its marker's final state. Options come before the context, so
+    truncation cuts the context, never an option.
+    """
+
+    head_layers: int = Field(default=2, ge=0)  # transformer layers over the whole sequence
+    head_heads: int = Field(default=8, ge=1)
+    head_ff_mult: int = Field(default=2, ge=1)
+    dropout: float = Field(default=0.1, ge=0.0, lt=1.0)
+    option_max_tokens: int = Field(default=48, ge=4)  # per option, before the head budget
+    head_max_len: int = Field(default=256, ge=32)  # question + options (Laya's head budget)
+    # Order robustness (the marker format is position-sensitive, unlike joint encoding).
+    shuffle_options: bool = True  # random option order in every training forward
+    rotations: int = Field(default=1, ge=1)  # inference: average over this many rotations
+    position_reset: bool = False  # every option segment starts at the same position id
+
+
 class DirectScorerConfig(StrictModel):
     kind: Literal["direct"] = "direct"
     latent_dim: int = Field(default=64, ge=8)
@@ -50,7 +70,18 @@ class DirectScorerConfig(StrictModel):
     # ``separate``: each candidate text is encoded alone (a_i ignores the input).
     # ``joint``: each candidate is encoded together with the rendered input, so a_i is
     # contextual (N encoder passes per request instead of one).
-    candidate_encoding: Literal["separate", "joint"] = "separate"
+    # ``sequence``: all options in one marked sequence, one encoder pass (decision 0015);
+    # needs the ``sequence`` settings and replaces the candidate scorer by a marker head.
+    candidate_encoding: Literal["separate", "joint", "sequence"] = "separate"
+    sequence: SequenceConfig | None = None
+
+    @model_validator(mode="after")
+    def _sequence_settings(self) -> "DirectScorerConfig":
+        if (self.candidate_encoding == "sequence") != (self.sequence is not None):
+            raise ValueError(
+                '"sequence" settings are set exactly for candidate_encoding "sequence"'
+            )
+        return self
 
 
 class WorkspaceConfig(StrictModel):
@@ -171,4 +202,9 @@ class ModelConfig(StrictModel):
             raise ValueError("a model has at most one of workspace, expansion and branch")
         if self.branch is not None and self.scorer.candidate_encoding != "joint":
             raise ValueError("branch reading needs joint candidate encoding")
+        if self.scorer.candidate_encoding == "sequence":
+            if mechanisms:
+                raise ValueError("sequence encoding supports the direct decision only (so far)")
+            if not isinstance(self.encoder, HFEncoderConfig):
+                raise ValueError("sequence encoding needs a Hugging Face encoder")
         return self

@@ -38,6 +38,13 @@ def build_model(config: ModelConfig, seed: int | None = None) -> DirectDecisionM
     if seed is not None:
         torch.manual_seed(seed)
     encoder = build_encoder(config.encoder)
+    if config.scorer.sequence is not None:
+        from metanoia.sequence_model import SequenceDecisionModel
+
+        return SequenceDecisionModel(encoder, config.scorer.sequence)
+    encoding = config.scorer.candidate_encoding
+    if encoding == "sequence":
+        raise AssertionError("sequence settings are validated with the encoding")
     scorer = CandidateScorer(
         input_dim=encoder.output_dim,
         latent_dim=config.scorer.latent_dim,
@@ -48,20 +55,16 @@ def build_model(config: ModelConfig, seed: int | None = None) -> DirectDecisionM
     if config.branch is not None:
         from metanoia.reasoning.branch import BranchDecisionModel
 
-        return BranchDecisionModel(encoder, scorer, config.scorer.candidate_encoding, config.branch)
+        return BranchDecisionModel(encoder, scorer, encoding, config.branch)
     if config.expansion is not None:
         from metanoia.reasoning.expand import ExpansionDecisionModel
 
-        return ExpansionDecisionModel(
-            encoder, scorer, config.scorer.candidate_encoding, config.expansion
-        )
+        return ExpansionDecisionModel(encoder, scorer, encoding, config.expansion)
     if config.workspace is not None:
         from metanoia.engine import WorkspaceDecisionModel
 
-        return WorkspaceDecisionModel(
-            encoder, scorer, config.scorer.candidate_encoding, config.workspace
-        )
-    return DirectDecisionModel(encoder, scorer, config.scorer.candidate_encoding)
+        return WorkspaceDecisionModel(encoder, scorer, encoding, config.workspace)
+    return DirectDecisionModel(encoder, scorer, encoding)
 
 
 def check_encoder_identity(model: DirectDecisionModel, recorded: dict[str, Any]) -> None:

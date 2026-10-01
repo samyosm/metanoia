@@ -6,6 +6,7 @@ Frozen by default; ``frozen=False`` fine-tunes the pretrained weights.
 from collections.abc import Sequence
 from typing import Literal
 
+import torch
 from torch import nn
 
 from metanoia.encoding.hashing import masked_mean
@@ -66,6 +67,18 @@ class HFEncoder(nn.Module):
         mask = batch["attention_mask"].bool()
         pooled = states[:, 0] if self.pooling == "cls" else masked_mean(states, mask)
         return EncodedText(states=states, mask=mask, pooled=pooled, offsets=offsets)
+
+    def encode_ids(
+        self,
+        input_ids: torch.Tensor,
+        attention_mask: torch.Tensor,
+        position_ids: torch.Tensor | None = None,
+    ) -> torch.Tensor:
+        """Token states for pre-built id sequences (the marker format, decision 0015)."""
+        kwargs = {} if position_ids is None else {"position_ids": position_ids}
+        return self.model(
+            input_ids=input_ids, attention_mask=attention_mask, **kwargs
+        ).last_hidden_state
 
     def identity(self) -> dict[str, object]:
         identity: dict[str, object] = {
