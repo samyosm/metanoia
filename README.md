@@ -38,9 +38,11 @@ It runs on CPU by default; for a GPU, build with
 `--build-arg TORCH_INDEX=https://download.pytorch.org/whl/cu128`, add `gpus: all` to the
 service and set `METANOIA_DEVICE=cuda`, `METANOIA_PRECISION=fp16`.
 
-**Cloudflare tunnel.** Either `cloudflared tunnel --url http://localhost:3000`, or put
-`TUNNEL_TOKEN=...` in `.env` and run `docker compose --profile tunnel up -d`. The site has
-no login; use Cloudflare Access if it should not be open to everyone.
+**Cloudflare tunnel** (served at https://metanoia.samy.dev). Put the tunnel token in `.env`
+(see `.env.example`) and run `docker compose --profile tunnel up -d`. In the Cloudflare
+dashboard (Zero Trust, Networks, Tunnels), give the tunnel one public hostname,
+`metanoia.samy.dev`, with service `http://metanoia:3000`. The site has no login; use
+Cloudflare Access if it should not be open to everyone.
 
 Models are chosen from `serving/artifacts`. Pass other bundle names to
 `export_serving.py` to serve them. To train your own, see [docs/WORKFLOW.md](docs/WORKFLOW.md).
@@ -61,6 +63,10 @@ cd interface && pnpm install && pnpm dev       # needs a trained model in artifa
 - `configs/`, `suites/`, `analysis/`: experiment settings and fixed evaluation protocols.
 - `docs/`: [workflow](docs/WORKFLOW.md), [plan](docs/PLAN.md), [decisions](docs/decisions/).
 - `RESULT_LOG.md`, `result_logs/`, `model_cards.toml`: what was tried and what each model can do.
+
+## Licence
+
+MIT, see [LICENSE](LICENSE). Datasets and pretrained models keep their own licences.
 
 ## Data and credits
 
