@@ -7,6 +7,7 @@ left, so a long context is truncated and an option never is. Each option's first
 the tokenizer's ``[MASK]``; its position is the option's *marker*, where the score is read.
 """
 
+import hashlib
 from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import Any
@@ -47,6 +48,8 @@ def build_sequences(
     head_max_len: int,
     option_max_tokens: int,
     position_reset: bool,
+    position_hash: bool = False,
+    position_hash_range: int = 512,
 ) -> BuiltSequences:
     cls_id, sep_id = tokenizer.cls_token_id, tokenizer.sep_token_id
     mask_id, pad_id = tokenizer.mask_token_id, tokenizer.pad_token_id
@@ -70,17 +73,23 @@ def build_sequences(
         seq, pos, markers = list(head), list(range(len(head))), []
         start = len(head)
         longest = max(len(o) for o in options) + 1
-        for option in options:
+        for option, candidate in zip(options, request.candidates, strict=True):
             markers.append(len(seq))
             segment = [mask_id, *option]
             seq += segment
-            pos += (
-                list(range(start, start + len(segment)))
-                if position_reset
-                else list(range(len(seq) - len(segment), len(seq)))
-            )
+            if position_hash:
+                offset = int(hashlib.sha256(candidate.text.encode()).hexdigest(), 16)
+                first = start + offset % position_hash_range
+                pos += list(range(first, first + len(segment)))
+            elif position_reset:
+                pos += list(range(start, start + len(segment)))
+            else:
+                pos += list(range(len(seq) - len(segment), len(seq)))
         seq.append(sep_id)
-        pos.append(start + longest if position_reset else len(seq) - 1)
+        if position_hash:
+            pos.append(start + position_hash_range + option_max_tokens + 1)
+        else:
+            pos.append(start + longest if position_reset else len(seq) - 1)
 
         context = ids(context_text(request))
         room = max(0, max_length - len(seq) - 1)
@@ -112,7 +121,7 @@ def build_sequences(
     return BuiltSequences(
         input_ids=input_ids,
         attention_mask=attention,
-        position_ids=pos_ids if position_reset else None,
+        position_ids=pos_ids if (position_reset or position_hash) else None,
         markers=markers_t,
         option_mask=option_mask,
         context_kept=kept,

@@ -148,3 +148,18 @@ def test_config_requires_sequence_settings():
         DirectScorerConfig(candidate_encoding="sequence")
     with pytest.raises(ValueError):
         DirectScorerConfig(candidate_encoding="joint", sequence=SequenceConfig())
+
+
+def test_hashed_positions_do_not_depend_on_option_order_but_differ_between_options():
+    model = _model(position_hash=True)
+    a = model.build([_request(OPTIONS)])
+    b = model.build([_request(OPTIONS[::-1])])
+    starts_a = {int(a.position_ids[0, m]) for m in a.markers[0]}
+    starts_b = {int(b.position_ids[0, m]) for m in b.markers[0]}
+    assert starts_a == starts_b and len(starts_a) == 4
+    assert a.position_ids[0, -1] == b.position_ids[0, -1]
+
+
+def test_reset_and_hash_are_exclusive():
+    with pytest.raises(ValueError):
+        SequenceConfig(position_reset=True, position_hash=True)

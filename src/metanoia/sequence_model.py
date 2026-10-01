@@ -75,6 +75,8 @@ class SequenceDecisionModel(DirectDecisionModel):
             head_max_len=self.config.head_max_len,
             option_max_tokens=self.config.option_max_tokens,
             position_reset=self.config.position_reset,
+            position_hash=self.config.position_hash,
+            position_hash_range=self.config.position_hash_range,
         )
 
     def _score(self, requests: Sequence[DecisionRequest]) -> torch.Tensor:

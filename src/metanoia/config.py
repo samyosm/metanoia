@@ -58,7 +58,20 @@ class SequenceConfig(StrictModel):
     # Order robustness (the marker format is position-sensitive, unlike joint encoding).
     shuffle_options: bool = True  # random option order in every training forward
     rotations: int = Field(default=1, ge=1)  # inference: average over this many rotations
-    position_reset: bool = False  # every option segment starts at the same position id
+    # Every option segment starts at the same position id. KNOWN NOT TO LEARN (R032): markers
+    # lose track of their own option's tokens. Kept so the experiment stays reproducible.
+    position_reset: bool = False
+    # Each option segment starts at a position derived from its own text (stable hash, within
+    # ``position_hash_range``), so positions do not depend on the presented order but options
+    # keep distinct position ranges (R032: resets alone make markers blind to their option).
+    position_hash: bool = False
+    position_hash_range: int = Field(default=512, ge=16)
+
+    @model_validator(mode="after")
+    def _one_position_scheme(self) -> "SequenceConfig":
+        if self.position_reset and self.position_hash:
+            raise ValueError("position_reset and position_hash are alternatives")
+        return self
 
 
 class DirectScorerConfig(StrictModel):

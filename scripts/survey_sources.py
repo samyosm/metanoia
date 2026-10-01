@@ -22,7 +22,10 @@ CANDIDATES = {
     "2wiki": ["framolfese/2WikiMultihopQA", "scholarly-shadows-syndicate/2wikimultihopqa"],
     "casehold": ["coastalcph/lex_glue", "casehold/casehold"],
     "contractnli": ["kiddothe2b/contract-nli", "tasksource/contract-nli"],
-    "cuad": ["theatticusproject/cuad-qa", "dvgodoy/CUAD_v1_Contract_Understanding_clause_classification"],
+    "cuad": [
+        "theatticusproject/cuad-qa",
+        "dvgodoy/CUAD_v1_Contract_Understanding_clause_classification",
+    ],
     "legalbench": ["nguha/legalbench"],
     "pubmedqa": ["qiaojin/PubMedQA"],
     "medmcqa": ["openlifescienceai/medmcqa"],
@@ -56,7 +59,9 @@ def main() -> None:
                 infos = [infos]
             for cfg in infos or []:
                 for sp in cfg.get("splits", []):
-                    splits[f"{cfg.get('config_name', 'default')}/{sp['name']}"] = sp.get("num_examples")
+                    splits[f"{cfg.get('config_name', 'default')}/{sp['name']}"] = sp.get(
+                        "num_examples"
+                    )
             print(
                 json.dumps(
                     {

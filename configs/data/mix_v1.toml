@@ -1,0 +1,11 @@
+# Broad multiple-choice training mix (PLAN_V3 stage A2). General reading (RACE), science
+# (SciQ, ARC, OBQA, QASC), commonsense, a yes/no source (BoolQ), law with a passage
+# (CaseHOLD) and medicine without a passage (MedMCQA). Same seed and validation-split rule
+# as mcqa_v0 for RACE and SciQ, so those slices match mcqa_v0 (same partition and test);
+# the ARC/OBQA slices have a different seed than knowledge_v0, so use knowledge_v0 itself
+# for its numbers. QuALITY (long articles) is a separate suite, not in this mix.
+generator = "mcqa"
+dataset_id = "mix_v1"
+seed = 20260926
+sources = ["race", "sciq", "arc_easy", "arc_challenge", "obqa", "qasc", "commonsenseqa", "boolq", "casehold", "medmcqa"]
+dev_fraction = 0.5

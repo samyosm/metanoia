@@ -47,17 +47,17 @@ from metanoia_research.training.config import TrainingConfig
 Example = tuple[DecisionRequest, int]
 
 
-def load_examples(
-    dataset_dir: Path,
-    split: str,
-    limit: int | None = None,
-    subset: str = "head",
-    seed: int = 0,
-) -> list[Example]:
+def _selected(
+    dataset_dir: Path, split: str, limit: int | None, subset: str, seed: int
+) -> list[tuple[DecisionRequest, int, str]]:
     _, cases = read_cases(dataset_dir)
-    labels = {label.example_id: label.label_id for label in read_labels(dataset_dir)}
+    labels = {label.example_id: label for label in read_labels(dataset_dir)}
     examples = [
-        (case.request, case.request.candidate_ids.index(labels[case.example_id]))
+        (
+            case.request,
+            case.request.candidate_ids.index(labels[case.example_id].label_id),
+            str(labels[case.example_id].annotations.get("source", "")),
+        )
         for case in cases
         if case.split == split
     ]
@@ -66,6 +66,56 @@ def load_examples(
     if limit and subset == "random":
         return random.Random(f"{seed}:{split}").sample(examples, min(limit, len(examples)))
     return examples[:limit] if limit else examples
+
+
+def load_examples(
+    dataset_dir: Path,
+    split: str,
+    limit: int | None = None,
+    subset: str = "head",
+    seed: int = 0,
+) -> list[Example]:
+    return [(r, t) for r, t, _ in _selected(dataset_dir, split, limit, subset, seed)]
+
+
+def load_sources(
+    dataset_dir: Path,
+    split: str,
+    limit: int | None = None,
+    subset: str = "head",
+    seed: int = 0,
+) -> list[str]:
+    """The source of each example ``load_examples`` returns with the same arguments."""
+    return [s for _, _, s in _selected(dataset_dir, split, limit, subset, seed)]
+
+
+def epoch_order(
+    size: int, sources: Sequence[str] | None, config: TrainingConfig, rng: random.Random
+) -> list[int]:
+    """One epoch's example order. Plain: a shuffled pass. Mixed: see ``mix_alpha``."""
+    if config.mix_alpha is None:
+        order = list(range(size))
+        rng.shuffle(order)
+        return order
+    if sources is None or len(sources) != size:
+        raise ValueError("mix_alpha needs the source of every training example")
+    by_source: dict[str, list[int]] = {}
+    for index, source in enumerate(sources):
+        by_source.setdefault(source, []).append(index)
+    total = config.epoch_examples or size
+    weights = {s: len(ix) ** config.mix_alpha for s, ix in by_source.items()}
+    norm = sum(weights.values())
+    order = []
+    for source, indices in sorted(by_source.items()):
+        share = max(1, round(total * weights[source] / norm))
+        pool: list[int] = []
+        while len(pool) < share:
+            cycle = indices[:]
+            rng.shuffle(cycle)
+            pool += cycle
+        order += pool[:share]
+    rng.shuffle(order)
+    return order
 
 
 def batch_loss(
@@ -182,6 +232,7 @@ def fit(
     on_epoch: Callable[[dict[str, Any]], None] = lambda record: None,
     resume: dict[str, Any] | None = None,
     checkpoint: CheckpointFn | None = None,
+    train_sources: Sequence[str] | None = None,
 ) -> tuple[Progress, torch.optim.Optimizer, torch.amp.GradScaler]:
     """Train in place. ``resume`` is a saved train state (see :func:`train_state`)."""
     rng = random.Random(config.seed)
@@ -227,14 +278,14 @@ def fit(
         if resume.get("cuda_rng") is not None and torch.cuda.is_available():
             torch.cuda.set_rng_state_all(resume["cuda_rng"])
     micro = config.micro_batch_size or config.batch_size
-    steps_per_epoch = -(-len(train) // config.batch_size)
+    epoch_size = len(train) if config.mix_alpha is None else (config.epoch_examples or len(train))
+    steps_per_epoch = -(-epoch_size // config.batch_size)
     total_steps = steps_per_epoch * config.epochs
     started = time.perf_counter() - progress.elapsed_seconds
 
     while progress.epoch < config.epochs:
         if progress.order is None:
-            order = list(range(len(train)))
-            rng.shuffle(order)
+            order = epoch_order(len(train), train_sources, config, rng)
             progress.order, progress.python_rng, progress.position = order, rng.getstate(), 0
         model.train()
         while progress.position < len(progress.order):
@@ -359,6 +410,13 @@ def train(
     train_examples = load_examples(
         dataset_dir, config.train_split, config.max_train_examples, config.subset, config.seed
     )
+    train_sources = (
+        load_sources(
+            dataset_dir, config.train_split, config.max_train_examples, config.subset, config.seed
+        )
+        if config.mix_alpha is not None
+        else None
+    )
     dev_dir = Path(config.dev_dataset) if config.dev_dataset else dataset_dir
     dev_examples = load_examples(
         dev_dir, config.dev_split, config.max_dev_examples, config.subset, config.seed
@@ -391,7 +449,7 @@ def train(
 
     try:
         progress, optimizer, scaler = fit(
-            model, train_examples, dev_examples, config, on_epoch, state, checkpoint
+            model, train_examples, dev_examples, config, on_epoch, state, checkpoint, train_sources
         )
         manifest = context.write_bundle(work, progress, train_state(progress, optimizer, scaler))
     except BaseException:

@@ -1,0 +1,32 @@
+# Promoted suites are immutable: fix a bug by adding a new revision, not by editing.
+suite_id = "mix_v1"
+revision = 1
+task = "exclusive_choice"
+question = """
+PLAN_V3 instrument: how accurately, and how reliably in probability, does a direct predictor
+choose the correct option across a broad mix of multiple-choice sources: reading comprehension
+(RACE), law with a passage (CaseHOLD), medicine without a passage (MedMCQA), science,
+commonsense and yes/no questions? Reported per source. Dev and calibration come from each
+source's validation split or, where the source's test labels are hidden, are carved from
+its train split by group; test is the source's labelled test split (or its validation split).
+"""
+analysis_specification = "analysis/specifications/mix_v1.toml"
+
+[dataset]
+# Regenerate with: metanoia-research prepare --config configs/data/mix_v1.toml
+dataset_id = "mix_v1"
+cases_sha256 = "4ca9f0dd20ff457bab4bd9fc9dec04caadd9e20909eeff6ccc70b8f72fb8f7a8"
+labels_sha256 = "0279e83625f0140ec0bee90d0b441de0f013b54bd156b7b0f5633d99bf133565"
+
+[evaluation]
+splits = ["dev", "calibration", "test"]
+batch_size = 8
+repeats = 1
+base_seed = 0
+trace = "off"
+failure_policy = "uniform"
+timing_scope = "decide_call"
+
+[[budgets]]
+id = "b0"
+# All limits zero: the direct scorer without graph work.

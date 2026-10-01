@@ -39,6 +39,12 @@ class TrainingConfig(StrictModel):
     # Examples per forward pass; gradients accumulate to ``batch_size``.
     micro_batch_size: int | None = Field(default=None, ge=1)
     log_every_steps: int | None = Field(default=None, ge=1)
+    # Mixed-source training (PLAN_V3 A2). ``None``: every epoch is one shuffled pass over the
+    # split, as before. Set: each epoch draws ``epoch_examples`` examples (default: the split
+    # size) with source s taking a share proportional to n_s ** mix_alpha, so 1.0 is
+    # proportional to size and 0.0 gives every source the same share. Small sources repeat.
+    mix_alpha: float | None = Field(default=None, ge=0.0, le=1.0)
+    epoch_examples: int | None = Field(default=None, ge=1)
     # Intermediate checkpoints, each a loadable predictor bundle under
     # ``<bundle>/checkpoints/step_NNNNNNN/`` (for dev-based selection and resume).
     # Only the latest checkpoint keeps its optimizer state.

@@ -41,7 +41,12 @@ def load(name: str) -> list[dict]:
         )
         for r in df:
             rows.append(
-                dict(passage=r.article, question=r.question, options=list(r.options), gold="ABCD".index(r.answer))
+                dict(
+                    passage=r.article,
+                    question=r.question,
+                    options=list(r.options),
+                    gold="ABCD".index(r.answer),
+                )
             )
     elif name == "casehold":
         df = _read(
@@ -53,7 +58,9 @@ def load(name: str) -> list[dict]:
             )
         )
         for r in df:
-            rows.append(dict(passage=r.context, question="", options=list(r.endings), gold=int(r.label)))
+            rows.append(
+                dict(passage=r.context, question="", options=list(r.endings), gold=int(r.label))
+            )
     elif name == "quality":
         df = _read(
             hf_hub_download(
@@ -64,7 +71,14 @@ def load(name: str) -> list[dict]:
             )
         )
         for r in df:
-            rows.append(dict(passage=r.article, question=r.question, options=list(r.options), gold=int(r.answer)))
+            rows.append(
+                dict(
+                    passage=r.article,
+                    question=r.question,
+                    options=list(r.options),
+                    gold=int(r.answer),
+                )
+            )
     return rows
 
 

@@ -1,0 +1,7 @@
+run_id = "lexical_mix_v1"
+suite = "suites/mix_v1"
+dataset = "artifacts/datasets/mix_v1"
+output_root = "artifacts/runs"
+
+[predictor]
+kind = "lexical"

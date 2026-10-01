@@ -1,0 +1,24 @@
+name = "seq_smoke_mix_v1"
+# Pipeline smoke only (PLAN_V3 A1): 640 examples drawn with mix_alpha 0.5, one epoch.
+model_config_path = "configs/models/seq_modernbert_base.toml"
+dataset = "artifacts/datasets/mix_v1"
+train_split = "train"
+dev_split = "dev"
+batch_size = 16
+micro_batch_size = 8
+learning_rate = 1e-4
+encoder_learning_rate = 3e-5
+weight_decay = 0.01
+warmup_fraction = 0.1
+schedule = "linear"
+precision = "fp16-mixed"
+grad_clip = 1.0
+seed = 0
+device = "cuda"
+log_every_steps = 10
+epochs = 1
+subset = "random"
+max_train_examples = 20000
+max_dev_examples = 160
+mix_alpha = 0.5
+epoch_examples = 640

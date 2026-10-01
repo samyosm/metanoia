@@ -1,0 +1,11 @@
+run_id = "seq_sciq_quick_mcqa_v0"
+suite = "suites/mcqa_v0"
+dataset = "artifacts/datasets/mcqa_v0"
+output_root = "artifacts/runs"
+splits = ["test"]
+
+[predictor]
+kind = "bundle"
+path = "artifacts/predictors/seq_sciq_quick"
+device = "cuda"
+precision = "fp16"
