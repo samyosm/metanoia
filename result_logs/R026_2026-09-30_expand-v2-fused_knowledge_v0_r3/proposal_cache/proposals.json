@@ -1,0 +1,77 @@
+{
+  "kind": "proposal_cache",
+  "identity": {
+    "method": "fused",
+    "pool": 32,
+    "rrf_k": 60,
+    "memory_id": "generics_v0",
+    "vectors_sha256": "bd78ee584d92f8cc926dca20b5a880bee03824b4b9b1664113aa857e9110b00b",
+    "retrieval_encoder": {
+      "model": "BAAI/bge-small-en-v1.5",
+      "requested_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+      "resolved_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+      "pooling": "cls",
+      "max_length": 128,
+      "query_prefix": "Represent this sentence for searching relevant passages: ",
+      "normalized": true
+    },
+    "reranker": {
+      "model": "BAAI/bge-reranker-v2-m3",
+      "requested_revision": "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e",
+      "max_length": 192,
+      "query_format": "qa"
+    }
+  },
+  "width": 8,
+  "entries": {
+    "path": "entries.jsonl",
+    "sha256": "f75035060d0f38ee214ee3862f0eac8047a3bbbf79c9b77d546097a5b5371f99",
+    "rows": 54563
+  },
+  "dataset_id": "knowledge_v0",
+  "cases_sha256": "3fd83e1bb8027305b332401e6dce5b9693439591bb8f6bfc5142ee34a25d21b4",
+  "splits": [
+    "train",
+    "dev",
+    "calibration",
+    "test"
+  ],
+  "pairs": 54563,
+  "seconds": 4763.9,
+  "environment": {
+    "python": "3.12.13",
+    "implementation": "CPython",
+    "platform": "Linux-7.0.7-arch2-1-x86_64-with-glibc2.43",
+    "machine": "x86_64",
+    "packages": {
+      "metanoia": "0.1.0",
+      "pydantic": "2.13.5",
+      "torch": "2.11.0+cu128",
+      "transformers": "5.17.0",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "pyarrow": "25.0.1"
+    },
+    "accelerator": {
+      "requested_device": "cuda",
+      "torch_cuda": "12.8",
+      "cuda_available": true,
+      "cudnn_version": 91900,
+      "cudnn_deterministic": false,
+      "cudnn_benchmark": false,
+      "deterministic_algorithms": false,
+      "matmul_tf32": false,
+      "gpu_name": "NVIDIA GeForce RTX 2060",
+      "gpu_capability": "7.5",
+      "gpu_memory_bytes": 6017122304,
+      "driver_version": "595.71.05"
+    }
+  },
+  "code_source": {
+    "vcs": "git",
+    "commit": "6c02551778bc8db99f1ff23b617bd78085bdc969",
+    "dirty": true,
+    "diff_sha256": "3ee53083dd9c9e16e4009b846508023a03f382405684d346fdb9581e69799c0f"
+  },
+  "created_at": "2026-09-29T21:42:47+00:00"
+}

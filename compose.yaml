@@ -1,0 +1,30 @@
+# docker compose up -d --build                    the website + model server on 127.0.0.1:3000
+# docker compose --profile tunnel up -d           also expose it with a Cloudflare tunnel
+#                                                 (set TUNNEL_TOKEN in .env)
+services:
+  metanoia:
+    build: .
+    image: metanoia
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      METANOIA_DEVICE: cpu
+      METANOIA_DEFAULT_MODEL: ${METANOIA_DEFAULT_MODEL:-mbft_joint_mcqa_v0}
+    volumes:
+      # Served models (see scripts/export_serving.py). Not part of the image.
+      - ${METANOIA_ARTIFACTS:-./serving/artifacts}:/app/artifacts:ro
+      # Pretrained encoders are downloaded on first use and cached here.
+      - hf-cache:/hf
+    restart: unless-stopped
+
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    profiles: [tunnel]
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN:-}
+    depends_on: [metanoia]
+    restart: unless-stopped
+
+volumes:
+  hf-cache:

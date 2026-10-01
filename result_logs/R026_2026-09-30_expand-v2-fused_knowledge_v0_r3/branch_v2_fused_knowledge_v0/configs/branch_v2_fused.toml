@@ -1,0 +1,37 @@
+# EXPAND v2, branch reading with fused proposals (decision 0014, promoted by R025): each
+# candidate's branch comes from the top 32 generics_v0 statements for "question
+# candidate", ordered by reciprocal-rank fusion of retrieval similarity and a pinned
+# cross-encoder reranker. The proposal cache (built by build-proposals) only saves time.
+# Otherwise identical to branch_v2_focused.
+name = "branch_v2_fused"
+
+[encoder]
+kind = "hf"
+model = "answerdotai/ModernBERT-base"
+revision = "8949b909ec900327062f0ebf497f51aef5e6f0c8"
+max_length = 384
+pooling = "mean"
+frozen = false
+gradient_checkpointing = true
+
+[scorer]
+kind = "direct"
+latent_dim = 256
+heads = 4
+hidden_dim = 512
+dropout = 0.1
+candidate_encoding = "joint"
+
+[branch]
+kind = "branch"
+memory = "artifacts/memories/generics_v0"
+nodes = "retrieved"
+proposals = "fused"
+proposal_cache = "artifacts/proposals/generics_v0_fused_knowledge_v0"
+train_widths = [0, 1, 2, 4, 8]
+max_width = 8
+
+[branch.reranker]
+model = "BAAI/bge-reranker-v2-m3"
+revision = "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e"
+max_length = 192

@@ -1,0 +1,64 @@
+{
+  "dataset_version": 1,
+  "dataset_id": "mcqa_v0",
+  "task": "exclusive_choice",
+  "generator": {
+    "revision": "mcqa/1",
+    "config": {
+      "generator": "mcqa",
+      "dataset_id": "mcqa_v0",
+      "seed": 20260926,
+      "sources": [
+        "race",
+        "sciq"
+      ],
+      "dev_fraction": 0.5
+    },
+    "sources": {
+      "race": {
+        "repo": "ehovy/race",
+        "revision": "2fec9fd81f1dc971569a9b729c43f2f0e6436637",
+        "files": {
+          "train": "all/train-00000-of-00001.parquet",
+          "validation": "all/validation-00000-of-00001.parquet",
+          "test": "all/test-00000-of-00001.parquet"
+        }
+      },
+      "sciq": {
+        "repo": "allenai/sciq",
+        "revision": "2c94ad3e1aafab77146f384e23536f97a4849815",
+        "files": {
+          "train": "data/train-00000-of-00001.parquet",
+          "validation": "data/validation-00000-of-00001.parquet",
+          "test": "data/test-00000-of-00001.parquet"
+        }
+      }
+    },
+    "skipped": {
+      "empty_option": 0,
+      "duplicate_option": 105
+    }
+  },
+  "splits": {
+    "calibration": 2990,
+    "dev": 2890,
+    "test": 5922,
+    "train": 99459
+  },
+  "cases": {
+    "path": "cases.jsonl",
+    "sha256": "03fa885ea3d3b2a7450287d68532723268a071ac21da21ccec3033f4ef5510e0",
+    "rows": 111261
+  },
+  "labels": {
+    "path": "labels.parquet",
+    "sha256": "aabdd466f6702dcf30e47d7ee708249281b7c6f02b5bad9196be05c9b29f4cc5",
+    "rows": 111261
+  },
+  "proofs": {
+    "path": "proofs.jsonl",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "rows": 0
+  },
+  "created_at": "2026-09-27T03:41:54+00:00"
+}

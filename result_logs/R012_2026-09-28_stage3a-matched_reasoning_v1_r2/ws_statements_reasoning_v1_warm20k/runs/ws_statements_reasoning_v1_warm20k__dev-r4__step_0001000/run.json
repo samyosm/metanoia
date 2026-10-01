@@ -1,0 +1,209 @@
+{
+  "run_version": 1,
+  "run_id": "ws_statements_reasoning_v1_warm20k__dev-r4__step_0001000",
+  "status": "complete",
+  "suite": {
+    "suite_id": "reasoning_v1",
+    "revision": 2,
+    "path": "suites/reasoning_v1_r2",
+    "splits": [
+      "dev"
+    ],
+    "budgets": [
+      "r4"
+    ]
+  },
+  "protocol_sha256": "5be2994ad8b5940d981582fd061614259a78826b2eac49c794915771738af93a",
+  "protocol": {
+    "suite_id": "reasoning_v1",
+    "revision": 2,
+    "task": "exclusive_choice",
+    "question": "Depth extrapolation (decision 0007): trained on Horn-rule derivations of depth 1-3, how\naccurately and how reliably does a predictor choose the entity that provably holds a\ntarget property at held-out depths 4-8? Every example has 46 sentences, so input length\ndoes not track depth. The primary endpoint is accuracy and NLL per held-out depth, and\n(revision 2) how they change with the reasoning budget: 0, 1, 2, 4, 8 and 16 workspace\nrounds (H1; decision 0008). Rounds beyond those used in training test budget\nextrapolation. A direct predictor returns the same answer at every budget.\n",
+    "analysis_specification": "analysis/specifications/core_v0.toml",
+    "dataset": {
+      "dataset_id": "microworld_v1",
+      "cases_sha256": "e828fb9f012a7a106cfdb4cb77b00b656a370b6cb35ad53dd37eef52c2e64f3a",
+      "labels_sha256": "ace50c606346bd9205c544859f75c9e2be112772d7f5cddf29761a5832e18a94"
+    },
+    "evaluation": {
+      "splits": [
+        "dev",
+        "calibration",
+        "test"
+      ],
+      "batch_size": 8,
+      "repeats": 1,
+      "base_seed": 0,
+      "trace": "off",
+      "failure_policy": "uniform",
+      "timing_scope": "decide_call"
+    },
+    "budgets": [
+      {
+        "id": "b0"
+      },
+      {
+        "id": "r1",
+        "budget": {
+          "max_rounds": 1,
+          "max_nodes": 64,
+          "max_pairs": 4096
+        }
+      },
+      {
+        "id": "r2",
+        "budget": {
+          "max_rounds": 2,
+          "max_nodes": 64,
+          "max_pairs": 8192
+        }
+      },
+      {
+        "id": "r4",
+        "budget": {
+          "max_rounds": 4,
+          "max_nodes": 64,
+          "max_pairs": 16384
+        }
+      },
+      {
+        "id": "r8",
+        "budget": {
+          "max_rounds": 8,
+          "max_nodes": 64,
+          "max_pairs": 32768
+        }
+      },
+      {
+        "id": "r16",
+        "budget": {
+          "max_rounds": 16,
+          "max_nodes": 64,
+          "max_pairs": 65536
+        }
+      }
+    ]
+  },
+  "dataset_id": "microworld_v1",
+  "cases_sha256": "e828fb9f012a7a106cfdb4cb77b00b656a370b6cb35ad53dd37eef52c2e64f3a",
+  "labels_sha256": "ace50c606346bd9205c544859f75c9e2be112772d7f5cddf29761a5832e18a94",
+  "predictor": {
+    "predictor_id": "ws_statements_640@5259bb08c5e9",
+    "kind": "torch_workspace",
+    "model_config": {
+      "model": {
+        "config_version": 1,
+        "name": "ws_statements_640",
+        "encoder": {
+          "kind": "hf",
+          "model": "answerdotai/ModernBERT-base",
+          "revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+          "max_length": 640,
+          "pooling": "mean",
+          "frozen": false,
+          "gradient_checkpointing": true
+        },
+        "scorer": {
+          "kind": "direct",
+          "latent_dim": 256,
+          "heads": 4,
+          "hidden_dim": 512,
+          "dropout": 0.1,
+          "candidate_encoding": "joint"
+        },
+        "workspace": {
+          "kind": "workspace",
+          "mode": "statements",
+          "dim": 256,
+          "heads": 4,
+          "hidden_dim": 512,
+          "dropout": 0.0,
+          "latent_slots": 16,
+          "max_rounds": 32
+        }
+      },
+      "encoder_identity": {
+        "kind": "hf",
+        "model": "answerdotai/ModernBERT-base",
+        "requested_revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+        "resolved_revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+        "pooling": "mean",
+        "max_length": 640,
+        "frozen": false
+      },
+      "input_rendering": "question-context-observations/1"
+    },
+    "encoder": {
+      "kind": "hf",
+      "model": "answerdotai/ModernBERT-base",
+      "requested_revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+      "resolved_revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+      "pooling": "mean",
+      "max_length": 640,
+      "frozen": false
+    },
+    "calibration": {
+      "status": "uncalibrated",
+      "calibrator_id": null,
+      "temperature": 1.0
+    },
+    "precision": "fp16",
+    "spec": {
+      "kind": "bundle",
+      "path": "artifacts/predictors/ws_statements_reasoning_v1_warm20k/checkpoints/step_0001000",
+      "calibration": null,
+      "device": "cuda",
+      "precision": "fp16"
+    }
+  },
+  "runner_revision": "runner/1+metanoia_research-0.1.0",
+  "environment": {
+    "python": "3.12.13",
+    "implementation": "CPython",
+    "platform": "Linux-7.0.7-arch2-1-x86_64-with-glibc2.43",
+    "machine": "x86_64",
+    "packages": {
+      "metanoia": "0.1.0",
+      "pydantic": "2.13.5",
+      "torch": "2.11.0+cu128",
+      "transformers": "5.17.0",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "pyarrow": "25.0.1"
+    },
+    "accelerator": {
+      "requested_device": "cuda",
+      "torch_cuda": "12.8",
+      "cuda_available": true,
+      "cudnn_version": 91900,
+      "cudnn_deterministic": false,
+      "cudnn_benchmark": false,
+      "deterministic_algorithms": false,
+      "matmul_tf32": false,
+      "gpu_name": "NVIDIA GeForce RTX 2060",
+      "gpu_capability": "7.5",
+      "gpu_memory_bytes": 6017122304,
+      "driver_version": "595.71.05"
+    }
+  },
+  "source": {
+    "vcs": "git",
+    "commit": "c66da2bcc144167338571c09e24554f9120d8333",
+    "dirty": false,
+    "diff_sha256": null
+  },
+  "counts": {
+    "expected": 800,
+    "attempted": 800,
+    "completed": 800,
+    "failed": 0
+  },
+  "predictions": {
+    "path": "predictions.parquet",
+    "sha256": "865e42adf56227f84e1938e8d5c4a9640e480f4f80263d3346519fe023e615de",
+    "rows": 800
+  },
+  "traces": null,
+  "started_at": "2026-09-28T04:22:10+00:00",
+  "finished_at": "2026-09-28T04:23:18+00:00"
+}

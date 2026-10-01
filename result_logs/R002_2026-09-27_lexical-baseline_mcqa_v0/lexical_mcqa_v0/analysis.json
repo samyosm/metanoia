@@ -1,0 +1,853 @@
+{
+  "analysis_version": 1,
+  "analysis_id": "lexical_mcqa_v0__mcqa_v0-r1",
+  "kind": "analyze",
+  "inputs": {
+    "run_id": "lexical_mcqa_v0",
+    "run_predictions_sha256": "d1cad0d6daf3b682938b75baddbb2adff3ddeb88e77a91fac8e8002ac59f87b6",
+    "predictor_id": "lexical_overlap@1",
+    "suite": {
+      "suite_id": "mcqa_v0",
+      "revision": 1,
+      "path": "suites/mcqa_v0"
+    },
+    "protocol_sha256": "a38b292dd38ee6910e85c56cf5ac06beded1f05430633e6aa27c75aa07613ec5",
+    "labels_sha256": "aabdd466f6702dcf30e47d7ee708249281b7c6f02b5bad9196be05c9b29f4cc5",
+    "calibration": null
+  },
+  "specification": {
+    "spec_id": "mcqa_v0",
+    "revision": 1,
+    "splits": [
+      "dev",
+      "calibration",
+      "test"
+    ],
+    "metrics": [
+      "accuracy",
+      "nll",
+      "brier",
+      "ece"
+    ],
+    "ece_bins": 15,
+    "slice_by": [
+      "source"
+    ],
+    "bootstrap_resamples": 1000,
+    "bootstrap_seed": 0,
+    "confidence": 0.95,
+    "nll_floor": 1e-15
+  },
+  "analysis_revision": "metanoia_analysis-0.1.0",
+  "environment": {
+    "python": "3.12.13",
+    "implementation": "CPython",
+    "platform": "Linux-7.0.7-arch2-1-x86_64-with-glibc2.43",
+    "machine": "x86_64",
+    "packages": {
+      "metanoia": "0.1.0",
+      "pydantic": "2.13.5",
+      "torch": "2.11.0+cu128",
+      "transformers": "5.17.0",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "pyarrow": "25.0.1"
+    },
+    "accelerator": null
+  },
+  "counts": {
+    "dev": {
+      "attempted": 2890,
+      "completed": 2890,
+      "failed": 0
+    },
+    "calibration": {
+      "attempted": 2990,
+      "completed": 2990,
+      "failed": 0
+    },
+    "test": {
+      "attempted": 5922,
+      "completed": 5922,
+      "failed": 0
+    },
+    "run": {
+      "expected": 11802,
+      "attempted": 11802,
+      "completed": 11802,
+      "failed": 0
+    }
+  },
+  "metrics": [
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "accuracy",
+      "value": 0.38832179930795846,
+      "ci_low": 0.37012151337144733,
+      "ci_high": 0.4067188834246368,
+      "n": 2890
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "nll",
+      "value": 7.49368056704571,
+      "ci_low": 7.0421566960853115,
+      "ci_high": 7.969624353673877,
+      "n": 2890
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "brier",
+      "value": 1.06191461683362,
+      "ci_low": 1.0287956480071485,
+      "ci_high": 1.09593603236708,
+      "n": 2890
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "ece",
+      "value": 0.4373106756350317,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 2890
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "source=race",
+      "metric": "accuracy",
+      "value": 0.30549813972716,
+      "ci_low": 0.2881112610269642,
+      "ci_high": 0.32207624637358895,
+      "n": 2419
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "source=race",
+      "metric": "nll",
+      "value": 8.795451536365235,
+      "ci_low": 8.328024150712146,
+      "ci_high": 9.31255094877528,
+      "n": 2419
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "source=race",
+      "metric": "brier",
+      "value": 1.196867016768859,
+      "ci_low": 1.1628529391197924,
+      "ci_high": 1.2323332229749733,
+      "n": 2419
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "source=race",
+      "metric": "ece",
+      "value": 0.5200368827366154,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 2419
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "source=sciq",
+      "metric": "accuracy",
+      "value": 0.8136942675159236,
+      "ci_low": 0.7821921443736731,
+      "ci_high": 0.8443073248407643,
+      "n": 471
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "source=sciq",
+      "metric": "nll",
+      "value": 0.8079396439375809,
+      "ci_low": 0.7041006910197796,
+      "ci_high": 0.9336013446928036,
+      "n": 471
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "source=sciq",
+      "metric": "brier",
+      "value": 0.36881513606219146,
+      "ci_low": 0.3378334844253516,
+      "ci_high": 0.40019423698805434,
+      "n": 471
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "source=sciq",
+      "metric": "ece",
+      "value": 0.24900671997300616,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 471
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "accuracy",
+      "value": 0.4064938684503902,
+      "ci_low": 0.38888729821116924,
+      "ci_high": 0.4243034820419929,
+      "n": 2990
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "nll",
+      "value": 7.526428738493507,
+      "ci_low": 7.058569230066116,
+      "ci_high": 7.933317418066823,
+      "n": 2990
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "brier",
+      "value": 1.0297539923294279,
+      "ci_low": 0.994948871414388,
+      "ci_high": 1.0607661958363102,
+      "n": 2990
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "ece",
+      "value": 0.4170814035954368,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 2990
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "source=race",
+      "metric": "accuracy",
+      "value": 0.31547619047619047,
+      "ci_low": 0.2980716750535939,
+      "ci_high": 0.3327015188238686,
+      "n": 2464
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "source=race",
+      "metric": "nll",
+      "value": 8.979642933173775,
+      "ci_low": 8.513834891343866,
+      "ci_high": 9.478472726843764,
+      "n": 2464
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "source=race",
+      "metric": "brier",
+      "value": 1.1775099863788532,
+      "ci_low": 1.1446666972712114,
+      "ci_high": 1.2114724492355091,
+      "n": 2464
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "source=race",
+      "metric": "ece",
+      "value": 0.5036462313452925,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 2464
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "source=sciq",
+      "metric": "accuracy",
+      "value": 0.8328580481622307,
+      "ci_low": 0.8067094423320659,
+      "ci_high": 0.859794835234474,
+      "n": 526
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "source=sciq",
+      "metric": "nll",
+      "value": 0.7189766934513407,
+      "ci_low": 0.632211470901308,
+      "ci_high": 0.8208367691762853,
+      "n": 526
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "source=sciq",
+      "metric": "brier",
+      "value": 0.3376042407366821,
+      "ci_low": 0.30658072133669384,
+      "ci_high": 0.3710331195708038,
+      "n": 526
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "source=sciq",
+      "metric": "ece",
+      "value": 0.2316782116191331,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 526
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "accuracy",
+      "value": 0.39895024203534835,
+      "ci_low": 0.3870540966002703,
+      "ci_high": 0.41163244850937325,
+      "n": 5922
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "nll",
+      "value": 7.421535098729391,
+      "ci_low": 7.120673893235943,
+      "ci_high": 7.720800352599126,
+      "n": 5922
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "brier",
+      "value": 1.044300249885816,
+      "ci_low": 1.021896514847703,
+      "ci_high": 1.0663789408186546,
+      "n": 5922
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "ece",
+      "value": 0.4304929408345736,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 5922
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "source=race",
+      "metric": "accuracy",
+      "value": 0.3143547623876158,
+      "ci_low": 0.30252261637688815,
+      "ci_high": 0.32754517850118015,
+      "n": 4931
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "source=race",
+      "metric": "nll",
+      "value": 8.775743497616151,
+      "ci_low": 8.43387866212568,
+      "ci_high": 9.10254010827223,
+      "n": 4931
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "source=race",
+      "metric": "brier",
+      "value": 1.1863349666953016,
+      "ci_low": 1.1618742521841248,
+      "ci_high": 1.2082876215139806,
+      "n": 4931
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "source=race",
+      "metric": "ece",
+      "value": 0.5157337923170175,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 4931
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "source=sciq",
+      "metric": "accuracy",
+      "value": 0.8198789101917255,
+      "ci_low": 0.7995269929364278,
+      "ci_high": 0.8408173562058526,
+      "n": 991
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "source=sciq",
+      "metric": "nll",
+      "value": 0.6832892713725693,
+      "ci_low": 0.6423974619219812,
+      "ci_high": 0.72585799667188,
+      "n": 991
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "source=sciq",
+      "metric": "brier",
+      "value": 0.337566457163744,
+      "ci_low": 0.3171070249233389,
+      "ci_high": 0.35874829599111896,
+      "n": 991
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "source=sciq",
+      "metric": "ece",
+      "value": 0.2207873837029178,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 991
+    }
+  ],
+  "tables": {
+    "reliability/dev/b0/raw": [
+      {
+        "bin": 0,
+        "low": 0.0,
+        "high": 0.06666666666666667,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 1,
+        "low": 0.06666666666666667,
+        "high": 0.13333333333333333,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 2,
+        "low": 0.13333333333333333,
+        "high": 0.2,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 3,
+        "low": 0.2,
+        "high": 0.26666666666666666,
+        "count": 201,
+        "mean_confidence": 0.25,
+        "accuracy": 0.25
+      },
+      {
+        "bin": 4,
+        "low": 0.26666666666666666,
+        "high": 0.3333333333333333,
+        "count": 41,
+        "mean_confidence": 0.31549511072378666,
+        "accuracy": 0.2682926829268293
+      },
+      {
+        "bin": 5,
+        "low": 0.3333333333333333,
+        "high": 0.4,
+        "count": 67,
+        "mean_confidence": 0.37313160618111446,
+        "accuracy": 0.35074626865671643
+      },
+      {
+        "bin": 6,
+        "low": 0.4,
+        "high": 0.4666666666666667,
+        "count": 46,
+        "mean_confidence": 0.4335774679120687,
+        "accuracy": 0.29347826086956524
+      },
+      {
+        "bin": 7,
+        "low": 0.4666666666666667,
+        "high": 0.5333333333333333,
+        "count": 362,
+        "mean_confidence": 0.4810727313503227,
+        "accuracy": 0.638121546961326
+      },
+      {
+        "bin": 8,
+        "low": 0.5333333333333333,
+        "high": 0.6,
+        "count": 59,
+        "mean_confidence": 0.5517608466792576,
+        "accuracy": 0.3220338983050847
+      },
+      {
+        "bin": 9,
+        "low": 0.6,
+        "high": 0.6666666666666666,
+        "count": 78,
+        "mean_confidence": 0.6299571968466575,
+        "accuracy": 0.44871794871794873
+      },
+      {
+        "bin": 10,
+        "low": 0.6666666666666666,
+        "high": 0.7333333333333333,
+        "count": 271,
+        "mean_confidence": 0.718460829770996,
+        "accuracy": 0.5571955719557196
+      },
+      {
+        "bin": 11,
+        "low": 0.7333333333333333,
+        "high": 0.8,
+        "count": 29,
+        "mean_confidence": 0.777333206169205,
+        "accuracy": 0.41379310344827586
+      },
+      {
+        "bin": 12,
+        "low": 0.8,
+        "high": 0.8666666666666667,
+        "count": 66,
+        "mean_confidence": 0.8340839321188532,
+        "accuracy": 0.30303030303030304
+      },
+      {
+        "bin": 13,
+        "low": 0.8666666666666667,
+        "high": 0.9333333333333333,
+        "count": 185,
+        "mean_confidence": 0.8815697490842477,
+        "accuracy": 0.43243243243243246
+      },
+      {
+        "bin": 14,
+        "low": 0.9333333333333333,
+        "high": 1.0,
+        "count": 1485,
+        "mean_confidence": 0.9919329686201352,
+        "accuracy": 0.3205387205387205
+      }
+    ],
+    "reliability/calibration/b0/raw": [
+      {
+        "bin": 0,
+        "low": 0.0,
+        "high": 0.06666666666666667,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 1,
+        "low": 0.06666666666666667,
+        "high": 0.13333333333333333,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 2,
+        "low": 0.13333333333333333,
+        "high": 0.2,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 3,
+        "low": 0.2,
+        "high": 0.26666666666666666,
+        "count": 221,
+        "mean_confidence": 0.25,
+        "accuracy": 0.25
+      },
+      {
+        "bin": 4,
+        "low": 0.26666666666666666,
+        "high": 0.3333333333333333,
+        "count": 45,
+        "mean_confidence": 0.3110735876166196,
+        "accuracy": 0.2592592592592593
+      },
+      {
+        "bin": 5,
+        "low": 0.3333333333333333,
+        "high": 0.4,
+        "count": 75,
+        "mean_confidence": 0.3727734525865332,
+        "accuracy": 0.36666666666666664
+      },
+      {
+        "bin": 6,
+        "low": 0.4,
+        "high": 0.4666666666666667,
+        "count": 32,
+        "mean_confidence": 0.4348461875058083,
+        "accuracy": 0.28125
+      },
+      {
+        "bin": 7,
+        "low": 0.4666666666666667,
+        "high": 0.5333333333333333,
+        "count": 372,
+        "mean_confidence": 0.4813783575736325,
+        "accuracy": 0.6263440860215054
+      },
+      {
+        "bin": 8,
+        "low": 0.5333333333333333,
+        "high": 0.6,
+        "count": 54,
+        "mean_confidence": 0.5477226499986755,
+        "accuracy": 0.5740740740740741
+      },
+      {
+        "bin": 9,
+        "low": 0.6,
+        "high": 0.6666666666666666,
+        "count": 82,
+        "mean_confidence": 0.6281484184867047,
+        "accuracy": 0.43902439024390244
+      },
+      {
+        "bin": 10,
+        "low": 0.6666666666666666,
+        "high": 0.7333333333333333,
+        "count": 269,
+        "mean_confidence": 0.7179255721620368,
+        "accuracy": 0.5241635687732342
+      },
+      {
+        "bin": 11,
+        "low": 0.7333333333333333,
+        "high": 0.8,
+        "count": 31,
+        "mean_confidence": 0.7717644467995735,
+        "accuracy": 0.3870967741935484
+      },
+      {
+        "bin": 12,
+        "low": 0.8,
+        "high": 0.8666666666666667,
+        "count": 62,
+        "mean_confidence": 0.839654978540013,
+        "accuracy": 0.45161290322580644
+      },
+      {
+        "bin": 13,
+        "low": 0.8666666666666667,
+        "high": 0.9333333333333333,
+        "count": 195,
+        "mean_confidence": 0.8833359430996877,
+        "accuracy": 0.4666666666666667
+      },
+      {
+        "bin": 14,
+        "low": 0.9333333333333333,
+        "high": 1.0,
+        "count": 1552,
+        "mean_confidence": 0.9917232425871226,
+        "accuracy": 0.3479381443298969
+      }
+    ],
+    "reliability/test/b0/raw": [
+      {
+        "bin": 0,
+        "low": 0.0,
+        "high": 0.06666666666666667,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 1,
+        "low": 0.06666666666666667,
+        "high": 0.13333333333333333,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 2,
+        "low": 0.13333333333333333,
+        "high": 0.2,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 3,
+        "low": 0.2,
+        "high": 0.26666666666666666,
+        "count": 443,
+        "mean_confidence": 0.25,
+        "accuracy": 0.25
+      },
+      {
+        "bin": 4,
+        "low": 0.26666666666666666,
+        "high": 0.3333333333333333,
+        "count": 85,
+        "mean_confidence": 0.31268899947021,
+        "accuracy": 0.2509803921568627
+      },
+      {
+        "bin": 5,
+        "low": 0.3333333333333333,
+        "high": 0.4,
+        "count": 135,
+        "mean_confidence": 0.37458449340441585,
+        "accuracy": 0.3074074074074074
+      },
+      {
+        "bin": 6,
+        "low": 0.4,
+        "high": 0.4666666666666667,
+        "count": 68,
+        "mean_confidence": 0.4346931525004551,
+        "accuracy": 0.2867647058823529
+      },
+      {
+        "bin": 7,
+        "low": 0.4666666666666667,
+        "high": 0.5333333333333333,
+        "count": 669,
+        "mean_confidence": 0.4815608565471017,
+        "accuracy": 0.64050822122571
+      },
+      {
+        "bin": 8,
+        "low": 0.5333333333333333,
+        "high": 0.6,
+        "count": 96,
+        "mean_confidence": 0.5486238754173304,
+        "accuracy": 0.4479166666666667
+      },
+      {
+        "bin": 9,
+        "low": 0.6,
+        "high": 0.6666666666666666,
+        "count": 158,
+        "mean_confidence": 0.6320598687937024,
+        "accuracy": 0.379746835443038
+      },
+      {
+        "bin": 10,
+        "low": 0.6666666666666666,
+        "high": 0.7333333333333333,
+        "count": 552,
+        "mean_confidence": 0.7169641089513408,
+        "accuracy": 0.5815217391304348
+      },
+      {
+        "bin": 11,
+        "low": 0.7333333333333333,
+        "high": 0.8,
+        "count": 56,
+        "mean_confidence": 0.7757316583234442,
+        "accuracy": 0.48214285714285715
+      },
+      {
+        "bin": 12,
+        "low": 0.8,
+        "high": 0.8666666666666667,
+        "count": 133,
+        "mean_confidence": 0.8358844165926901,
+        "accuracy": 0.39849624060150374
+      },
+      {
+        "bin": 13,
+        "low": 0.8666666666666667,
+        "high": 0.9333333333333333,
+        "count": 388,
+        "mean_confidence": 0.8829431219065036,
+        "accuracy": 0.46649484536082475
+      },
+      {
+        "bin": 14,
+        "low": 0.9333333333333333,
+        "high": 1.0,
+        "count": 3139,
+        "mean_confidence": 0.9920920882535271,
+        "accuracy": 0.3364128703408729
+      }
+    ]
+  },
+  "limitations": [
+    "ECE uses top-label confidence with equal-width bins; it depends on binning and sample size.",
+    "Intervals are percentile bootstraps over groups (worlds), not over individual examples.",
+    "Calibration quality is established only for the evaluated distribution and budgets."
+  ],
+  "created_at": "2026-09-27T04:32:28+00:00"
+}

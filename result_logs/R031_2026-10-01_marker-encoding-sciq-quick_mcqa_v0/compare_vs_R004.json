@@ -1,0 +1,247 @@
+{
+  "analysis_version": 1,
+  "analysis_id": "mbft_joint_sciq_quick_mcqa_v0__vs__seq_sciq_quick_mcqa_v0_all__mcqa_v0-r1",
+  "kind": "compare",
+  "inputs": {
+    "a": {
+      "run_id": "mbft_joint_sciq_quick_mcqa_v0",
+      "predictor_id": "direct_modernbert_ft_joint@98d789393a90",
+      "predictions_sha256": "85a354af9d3ddbb0b83b94ee72cd391ea7636bb68cc0861bace883c709c0dd2a"
+    },
+    "b": {
+      "run_id": "seq_sciq_quick_mcqa_v0_all",
+      "predictor_id": "seq_modernbert_base@ee3ced731194",
+      "predictions_sha256": "0cba5e19cdd35e6704805f498f3120912cd90db364b494217d8bce5b1e5a8a35"
+    },
+    "direction": "b - a",
+    "accepted_mismatches": []
+  },
+  "specification": {
+    "spec_id": "mcqa_v0",
+    "revision": 1,
+    "splits": [
+      "dev",
+      "calibration",
+      "test"
+    ],
+    "metrics": [
+      "accuracy",
+      "nll",
+      "brier",
+      "ece"
+    ],
+    "ece_bins": 15,
+    "slice_by": [
+      "source"
+    ],
+    "bootstrap_resamples": 1000,
+    "bootstrap_seed": 0,
+    "confidence": 0.95,
+    "nll_floor": 1e-15
+  },
+  "analysis_revision": "metanoia_analysis-0.1.0",
+  "environment": {
+    "python": "3.12.13",
+    "implementation": "CPython",
+    "platform": "Linux-7.2.7-arch1-1-x86_64-with-glibc2.44",
+    "machine": "x86_64",
+    "packages": {
+      "metanoia": "0.1.0",
+      "pydantic": "2.13.5",
+      "torch": "2.11.0+cu128",
+      "transformers": "5.17.0",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "pyarrow": "25.0.1"
+    },
+    "accelerator": null
+  },
+  "counts": {
+    "a": {
+      "expected": 11802,
+      "attempted": 11802,
+      "completed": 11802,
+      "failed": 0
+    },
+    "b": {
+      "expected": 11802,
+      "attempted": 11802,
+      "completed": 11802,
+      "failed": 0
+    }
+  },
+  "metrics": [
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "accuracy_diff",
+      "value": 0.02318339100346021,
+      "ci_low": 0.004282212380265736,
+      "ci_high": 0.040672116122624044,
+      "n": 2890
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "nll_diff",
+      "value": 0.24401234706156938,
+      "ci_low": 0.20030563201753285,
+      "ci_high": 0.28872275328521585,
+      "n": 2890
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "brier_diff",
+      "value": 0.06681819088518191,
+      "ci_low": 0.05075996248311297,
+      "ci_high": 0.08351474099084127,
+      "n": 2890
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "wrong_to_right",
+      "value": 0.14186851211072665,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 2890
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "right_to_wrong",
+      "value": 0.11833910034602076,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 2890
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "accuracy_diff",
+      "value": 0.024414715719063545,
+      "ci_low": 0.005554719608121441,
+      "ci_high": 0.041469814723063984,
+      "n": 2990
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "nll_diff",
+      "value": 0.27311302634328394,
+      "ci_low": 0.2227843369411849,
+      "ci_high": 0.3186800508259367,
+      "n": 2990
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "brier_diff",
+      "value": 0.06489160822894015,
+      "ci_low": 0.04564029867859156,
+      "ci_high": 0.08491298547972685,
+      "n": 2990
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "wrong_to_right",
+      "value": 0.13411371237458194,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 2990
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "right_to_wrong",
+      "value": 0.10936454849498328,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 2990
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "accuracy_diff",
+      "value": 0.026286164584036924,
+      "ci_low": 0.01339202141884664,
+      "ci_high": 0.038824026433276426,
+      "n": 5922
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "nll_diff",
+      "value": 0.2892182583974566,
+      "ci_low": 0.25147387460034853,
+      "ci_high": 0.3254892230953085,
+      "n": 5922
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "brier_diff",
+      "value": 0.06989086979248538,
+      "ci_low": 0.056296562086978745,
+      "ci_high": 0.0836531861682857,
+      "n": 5922
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "wrong_to_right",
+      "value": 0.14437689969604864,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 5922
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "right_to_wrong",
+      "value": 0.11803444782168186,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 5922
+    }
+  ],
+  "tables": {},
+  "limitations": [
+    "ECE uses top-label confidence with equal-width bins; it depends on binning and sample size.",
+    "Intervals are percentile bootstraps over groups (worlds), not over individual examples.",
+    "Calibration quality is established only for the evaluated distribution and budgets."
+  ],
+  "created_at": "2026-10-01T06:01:20+00:00"
+}

@@ -1,0 +1,156 @@
+{
+  "run_version": 1,
+  "run_id": "mbft_joint_reasoning_v0_e3__dev__step_0000113",
+  "status": "complete",
+  "suite": {
+    "suite_id": "reasoning_v0",
+    "revision": 1,
+    "path": "suites/reasoning_v0",
+    "splits": [
+      "dev"
+    ]
+  },
+  "protocol_sha256": "48a5cdedd3e893c2e8de5bf75cc647f8cd750207689a492e1f926a964d3b7cee",
+  "protocol": {
+    "suite_id": "reasoning_v0",
+    "revision": 1,
+    "task": "exclusive_choice",
+    "question": "Stage-1 measuring instrument: how well does a depth-zero predictor choose the entity\nthat provably holds a target property in controlled Horn-rule micro-worlds, and are its\nprobabilities reliable? Depth 4 appears only in test worlds.\n",
+    "analysis_specification": "analysis/specifications/core_v0.toml",
+    "dataset": {
+      "dataset_id": "microworld_v0",
+      "cases_sha256": "50f2158869fd7587bf8e9836b17e78096659e22b6d30367aefec78e4b8e3d534",
+      "labels_sha256": "251aabbf6b0f0fe05f6cc8e0ef8d4b6144c5ae9b520f3814da2bf0bd2f9c4482"
+    },
+    "evaluation": {
+      "splits": [
+        "dev",
+        "calibration",
+        "test"
+      ],
+      "batch_size": 16,
+      "repeats": 1,
+      "base_seed": 0,
+      "trace": "off",
+      "failure_policy": "uniform",
+      "timing_scope": "decide_call"
+    },
+    "budgets": [
+      {
+        "id": "b0"
+      }
+    ]
+  },
+  "dataset_id": "microworld_v0",
+  "cases_sha256": "50f2158869fd7587bf8e9836b17e78096659e22b6d30367aefec78e4b8e3d534",
+  "labels_sha256": "251aabbf6b0f0fe05f6cc8e0ef8d4b6144c5ae9b520f3814da2bf0bd2f9c4482",
+  "predictor": {
+    "predictor_id": "direct_modernbert_ft_joint@e96d68733f99",
+    "kind": "torch_direct",
+    "model_config": {
+      "model": {
+        "config_version": 1,
+        "name": "direct_modernbert_ft_joint",
+        "encoder": {
+          "kind": "hf",
+          "model": "answerdotai/ModernBERT-base",
+          "revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+          "max_length": 384,
+          "pooling": "mean",
+          "frozen": false,
+          "gradient_checkpointing": true
+        },
+        "scorer": {
+          "kind": "direct",
+          "latent_dim": 256,
+          "heads": 4,
+          "hidden_dim": 512,
+          "dropout": 0.1,
+          "candidate_encoding": "joint"
+        }
+      },
+      "encoder_identity": {
+        "kind": "hf",
+        "model": "answerdotai/ModernBERT-base",
+        "requested_revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+        "resolved_revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+        "pooling": "mean",
+        "max_length": 384,
+        "frozen": false
+      },
+      "input_rendering": "question-context-observations/1"
+    },
+    "encoder": {
+      "kind": "hf",
+      "model": "answerdotai/ModernBERT-base",
+      "requested_revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+      "resolved_revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+      "pooling": "mean",
+      "max_length": 384,
+      "frozen": false
+    },
+    "calibration": {
+      "status": "uncalibrated",
+      "calibrator_id": null,
+      "temperature": 1.0
+    },
+    "precision": "fp16",
+    "spec": {
+      "kind": "bundle",
+      "path": "artifacts/predictors/mbft_joint_reasoning_v0_e3/checkpoints/step_0000113",
+      "calibration": null,
+      "device": "cuda",
+      "precision": "fp16"
+    }
+  },
+  "runner_revision": "runner/1+metanoia_research-0.1.0",
+  "environment": {
+    "python": "3.12.13",
+    "implementation": "CPython",
+    "platform": "Linux-7.0.7-arch2-1-x86_64-with-glibc2.43",
+    "machine": "x86_64",
+    "packages": {
+      "metanoia": "0.1.0",
+      "pydantic": "2.13.5",
+      "torch": "2.11.0+cu128",
+      "transformers": "5.17.0",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "pyarrow": "25.0.1"
+    },
+    "accelerator": {
+      "requested_device": "cuda",
+      "torch_cuda": "12.8",
+      "cuda_available": true,
+      "cudnn_version": 91900,
+      "cudnn_deterministic": false,
+      "cudnn_benchmark": false,
+      "deterministic_algorithms": false,
+      "matmul_tf32": false,
+      "gpu_name": "NVIDIA GeForce RTX 2060",
+      "gpu_capability": "7.5",
+      "gpu_memory_bytes": 6017122304,
+      "driver_version": "595.71.05"
+    }
+  },
+  "source": {
+    "vcs": "git",
+    "commit": "d0de1deb977991b339a9f9a587ffd33e2ea59573",
+    "dirty": true,
+    "diff_sha256": "37d7406d667d3b9819ae78edef746574b3ff2e7dcbc59889e4a1b2fadd831fff"
+  },
+  "counts": {
+    "expected": 300,
+    "attempted": 300,
+    "completed": 300,
+    "failed": 0
+  },
+  "predictions": {
+    "path": "predictions.parquet",
+    "sha256": "41c89a7f277f7b637057de8a18aeea34040de8aa12089aee6fb1253ad29bad8a",
+    "rows": 300
+  },
+  "traces": null,
+  "started_at": "2026-09-27T17:06:28+00:00",
+  "finished_at": "2026-09-27T17:06:36+00:00"
+}

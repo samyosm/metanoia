@@ -1,0 +1,14 @@
+44 MiB
+index built 25 s
+G3 built 280 s
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+reranked 0 questions 1 s
+reranked 200 questions 89 s
+reranked 400 questions 185 s
+reranked 600 questions 295 s
+reranked 800 questions 421 s
+reranked 1000 questions 551 s
+reranked 1200 questions 691 s
+{"questions": 1368, "g3_one_hop_nonempty": 0.8557850484372144, "g3_two_hop_nonempty": 0.8972765490769512, "mean_pool": 65.6477791994151, "rerank_ms_per_pair_gpu": 2.2383718407569404, "seconds": 1150}
+
+[exited with code 0]

@@ -1,0 +1,142 @@
+{
+  "bundle_version": 1,
+  "predictor_id": "ws_statements_640@5259bb08c5e9",
+  "contract_version": 1,
+  "resolved_config": {
+    "model": {
+      "config_version": 1,
+      "name": "ws_statements_640",
+      "encoder": {
+        "kind": "hf",
+        "model": "answerdotai/ModernBERT-base",
+        "revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+        "max_length": 640,
+        "pooling": "mean",
+        "frozen": false,
+        "gradient_checkpointing": true
+      },
+      "scorer": {
+        "kind": "direct",
+        "latent_dim": 256,
+        "heads": 4,
+        "hidden_dim": 512,
+        "dropout": 0.1,
+        "candidate_encoding": "joint"
+      },
+      "workspace": {
+        "kind": "workspace",
+        "mode": "statements",
+        "dim": 256,
+        "heads": 4,
+        "hidden_dim": 512,
+        "dropout": 0.0,
+        "latent_slots": 16,
+        "max_rounds": 32
+      }
+    },
+    "encoder_identity": {
+      "kind": "hf",
+      "model": "answerdotai/ModernBERT-base",
+      "requested_revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+      "resolved_revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+      "pooling": "mean",
+      "max_length": 640,
+      "frozen": false
+    },
+    "input_rendering": "question-context-observations/1"
+  },
+  "weights": {
+    "path": "weights.pt",
+    "sha256": "5259bb08c5e95ca76f7f1bf0a6cea6334cae7ad9f36275efa103d9257d208708",
+    "rows": 0
+  },
+  "memory": null,
+  "training": {
+    "config": {
+      "config_version": 1,
+      "name": "ws_statements_reasoning_v1_warm20k",
+      "model_config_path": "configs/models/ws_statements_640.toml",
+      "dataset": "artifacts/datasets/microworld_v1_train20k",
+      "dev_dataset": "artifacts/datasets/microworld_v1",
+      "init_from": "artifacts/predictors/mbft_joint_mcqa_v0",
+      "train_split": "train",
+      "dev_split": "dev",
+      "epochs": 1,
+      "batch_size": 16,
+      "learning_rate": 0.0001,
+      "weight_decay": 0.01,
+      "grad_clip": 1.0,
+      "seed": 0,
+      "device": "cuda",
+      "max_train_examples": null,
+      "max_dev_examples": 400,
+      "subset": "random",
+      "encoder_learning_rate": 2e-05,
+      "warmup_fraction": 0.06,
+      "schedule": "linear",
+      "precision": "fp16-mixed",
+      "micro_batch_size": 4,
+      "log_every_steps": 50,
+      "checkpoint_every_steps": 125,
+      "checkpoint_each_epoch": false,
+      "train_rounds": [
+        1,
+        4
+      ],
+      "eval_rounds": 4
+    },
+    "dataset_id": "microworld_v1_train20k",
+    "cases_sha256": "e094251ef7ca5551ec55a20cfeb8535beb9b92c3da837e982ea8e6011ad9bbb3",
+    "labels_sha256": "e40b3cd9d40b3d7614a2aa080176afb7f02af039c7eec70529510b547b7b313a",
+    "train_examples": 20000,
+    "dev_examples": 400,
+    "parameters_total": 151381762,
+    "parameters_trainable": 151381762,
+    "steps": 1000,
+    "final_epoch": null,
+    "wall_time_seconds": 5015.8,
+    "train_examples_per_second": 3.19,
+    "initialized_from": "direct_modernbert_ft_joint@7345459d01da",
+    "checkpoint": {
+      "step": 1000,
+      "epoch": 0,
+      "position": 16000
+    }
+  },
+  "environment": {
+    "python": "3.12.13",
+    "implementation": "CPython",
+    "platform": "Linux-7.0.7-arch2-1-x86_64-with-glibc2.43",
+    "machine": "x86_64",
+    "packages": {
+      "metanoia": "0.1.0",
+      "pydantic": "2.13.5",
+      "torch": "2.11.0+cu128",
+      "transformers": "5.17.0",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "pyarrow": "25.0.1"
+    },
+    "accelerator": {
+      "requested_device": "cuda",
+      "torch_cuda": "12.8",
+      "cuda_available": true,
+      "cudnn_version": 91900,
+      "cudnn_deterministic": false,
+      "cudnn_benchmark": false,
+      "deterministic_algorithms": false,
+      "matmul_tf32": false,
+      "gpu_name": "NVIDIA GeForce RTX 2060",
+      "gpu_capability": "7.5",
+      "gpu_memory_bytes": 6017122304,
+      "driver_version": "595.71.05"
+    }
+  },
+  "source": {
+    "vcs": "git",
+    "commit": "c66da2bcc144167338571c09e24554f9120d8333",
+    "dirty": false,
+    "diff_sha256": null
+  },
+  "created_at": "2026-09-28T03:52:26+00:00"
+}

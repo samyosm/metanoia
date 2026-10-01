@@ -1,0 +1,119 @@
+{
+  "bundle_version": 1,
+  "predictor_id": "direct_modernbert_ft_joint@e2e17e2b2b77",
+  "contract_version": 1,
+  "resolved_config": {
+    "model": {
+      "config_version": 1,
+      "name": "direct_modernbert_ft_joint",
+      "encoder": {
+        "kind": "hf",
+        "model": "answerdotai/ModernBERT-base",
+        "revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+        "max_length": 384,
+        "pooling": "mean",
+        "frozen": false,
+        "gradient_checkpointing": true
+      },
+      "scorer": {
+        "kind": "direct",
+        "latent_dim": 256,
+        "heads": 4,
+        "hidden_dim": 512,
+        "dropout": 0.1,
+        "candidate_encoding": "joint"
+      }
+    },
+    "encoder_identity": {
+      "kind": "hf",
+      "model": "answerdotai/ModernBERT-base",
+      "requested_revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+      "resolved_revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+      "pooling": "mean",
+      "max_length": 384,
+      "frozen": false
+    },
+    "input_rendering": "question-context-observations/1"
+  },
+  "weights": {
+    "path": "weights.pt",
+    "sha256": "e2e17e2b2b7798564f49d8f5bb135980b6ccbd864331bb86f9c8d44cfde5b2eb",
+    "rows": 0
+  },
+  "memory": null,
+  "training": {
+    "config": {
+      "config_version": 1,
+      "name": "mbft_joint_mcqa_smoke",
+      "model_config_path": "configs/models/direct_modernbert_ft_joint.toml",
+      "dataset": "artifacts/datasets/mcqa_v0",
+      "train_split": "train",
+      "dev_split": "dev",
+      "epochs": 1,
+      "batch_size": 16,
+      "learning_rate": 0.0001,
+      "weight_decay": 0.01,
+      "grad_clip": 1.0,
+      "seed": 0,
+      "device": "cuda",
+      "max_train_examples": 2400,
+      "max_dev_examples": 400,
+      "encoder_learning_rate": 2e-05,
+      "warmup_fraction": 0.06,
+      "schedule": "linear",
+      "precision": "fp16-mixed",
+      "micro_batch_size": 4,
+      "log_every_steps": 50
+    },
+    "dataset_id": "mcqa_v0",
+    "cases_sha256": "03fa885ea3d3b2a7450287d68532723268a071ac21da21ccec3033f4ef5510e0",
+    "labels_sha256": "aabdd466f6702dcf30e47d7ee708249281b7c6f02b5bad9196be05c9b29f4cc5",
+    "train_examples": 2400,
+    "dev_examples": 400,
+    "parameters_total": 150393345,
+    "parameters_trainable": 150393345,
+    "final_epoch": {
+      "epoch": 0,
+      "train_loss": 1.3866435666879018,
+      "dev_loss": 1.3862854719161988,
+      "grad_norm_encoder": 0.3921093115210533,
+      "grad_norm_scorer": 0.7623841112852097
+    }
+  },
+  "environment": {
+    "python": "3.12.13",
+    "implementation": "CPython",
+    "platform": "Linux-7.0.7-arch2-1-x86_64-with-glibc2.43",
+    "machine": "x86_64",
+    "packages": {
+      "metanoia": "0.1.0",
+      "pydantic": "2.13.5",
+      "torch": "2.11.0+cu128",
+      "transformers": "5.17.0",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "pyarrow": "25.0.1"
+    },
+    "accelerator": {
+      "requested_device": "cuda",
+      "torch_cuda": "12.8",
+      "cuda_available": true,
+      "cudnn_version": 91900,
+      "cudnn_deterministic": false,
+      "cudnn_benchmark": false,
+      "deterministic_algorithms": false,
+      "matmul_tf32": false,
+      "gpu_name": "NVIDIA GeForce RTX 2060",
+      "gpu_capability": "7.5",
+      "gpu_memory_bytes": 6017122304,
+      "driver_version": "595.71.05"
+    }
+  },
+  "source": {
+    "vcs": "git",
+    "commit": "d65d89c7c44e2ad553b5bcb9ecfdc55f10e342fb",
+    "dirty": true,
+    "diff_sha256": "a8e51fd0f8b4e1486c3b6133fb80e119e34edcec2f824140637a9bff6d4693a5"
+  },
+  "created_at": "2026-09-27T04:02:19+00:00"
+}

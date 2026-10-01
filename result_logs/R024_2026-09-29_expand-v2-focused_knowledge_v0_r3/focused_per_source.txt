@@ -1,0 +1,13 @@
+paired test accuracy differences, focused minus control (95% group bootstrap, 1000)
+  vs none      p8   obqa          +0.006 [-0.040, +0.046]
+  vs none      p8   arc_easy      +0.082 [+0.062, +0.101]
+  vs none      p8   arc_challenge +0.015 [-0.014, +0.045]
+  vs none      p32  obqa          -0.010 [-0.056, +0.032]
+  vs none      p32  arc_easy      +0.100 [+0.078, +0.120]
+  vs none      p32  arc_challenge +0.045 [+0.016, +0.073]
+  vs retrieved p8   obqa          +0.020 [-0.018, +0.058]
+  vs retrieved p8   arc_easy      +0.019 [+0.001, +0.037]
+  vs retrieved p8   arc_challenge +0.045 [+0.018, +0.071]
+  vs retrieved p32  obqa          -0.002 [-0.044, +0.042]
+  vs retrieved p32  arc_easy      +0.036 [+0.019, +0.053]
+  vs retrieved p32  arc_challenge +0.068 [+0.039, +0.096]

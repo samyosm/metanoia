@@ -1,0 +1,33 @@
+focused   G1+G3+G4/J1+RRF(J0,J2)/k8    all 0.637/0.903  obqa 0.612  easy 0.719  chal 0.520  on 0.95 jac 0.07 rec 0.435
+
+[exited with code 0]
+retrieved G1/J0/k2                     all 0.610/0.969  obqa 0.604  easy 0.665  chal 0.517  on 0.44 jac 0.35 rec 0.247
+retrieved G1/J0/k8                     all 0.601/0.965  obqa 0.582  easy 0.665  chal 0.510  on 0.64 jac 0.36 rec 0.458
+retrieved G1/J1/k2                     all 0.596/0.984  obqa 0.586  easy 0.660  chal 0.490  on 0.79 jac 0.15 rec 0.260
+retrieved G1/J1/k8                     all 0.591/0.976  obqa 0.572  easy 0.656  chal 0.500  on 0.79 jac 0.22 rec 0.467
+retrieved G1/J2/k2                     all 0.591/0.989  obqa 0.558  easy 0.661  chal 0.510  on 0.49 jac 0.31 rec 0.179
+retrieved G1/J2/k8                     all 0.604/0.964  obqa 0.600  easy 0.667  chal 0.490  on 0.67 jac 0.32 rec 0.411
+retrieved G1/J1+J2/k2                  all 0.596/0.987  obqa 0.572  easy 0.663  chal 0.507  on 0.79 jac 0.13 rec 0.214
+retrieved G1/J1+J2/k8                  all 0.585/0.977  obqa 0.570  easy 0.649  chal 0.487  on 0.79 jac 0.21 rec 0.437
+retrieved G1/RRF(J0,J2)/k2             all 0.607/0.963  obqa 0.608  easy 0.668  chal 0.490  on 0.48 jac 0.33 rec 0.235
+retrieved G1/RRF(J0,J2)/k8             all 0.602/0.966  obqa 0.584  easy 0.674  chal 0.493  on 0.66 jac 0.35 rec 0.432
+retrieved G1/J1+RRF(J0,J2)/k2          all 0.593/0.974  obqa 0.582  easy 0.651  chal 0.500  on 0.79 jac 0.14 rec 0.252
+retrieved G1/J1+RRF(J0,J2)/k8          all 0.593/0.983  obqa 0.592  easy 0.651  chal 0.483  on 0.79 jac 0.22 rec 0.455
+retrieved G3/J1/k2                     all 0.590/1.005  obqa 0.572  easy 0.656  chal 0.493  on 0.95 jac 0.08 rec 0.251
+retrieved G3/J1/k8                     all 0.583/0.994  obqa 0.552  easy 0.656  chal 0.497  on 0.95 jac 0.08 rec 0.461
+retrieved G3/J2/k2                     all 0.585/0.993  obqa 0.568  easy 0.658  chal 0.473  on 0.91 jac 0.07 rec 0.229
+retrieved G3/J2/k8                     all 0.581/0.998  obqa 0.560  easy 0.660  chal 0.466  on 0.95 jac 0.08 rec 0.450
+retrieved G1+G3/J1/k2                  all 0.585/1.001  obqa 0.570  easy 0.651  chal 0.483  on 0.95 jac 0.07 rec 0.252
+retrieved G1+G3/J1/k8                  all 0.572/0.993  obqa 0.528  easy 0.647  chal 0.503  on 0.95 jac 0.08 rec 0.463
+retrieved G1+G3/J1+J2/k2               all 0.598/0.989  obqa 0.566  easy 0.677  chal 0.500  on 0.95 jac 0.06 rec 0.202
+retrieved G1+G3/J1+J2/k8               all 0.596/0.978  obqa 0.558  easy 0.677  chal 0.503  on 0.95 jac 0.07 rec 0.416
+retrieved G1+G3/J1+RRF(J0,J2)/k2       all 0.591/0.982  obqa 0.570  easy 0.660  chal 0.497  on 0.95 jac 0.06 rec 0.237
+retrieved G1+G3/J1+RRF(J0,J2)/k8       all 0.586/0.991  obqa 0.548  easy 0.665  chal 0.500  on 0.95 jac 0.07 rec 0.436
+retrieved G1+G3+G4/J1/k2               all 0.583/1.000  obqa 0.566  easy 0.651  chal 0.480  on 0.95 jac 0.07 rec 0.250
+retrieved G1+G3+G4/J1/k8               all 0.573/0.993  obqa 0.538  easy 0.640  chal 0.503  on 0.95 jac 0.08 rec 0.463
+retrieved G1+G3+G4/J1+J2/k2            all 0.601/0.990  obqa 0.572  easy 0.681  chal 0.497  on 0.95 jac 0.06 rec 0.196
+retrieved G1+G3+G4/J1+J2/k8            all 0.596/0.979  obqa 0.560  easy 0.677  chal 0.503  on 0.95 jac 0.06 rec 0.414
+retrieved G1+G3+G4/J1+RRF(J0,J2)/k2    all 0.591/0.980  obqa 0.568  easy 0.660  chal 0.500  on 0.95 jac 0.06 rec 0.237
+retrieved G1+G3+G4/J1+RRF(J0,J2)/k8    all 0.583/0.995  obqa 0.544  easy 0.660  chal 0.500  on 0.95 jac 0.07 rec 0.435
+
+[exited with code 0]

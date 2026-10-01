@@ -1,0 +1,600 @@
+{
+ "bundle": "artifacts/predictors/branch_v2_retrieved_knowledge_v0",
+ "predictor_id": "branch_v2_retrieved@277ebb247391",
+ "results": {
+  "empty/k0": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.574,
+    "nll": 1.0284077284469035
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.5621345029239766,
+    "nll": 1.069973041849894
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.5929824561403508,
+    "nll": 0.9949905336120775
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.48322147651006714,
+    "nll": 1.2831364190212051
+   }
+  },
+  "own/k2": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.608,
+    "nll": 0.9571762856767707
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.6140350877192983,
+    "nll": 0.9690497714367552
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.6666666666666666,
+    "nll": 0.8599636496487855
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.5234899328859061,
+    "nll": 1.1976263898902282
+   }
+  },
+  "swapped/k2": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.592,
+    "nll": 1.0094820397577846
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.570906432748538,
+    "nll": 1.0468906952521277
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.6,
+    "nll": 0.9792675808729382
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.4798657718120805,
+    "nll": 1.2390031212363883
+   }
+  },
+  "shared/k2": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.612,
+    "nll": 0.9633692125146859
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.5964912280701754,
+    "nll": 0.9973775890902248
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.6403508771929824,
+    "nll": 0.9104004043400531
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.4865771812080537,
+    "nll": 1.2208043796787056
+   }
+  },
+  "question/k2": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.604,
+    "nll": 0.9902080485766391
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.597953216374269,
+    "nll": 1.0115639029896912
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.643859649122807,
+    "nll": 0.926553732259317
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.5,
+    "nll": 1.2099992201804275
+   }
+  },
+  "gold+own/k2": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.666,
+    "nll": 0.8145896984448912
+   },
+   "all": {
+    "n": 500,
+    "accuracy": 0.666,
+    "nll": 0.8145896984448912
+   }
+  },
+  "own/k8": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.576,
+    "nll": 0.9733768917463781
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.6001461988304093,
+    "nll": 0.962696343374329
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.6736842105263158,
+    "nll": 0.8307015647906669
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.5,
+    "nll": 1.197249194403399
+   }
+  },
+  "swapped/k8": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.588,
+    "nll": 1.0410295583455764
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.5635964912280702,
+    "nll": 1.0700513062664168
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.5912280701754385,
+    "nll": 0.9917308559927659
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.4697986577181208,
+    "nll": 1.268553086858367
+   }
+  },
+  "shared/k8": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.612,
+    "nll": 0.9523855937360155
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.6133040935672515,
+    "nll": 0.9624555048031496
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.6666666666666666,
+    "nll": 0.8700661077392247
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.5134228187919463,
+    "nll": 1.1560693029910833
+   }
+  },
+  "question/k8": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.606,
+    "nll": 0.9991507796918104
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.6001461988304093,
+    "nll": 1.0058384276852523
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.6508771929824562,
+    "nll": 0.9047314471397606
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.49328859060402686,
+    "nll": 1.210451860261263
+   }
+  },
+  "gold+own/k8": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.654,
+    "nll": 0.8561383218051787
+   },
+   "all": {
+    "n": 500,
+    "accuracy": 0.654,
+    "nll": 0.8561383218051787
+   }
+  },
+  "gold/k1": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.674,
+    "nll": 0.8240735189457097
+   },
+   "all": {
+    "n": 500,
+    "accuracy": 0.674,
+    "nll": 0.8240735189457097
+   }
+  }
+ },
+ "follow": {
+  "k2": {
+   "changed": 0.2894736842105263,
+   "followed_branch": 0.125,
+   "chance": 0.25
+  },
+  "k8": {
+   "changed": 0.32456140350877194,
+   "followed_branch": 0.15423976608187134,
+   "chance": 0.25
+  }
+ },
+ "overlap": {
+  "k2": {
+   "mean_pairwise_jaccard": 0.34669428200129954,
+   "nodes_also_in_another_branch": 0.5537378906963992
+  },
+  "k8": {
+   "mean_pairwise_jaccard": 0.35607056469629567,
+   "nodes_also_in_another_branch": 0.6034545786876256
+  }
+ },
+ "mentions_own_words": {
+  "k2": 0.4907235621521336,
+  "k8": 0.6907235621521336
+ },
+ "loo": {
+  "k2": {
+   "mean_abs_node_contribution": 0.4523380517959595,
+   "mean_abs_centered_logit_change": 0.5806687517091632,
+   "mean_direct_logit_std": 1.440987304225564
+  },
+  "k8": {
+   "mean_abs_node_contribution": 0.21673025339841842,
+   "mean_abs_centered_logit_change": 0.6577046511694788,
+   "mean_direct_logit_std": 1.440987304225564
+  }
+ },
+ "examples": [
+  {
+   "question": "Frilled sharks and angler fish live far beneath the surface of the ocean, which is why they are known as",
+   "label": "a",
+   "choice_empty": "a",
+   "choice_own_k8": "a",
+   "branches": {
+    "Deep sea animals": [
+     "Most angler fish live in deep sea.",
+     "Angler fish live in deep sea.",
+     "Most fish live in the deep water, just below the ocean surface.",
+     "Most fish live in deep oceans."
+    ],
+    "fish": [
+     "Sharks are fish that live throughout the world's oceans.",
+     "Most fish live in the deep water, just below the ocean surface.",
+     "Most angler fish live in deep sea.",
+     "Sharks are fish because they have gills and get their oxygen from the water."
+    ],
+    "Long Sea Fish": [
+     "Most angler fish live in deep sea.",
+     "Sharks are fish that live throughout the world's oceans.",
+     "Angler fish live in deep sea.",
+     "Most fish live in deep oceans."
+    ],
+    "Far Sea Animals": [
+     "Sharks are fish that live throughout the world's oceans.",
+     "Some species of sharks live in coastal waters, but others dwell far out at sea.",
+     "Most sharks live in shallow sea.",
+     "Most species of sharks reside in saltwater which means they are found in the oceans."
+    ]
+   }
+  },
+  {
+   "question": "To have a positive impact of the environment",
+   "label": "c",
+   "choice_empty": "c",
+   "choice_own_k8": "c",
+   "branches": {
+    "use Styrofoam plates and bowls": [
+     "Products have environmental impact.",
+     "Use has environmental benefits.",
+     "Some materials have more of an impact on the environment than others.",
+     "Products have environmental benefits."
+    ],
+    "use more paper towels": [
+     "Some materials have more of an impact on the environment than others.",
+     "Paper towels are paper.",
+     "Paper toweling are paper.",
+     "Paper towels are towels."
+    ],
+    "salvage plastic bottles instead of throwing them away": [
+     "Recycle products have environmental benefits.",
+     "Recycling is important for the environment.",
+     "Recycling helps protect the environment.",
+     "Buy recycle products have environmental benefits."
+    ],
+    "drive a car that guzzles gas": [
+     "Pollution is an indirect product of driving a car.",
+     "Vehicle emissions can affect the environment in several ways.",
+     "Cars emit greenhouse gasses, such as carbon dioxide, which contribute to global warming.",
+     "Some gases have environmental impact."
+    ]
+   }
+  },
+  {
+   "question": "Pasteurization reduces the amount of bacteria in",
+   "label": "b",
+   "choice_empty": "b",
+   "choice_own_k8": "d",
+   "branches": {
+    "green tea": [
+     "Pasteurization destroys bacteria.",
+     "Pasteurization kills harmful levels of bacteria.",
+     "Green tea has the ability to kill certain bacteria.",
+     "Pasteurization kills harmful levels of bacteria commonly found in food."
+    ],
+    "cheddar cheese": [
+     "Pasteurization destroys bacteria.",
+     "Pasteurization kills harmful levels of bacteria commonly found in food.",
+     "Pasteurization destroys salmonella bacteria.",
+     "Pasteurization kills harmful levels of bacteria."
+    ],
+    "orange juice": [
+     "Pasteurization destroys bacteria.",
+     "Pasteurization kills harmful levels of bacteria.",
+     "Pasteurization kills harmful levels of bacteria commonly found in food.",
+     "Pasteurization destroys salmonella bacteria."
+    ],
+    "almond milk": [
+     "Pasteurization destroys salmonella bacteria.",
+     "Pasteurization destroys bacteria.",
+     "Pasteurization kills harmful levels of bacteria commonly found in food.",
+     "Pasteurization kills harmful levels of bacteria."
+    ]
+   }
+  },
+  {
+   "question": "When going in the basement, it's better to have a laser than a",
+   "label": "c",
+   "choice_empty": "a",
+   "choice_own_k8": "b",
+   "branches": {
+    "flashlight": [
+     "Lasers work differently depending on what they're needed for.",
+     "Laser beams use a lower heat input, but higher intensity than an electron beam.",
+     "Light bulbs are located in basements.",
+     "Laser light is acheived by using laser diods and allow better penetration of the laser light."
+    ],
+    "light bulb": [
+     "Light bulbs are located in basements.",
+     "Laser beams use a lower heat input, but higher intensity than an electron beam.",
+     "Lasers deliver a type of light energy.",
+     "Laser light can be coherent light."
+    ],
+    "radio": [
+     "Masers are the radio equivalent of lasers.",
+     "Lasers work differently depending on what they're needed for.",
+     "Laser beams use a lower heat input, but higher intensity than an electron beam.",
+     "Lasers are devices."
+    ],
+    "TV": [
+     "Lasers work differently depending on what they're needed for.",
+     "Electrical appliances are located in basements.",
+     "Electricity is located in basements.",
+     "Basements are places."
+    ]
+   }
+  },
+  {
+   "question": "What is likely to be the most direct result of offshore oil leaking?",
+   "label": "b",
+   "choice_empty": "b",
+   "choice_own_k8": "b",
+   "branches": {
+    "oil pollutes cities": [
+     "Most oil pollution creates conditions.",
+     "Oil spills are environmental disasters, especially offshore spills.",
+     "Significant pressure causes oil leakage.",
+     "Oil extraction is another cause of oil spill."
+    ],
+    "oil harms ocean life": [
+     "Oil affects marine life.",
+     "Most oil affects marine life.",
+     "Natural seepage is another cause of oil spills especially in the oceans.",
+     "Oil spills are environmental disasters, especially offshore spills."
+    ],
+    "oil ruins farmland": [
+     "Oil drilling can result in harmful spillage.",
+     "Significant pressure causes oil leakage.",
+     "Natural seepage is another cause of oil spills especially in the oceans.",
+     "Oil spills are environmental disasters, especially offshore spills."
+    ],
+    "oil harms forests": [
+     "Some trees are susceptible to oil injury.",
+     "Oil spills are environmental disasters, especially offshore spills.",
+     "Natural seepage is another cause of oil spills especially in the oceans.",
+     "Oil drilling can result in harmful spillage."
+    ]
+   }
+  },
+  {
+   "question": "A pelican is hungry, so decides to try to catch some fish. In order to do this, the pelican will",
+   "label": "c",
+   "choice_empty": "b",
+   "choice_own_k8": "b",
+   "branches": {
+    "use the back of its head": [
+     "Pelicans eat fish.",
+     "Pelicans use two different ways to feed.",
+     "A pelican is a sea bird",
+     "Pelicans catch fish."
+    ],
+    "use the bottom of its stomach": [
+     "Pelicans eat fish.",
+     "Pelicans use two different ways to feed.",
+     "Pelicans eat food.",
+     "Most pelicans eat fish."
+    ],
+    "use the front of its face": [
+     "Pelicans eat fish.",
+     "Pelicans use two different ways to feed.",
+     "Pelicans catch fish.",
+     "A pelican is a sea bird"
+    ],
+    "use the back of its tail": [
+     "Pelicans eat fish.",
+     "Pelicans use two different ways to feed.",
+     "Fish have (part) tail fins.",
+     "Tail fins are part of fish."
+    ]
+   }
+  },
+  {
+   "question": "A change in the Earth is",
+   "label": "b",
+   "choice_empty": "b",
+   "choice_own_k8": "b",
+   "branches": {
+    "a person's hair growing": [
+     "Hair grows at different rates.",
+     "Hair growing cycles vary in different cultures and parts of the world.",
+     "Hair grows in cycles.",
+     "Human hair grows in cycles."
+    ],
+    "a wooded area appearing on land that was once part of the ocean": [
+     "Water causes change around the earth.",
+     "Earth changes take place over many scales of time and space.",
+     "Water affects the climate of the Earth and changes the surface of the land.",
+     "Earth change is the way of nature."
+    ],
+    "a wooded area existing next to an ocean": [
+     "Water causes change around the earth.",
+     "Earth is located in trees.",
+     "Earth change is the way of nature.",
+     "Earth has a changing weather pattern."
+    ],
+    "the moon moving around the Earth": [
+     "Moon travels around the Earth.",
+     "Earth has one moon, which revolves around it.",
+     "Moon revolves as Earth spins.",
+     "Earth has the moon."
+    ]
+   }
+  },
+  {
+   "question": "So many environments receive large amounts of rain, though an exception is",
+   "label": "a",
+   "choice_empty": "c",
+   "choice_own_k8": "c",
+   "branches": {
+    "the Sahara": [
+     "Most rainfall occurs in arid areas.",
+     "Most atmospheres cause rain.",
+     "Most arid areas have rainfall.",
+     "Most atmospheres cause intense rain."
+    ],
+    "the great plains": [
+     "Rain is the result of excessive moisture in the atmosphere.",
+     "Most atmospheres cause rain.",
+     "Most atmospheres cause intense rain.",
+     "Many crops are under stress because of excessive rain."
+    ],
+    "the rain-forest": [
+     "Most forest areas have rainfall.",
+     "Rain forests occur throughout the world where both heavy rains occur and where forests grow.",
+     "Rain forests are environments.",
+     "Rain forests are basically jungles with many trees and plants."
+    ],
+    "Seattle": [
+     "Rain is the result of excessive moisture in the atmosphere.",
+     "Most atmospheres cause rain.",
+     "Most atmospheres cause intense rain.",
+     "Most clouds cause rain."
+    ]
+   }
+  },
+  {
+   "question": "nest sitting is left up to the",
+   "label": "b",
+   "choice_empty": "b",
+   "choice_own_k8": "b",
+   "branches": {
+    "daddy": [
+     "Parents leave nest territory.",
+     "Most parents leave nest territory.",
+     "Members leave nest territory.",
+     "A daddy is a father"
+    ],
+    "the embryo's creator": [
+     "A hatch is a birth",
+     "Some eggs hold the remains of an embryo that can be identified to a particular species.",
+     "Nests are where eggs stay.",
+     "Embryos have (part) sections."
+    ],
+    "strangers": [
+     "Members leave nest territory.",
+     "Parents leave nest territory.",
+     "Most parents leave nest territory.",
+     "Some families have nest sites."
+    ],
+    "male siblings": [
+     "Parents leave nest territory.",
+     "Male offspring remain with mothers.",
+     "Members leave nest territory.",
+     "Siblings stay with parents."
+    ]
+   }
+  },
+  {
+   "question": "Vaccines",
+   "label": "b",
+   "choice_empty": "b",
+   "choice_own_k8": "b",
+   "branches": {
+    "are only necessary for immuno-comprised people": [
+     "Vaccines are immunogen.",
+     "Some vaccines only protect against a specific subtype.",
+     "Vaccines contain antigen.",
+     "Some immunizations require only one dose of the vaccine."
+    ],
+    "help prevent outbreaks of once dormant diseases": [
+     "Vaccines can prevent outbreaks of disease and save lives.",
+     "Vaccination can prevent the onset of the disease.",
+     "Dormant bacteria contribute to the occurrence of seasonal epidemics.",
+     "Vaccines prevent diseases."
+    ],
+    "provide little protection against diseases": [
+     "Vaccines are one of few ways to prevent infectious disease outbreaks.",
+     "Most vaccines don t cause the diseases that are usually caused by viruses and bacteria.",
+     "Vaccines sometime appear to fail to protect from disease.",
+     "Vaccines prevent diseases."
+    ],
+    "are unimportant and under researched": [
+     "Influenza vaccine is underused in groups targeted for vaccination.",
+     "Vaccines reduce likelihood.",
+     "Mandatory vaccines violate the medical ethic of informed consent.",
+     "Vaccination interferes with diagnostic testing."
+    ]
+   }
+  }
+ ]
+}

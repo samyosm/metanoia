@@ -1,0 +1,58 @@
+{
+  "dataset_version": 1,
+  "dataset_id": "microworld_v0",
+  "task": "exclusive_choice",
+  "generator": {
+    "revision": "microworld/1",
+    "config": {
+      "generator": "microworld",
+      "dataset_id": "microworld_v0",
+      "seed": 20260926,
+      "n_worlds": 600,
+      "examples_per_world": 5,
+      "entities_per_world": 8,
+      "predicates_per_world": 44,
+      "n_candidates": 4,
+      "depths": [
+        1,
+        2,
+        3
+      ],
+      "heldout_depths": [
+        4
+      ],
+      "heldout_depth_splits": [
+        "test"
+      ],
+      "conjunction_probability": 0.3,
+      "splits": {
+        "train": 0.6,
+        "dev": 0.1,
+        "calibration": 0.1,
+        "test": 0.2
+      }
+    }
+  },
+  "splits": {
+    "calibration": 300,
+    "dev": 300,
+    "test": 600,
+    "train": 1800
+  },
+  "cases": {
+    "path": "cases.jsonl",
+    "sha256": "50f2158869fd7587bf8e9836b17e78096659e22b6d30367aefec78e4b8e3d534",
+    "rows": 3000
+  },
+  "labels": {
+    "path": "labels.parquet",
+    "sha256": "251aabbf6b0f0fe05f6cc8e0ef8d4b6144c5ae9b520f3814da2bf0bd2f9c4482",
+    "rows": 3000
+  },
+  "proofs": {
+    "path": "proofs.jsonl",
+    "sha256": "5198e037364bfd4929773d3d57800287d16d768a16f4fed2657bd4a8fda6777d",
+    "rows": 3000
+  },
+  "created_at": "2026-09-27T03:26:53+00:00"
+}

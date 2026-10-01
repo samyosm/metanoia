@@ -1,0 +1,215 @@
+{
+ "dataset": "mix_v1",
+ "splits": {
+  "calibration": 9008,
+  "dev": 9073,
+  "test": 23118,
+  "train": 355114
+ },
+ "sources": {
+  "arc_challenge": {
+   "counts": {
+    "train": 1117,
+    "dev": 165,
+    "calibration": 133,
+    "test": 1171
+   },
+   "options": {
+    "4": 2573,
+    "3": 8,
+    "5": 5
+   },
+   "median_passage_words": 0,
+   "group_overlap_train_test": 0,
+   "group_overlap_train_dev": 0,
+   "group_overlap_dev_calibration": 0,
+   "test_question_and_options_also_in_train": 0,
+   "test_dup_fraction": 0.0,
+   "chance": 0.2,
+   "test_acc_longest_option": 0.253,
+   "test_acc_overlap_with_passage": 0.227
+  },
+  "arc_easy": {
+   "counts": {
+    "train": 2251,
+    "dev": 306,
+    "calibration": 264,
+    "test": 2375
+   },
+   "options": {
+    "4": 5172,
+    "3": 14,
+    "5": 10
+   },
+   "median_passage_words": 0,
+   "group_overlap_train_test": 0,
+   "group_overlap_train_dev": 0,
+   "group_overlap_dev_calibration": 0,
+   "test_question_and_options_also_in_train": 3,
+   "test_dup_fraction": 0.0013,
+   "chance": 0.2,
+   "test_acc_longest_option": 0.251,
+   "test_acc_overlap_with_passage": 0.251
+  },
+  "boolq": {
+   "counts": {
+    "train": 8217,
+    "dev": 624,
+    "calibration": 586,
+    "test": 3270
+   },
+   "options": {
+    "2": 12697
+   },
+   "median_passage_words": 84,
+   "group_overlap_train_test": 623,
+   "group_overlap_train_dev": 0,
+   "group_overlap_dev_calibration": 0,
+   "test_question_and_options_also_in_train": 0,
+   "test_dup_fraction": 0.0,
+   "chance": 0.5,
+   "test_acc_longest_option": 0.517,
+   "test_acc_overlap_with_passage": 0.511
+  },
+  "casehold": {
+   "counts": {
+    "train": 44973,
+    "dev": 1971,
+    "calibration": 1928,
+    "test": 3595
+   },
+   "options": {
+    "5": 52467
+   },
+   "median_passage_words": 137,
+   "group_overlap_train_test": 0,
+   "group_overlap_train_dev": 0,
+   "group_overlap_dev_calibration": 0,
+   "test_question_and_options_also_in_train": 201,
+   "test_dup_fraction": 0.0561,
+   "chance": 0.2,
+   "test_acc_longest_option": 0.235,
+   "test_acc_overlap_with_passage": 0.344
+  },
+  "commonsenseqa": {
+   "counts": {
+    "train": 8552,
+    "calibration": 527,
+    "dev": 540,
+    "test": 1197
+   },
+   "options": {
+    "5": 10816
+   },
+   "median_passage_words": 0,
+   "group_overlap_train_test": 0,
+   "group_overlap_train_dev": 0,
+   "group_overlap_dev_calibration": 0,
+   "test_question_and_options_also_in_train": 0,
+   "test_dup_fraction": 0.0,
+   "chance": 0.2,
+   "test_acc_longest_option": 0.21,
+   "test_acc_overlap_with_passage": 0.194
+  },
+  "medmcqa": {
+   "counts": {
+    "train": 178402,
+    "calibration": 1841,
+    "dev": 1871,
+    "test": 4162
+   },
+   "options": {
+    "4": 186276
+   },
+   "median_passage_words": 0,
+   "group_overlap_train_test": 0,
+   "group_overlap_train_dev": 0,
+   "group_overlap_dev_calibration": 0,
+   "test_question_and_options_also_in_train": 0,
+   "test_dup_fraction": 0.0,
+   "chance": 0.25,
+   "test_acc_longest_option": 0.319,
+   "test_acc_overlap_with_passage": 0.322
+  },
+  "obqa": {
+   "counts": {
+    "train": 4954,
+    "calibration": 270,
+    "dev": 230,
+    "test": 500
+   },
+   "options": {
+    "4": 5954
+   },
+   "median_passage_words": 0,
+   "group_overlap_train_test": 0,
+   "group_overlap_train_dev": 0,
+   "group_overlap_dev_calibration": 0,
+   "test_question_and_options_also_in_train": 14,
+   "test_dup_fraction": 0.028,
+   "chance": 0.25,
+   "test_acc_longest_option": 0.326,
+   "test_acc_overlap_with_passage": 0.276
+  },
+  "qasc": {
+   "counts": {
+    "train": 7189,
+    "dev": 476,
+    "calibration": 469,
+    "test": 926
+   },
+   "options": {
+    "8": 9060
+   },
+   "median_passage_words": 0,
+   "group_overlap_train_test": 0,
+   "group_overlap_train_dev": 0,
+   "group_overlap_dev_calibration": 0,
+   "test_question_and_options_also_in_train": 0,
+   "test_dup_fraction": 0.0,
+   "chance": 0.125,
+   "test_acc_longest_option": 0.086,
+   "test_acc_overlap_with_passage": 0.131
+  },
+  "race": {
+   "counts": {
+    "train": 87816,
+    "calibration": 2464,
+    "dev": 2419,
+    "test": 4931
+   },
+   "options": {
+    "4": 97630
+   },
+   "median_passage_words": 279,
+   "group_overlap_train_test": 0,
+   "group_overlap_train_dev": 0,
+   "group_overlap_dev_calibration": 0,
+   "test_question_and_options_also_in_train": 70,
+   "test_dup_fraction": 0.0142,
+   "chance": 0.25,
+   "test_acc_longest_option": 0.298,
+   "test_acc_overlap_with_passage": 0.3
+  },
+  "sciq": {
+   "counts": {
+    "train": 11643,
+    "calibration": 526,
+    "dev": 471,
+    "test": 991
+   },
+   "options": {
+    "4": 13631
+   },
+   "median_passage_words": 49,
+   "group_overlap_train_test": 2,
+   "group_overlap_train_dev": 0,
+   "group_overlap_dev_calibration": 0,
+   "test_question_and_options_also_in_train": 0,
+   "test_dup_fraction": 0.0,
+   "chance": 0.25,
+   "test_acc_longest_option": 0.275,
+   "test_acc_overlap_with_passage": 0.817
+  }
+ }
+}

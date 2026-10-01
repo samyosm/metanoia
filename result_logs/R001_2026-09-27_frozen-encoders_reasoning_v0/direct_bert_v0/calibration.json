@@ -1,0 +1,29 @@
+{
+  "calibration_version": 1,
+  "calibrator_id": "temperature-72818de077ae",
+  "method": "temperature",
+  "temperature": 148.41309422164355,
+  "compatible_predictor_id": "direct_bert@7056aff3d45a",
+  "budget_id": "b0",
+  "budget": {
+    "max_nodes": 0,
+    "max_queries": 0,
+    "max_proposals": 0,
+    "max_pairs": 0,
+    "max_edges": 0,
+    "max_composites": 0,
+    "max_rounds": 0,
+    "max_depth": 0
+  },
+  "fitted_on": {
+    "run_id": "direct_bert_v0_reasoning_v0",
+    "predictions_sha256": "2ed43365611ae3e0442d5493f88163c725ed859b69d076aec89dc4016a3e0cfc",
+    "split": "calibration",
+    "n_examples": 300,
+    "nll_at_temperature_1": 1.5611764825264114,
+    "nll_at_fitted_temperature": 1.3863668735659227,
+    "at_search_bound": true
+  },
+  "analysis_revision": "metanoia_analysis-0.1.0",
+  "created_at": "2026-09-27T04:22:40+00:00"
+}

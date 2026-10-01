@@ -1,0 +1,6 @@
+Dev question: "Gas can fill any container it is given, and liquid" (gold fact: "Matter in the liquid phase has definite volume")
+Top-5 retrieved per candidate (query = question + candidate), cosine similarity:
+  'is standard weight and size' -> measure (0.73); gas-filled (0.72); gas (0.71); fluid (0.71); bottle (0.71)
+  'is the opposite of variable' -> gas (0.77); gas (0.72); bottle (0.72); cylinder (0.72); liquid (0.72)
+  'only needs a few'            -> gas-filled (0.76); inflate (0.73); gas up (0.73); bottle (0.72); gas (0.72)
+  'uses what it needs'          -> gas-filled (0.74); inflate (0.73); bottle (0.73); vessel (0.73); gas up (0.72)

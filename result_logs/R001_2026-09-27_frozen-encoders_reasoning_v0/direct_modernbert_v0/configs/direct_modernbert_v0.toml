@@ -1,0 +1,12 @@
+name = "direct_modernbert_v0"
+model_config_path = "configs/models/direct_modernbert.toml"
+dataset = "artifacts/datasets/microworld_v0"
+train_split = "train"
+dev_split = "dev"
+epochs = 15
+batch_size = 32
+learning_rate = 3e-4
+weight_decay = 0.01
+grad_clip = 1.0
+seed = 0
+device = "cuda"

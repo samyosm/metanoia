@@ -1,0 +1,15 @@
+{"dev_loss":1.3891210953394573,"epoch":0,"grad_norm_encoder":0.0,"grad_norm_scorer":0.18453195861034227,"train_loss":1.3876741225259346}
+{"dev_loss":1.3979700231552123,"epoch":1,"grad_norm_encoder":0.0,"grad_norm_scorer":0.2612195352190419,"train_loss":1.3826010122633816}
+{"dev_loss":1.400215277671814,"epoch":2,"grad_norm_encoder":0.0,"grad_norm_scorer":0.29480081979642836,"train_loss":1.3753141562143962}
+{"dev_loss":1.405173290570577,"epoch":3,"grad_norm_encoder":0.0,"grad_norm_scorer":0.4053670429346854,"train_loss":1.3690928722682751}
+{"dev_loss":1.4026428604125976,"epoch":4,"grad_norm_encoder":0.0,"grad_norm_scorer":0.5231279495515322,"train_loss":1.3631661398368968}
+{"dev_loss":1.4019770050048828,"epoch":5,"grad_norm_encoder":0.0,"grad_norm_scorer":0.5207352842155256,"train_loss":1.3573874527947944}
+{"dev_loss":1.412835284868876,"epoch":6,"grad_norm_encoder":0.0,"grad_norm_scorer":0.6534692974467027,"train_loss":1.3519043734199123}
+{"dev_loss":1.4176554250717164,"epoch":7,"grad_norm_encoder":0.0,"grad_norm_scorer":0.6191757054705369,"train_loss":1.3433105778275876}
+{"dev_loss":1.4198492066065471,"epoch":8,"grad_norm_encoder":0.0,"grad_norm_scorer":0.7540826860227083,"train_loss":1.3354904735297488}
+{"dev_loss":1.457037173906962,"epoch":9,"grad_norm_encoder":0.0,"grad_norm_scorer":0.8874473258068687,"train_loss":1.3166549895939075}
+{"dev_loss":1.4347813018163045,"epoch":10,"grad_norm_encoder":0.0,"grad_norm_scorer":1.0865619935487445,"train_loss":1.3031665400454873}
+{"dev_loss":1.4562611150741578,"epoch":11,"grad_norm_encoder":0.0,"grad_norm_scorer":1.2200718239734047,"train_loss":1.2800151088781524}
+{"dev_loss":1.4724861653645833,"epoch":12,"grad_norm_encoder":0.0,"grad_norm_scorer":1.3178201746522336,"train_loss":1.253725110438832}
+{"dev_loss":1.4889122279485068,"epoch":13,"grad_norm_encoder":0.0,"grad_norm_scorer":1.6746625837526823,"train_loss":1.2177410052533735}
+{"dev_loss":1.5100070492426554,"epoch":14,"grad_norm_encoder":0.0,"grad_norm_scorer":1.831465955366168,"train_loss":1.1889019618954575}

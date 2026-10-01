@@ -1,0 +1,29 @@
+{
+  "calibration_version": 1,
+  "calibrator_id": "temperature-37fd4e04807a",
+  "method": "temperature",
+  "temperature": 0.07140982835960753,
+  "compatible_predictor_id": "ws_latent_640@1a8013668375",
+  "budget_id": "b0",
+  "budget": {
+    "max_nodes": 0,
+    "max_queries": 0,
+    "max_proposals": 0,
+    "max_pairs": 0,
+    "max_edges": 0,
+    "max_composites": 0,
+    "max_rounds": 0,
+    "max_depth": 0
+  },
+  "fitted_on": {
+    "run_id": "ws_latent_reasoning_v1_warm20k_reasoning_v1_r2",
+    "predictions_sha256": "43488d57bd4edb5b1ebbeb4213c52c7b4f220a2765772c23a8a1db60070d61b1",
+    "split": "calibration",
+    "n_examples": 800,
+    "nll_at_temperature_1": 9.85311874302952e-06,
+    "nll_at_fitted_temperature": 0.0,
+    "at_search_bound": false
+  },
+  "analysis_revision": "metanoia_analysis-0.1.0",
+  "created_at": "2026-09-28T16:12:01+00:00"
+}

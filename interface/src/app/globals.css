@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+/* IBM Carbon tokens: the White theme, and Gray 100 when the system prefers dark. */
+:root {
+  --background: #ffffff;
+  --layer: #f4f4f4;
+  --field: #f4f4f4;
+  --border-subtle: #e0e0e0;
+  --border-strong: #8d8d8d;
+  --text-primary: #161616;
+  --text-secondary: #525252;
+  --text-helper: #6f6f6f;
+  --text-on-color: #ffffff;
+  --interactive: #0f62fe;
+  --interactive-hover: #0050e6;
+  --focus: #0f62fe;
+  --support-error: #da1e28;
+  --support-success: #24a148;
+  --bar-muted: #c6c6c6;
+  /* Carbon categorical palette (light), one colour per candidate in charts. */
+  --chart-1: #6929c4;
+  --chart-2: #1192e8;
+  --chart-3: #005d5d;
+  --chart-4: #9f1853;
+  --chart-5: #b28600;
+  --chart-6: #198038;
+  --chart-7: #002d9c;
+  --chart-8: #ee538b;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #161616;
+    --layer: #262626;
+    --field: #262626;
+    --border-subtle: #393939;
+    --border-strong: #6f6f6f;
+    --text-primary: #f4f4f4;
+    --text-secondary: #c6c6c6;
+    --text-helper: #a8a8a8;
+    --focus: #ffffff;
+    --support-error: #fa4d56;
+    --support-success: #42be65;
+    --bar-muted: #525252;
+    --chart-1: #8a3ffc;
+    --chart-2: #33b1ff;
+    --chart-3: #08bdba;
+    --chart-4: #ff7eb6;
+    --chart-5: #d2a106;
+    --chart-6: #6fdc8c;
+    --chart-7: #4589ff;
+    --chart-8: #d12771;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-layer: var(--layer);
+  --color-field: var(--field);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-strong: var(--border-strong);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-helper: var(--text-helper);
+  --color-text-on-color: var(--text-on-color);
+  --color-interactive: var(--interactive);
+  --color-interactive-hover: var(--interactive-hover);
+  --color-focus: var(--focus);
+  --color-support-error: var(--support-error);
+  --color-support-success: var(--support-success);
+  --color-bar-muted: var(--bar-muted);
+  --font-sans: var(--font-plex-sans);
+  --font-mono: var(--font-plex-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--text-primary);
+}
+
+/* Carbon focus: a 2px inset outline, never a glow. */
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}
+
+/* New nodes of the live tree fade in; nothing moves for reduced-motion users. */
+@keyframes node-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.node-enter {
+  animation: node-enter 240ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .node-enter {
+    animation: none;
+  }
+  .bar-animate {
+    transition: none;
+  }
+}

@@ -1,0 +1,11 @@
+# The weights chosen by artifacts/selections/select-4d0b909ed685.json (dev NLL): final.
+run_id = "mbft640_joint_reasoning_v1_warm_reasoning_v1"
+suite = "suites/reasoning_v1"
+dataset = "artifacts/datasets/microworld_v1"
+output_root = "artifacts/runs"
+
+[predictor]
+kind = "bundle"
+path = "artifacts/predictors/mbft640_joint_reasoning_v1_warm"
+device = "cuda"
+precision = "fp16"

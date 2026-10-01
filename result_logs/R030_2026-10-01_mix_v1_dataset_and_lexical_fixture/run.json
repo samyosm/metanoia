@@ -1,0 +1,101 @@
+{
+  "run_version": 1,
+  "run_id": "lexical_mix_v1",
+  "status": "complete",
+  "suite": {
+    "suite_id": "mix_v1",
+    "revision": 1,
+    "path": "suites/mix_v1"
+  },
+  "protocol_sha256": "de5570918a7216a32f4d2384ec120390adf8c8e67744c0742abba4125741463a",
+  "protocol": {
+    "suite_id": "mix_v1",
+    "revision": 1,
+    "task": "exclusive_choice",
+    "question": "PLAN_V3 instrument: how accurately, and how reliably in probability, does a direct predictor\nchoose the correct option across a broad mix of multiple-choice sources: reading comprehension\n(RACE), law with a passage (CaseHOLD), medicine without a passage (MedMCQA), science,\ncommonsense and yes/no questions? Reported per source. Dev and calibration come from each\nsource's validation split or, where the source's test labels are hidden, are carved from\nits train split by group; test is the source's labelled test split (or its validation split).\n",
+    "analysis_specification": "analysis/specifications/mix_v1.toml",
+    "dataset": {
+      "dataset_id": "mix_v1",
+      "cases_sha256": "4ca9f0dd20ff457bab4bd9fc9dec04caadd9e20909eeff6ccc70b8f72fb8f7a8",
+      "labels_sha256": "0279e83625f0140ec0bee90d0b441de0f013b54bd156b7b0f5633d99bf133565"
+    },
+    "evaluation": {
+      "splits": [
+        "dev",
+        "calibration",
+        "test"
+      ],
+      "batch_size": 8,
+      "repeats": 1,
+      "base_seed": 0,
+      "trace": "off",
+      "failure_policy": "uniform",
+      "timing_scope": "decide_call"
+    },
+    "budgets": [
+      {
+        "id": "b0"
+      }
+    ]
+  },
+  "dataset_id": "mix_v1",
+  "cases_sha256": "4ca9f0dd20ff457bab4bd9fc9dec04caadd9e20909eeff6ccc70b8f72fb8f7a8",
+  "labels_sha256": "0279e83625f0140ec0bee90d0b441de0f013b54bd156b7b0f5633d99bf133565",
+  "predictor": {
+    "predictor_id": "lexical_overlap@1",
+    "kind": "lexical_overlap",
+    "spec": {
+      "kind": "lexical",
+      "path": null,
+      "calibration": null,
+      "device": "cpu",
+      "precision": "fp32"
+    }
+  },
+  "runner_revision": "runner/1+metanoia_research-0.1.0",
+  "environment": {
+    "python": "3.12.13",
+    "implementation": "CPython",
+    "platform": "Linux-7.2.7-arch1-1-x86_64-with-glibc2.44",
+    "machine": "x86_64",
+    "packages": {
+      "metanoia": "0.1.0",
+      "pydantic": "2.13.5",
+      "torch": "2.11.0+cu128",
+      "transformers": "5.17.0",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "pyarrow": "25.0.1"
+    },
+    "accelerator": {
+      "requested_device": "cpu",
+      "torch_cuda": "12.8",
+      "cuda_available": true,
+      "cudnn_version": 91900,
+      "cudnn_deterministic": false,
+      "cudnn_benchmark": false,
+      "deterministic_algorithms": false,
+      "matmul_tf32": false
+    }
+  },
+  "source": {
+    "vcs": "git",
+    "commit": "85cd4629e76227652dd622d7808b8213c94ab2ea",
+    "dirty": true,
+    "diff_sha256": "e6b7d3118f352a2667f6f41c51f5fe4af312cb872dc490ebc17eb59ab69c032a"
+  },
+  "counts": {
+    "expected": 41199,
+    "attempted": 41199,
+    "completed": 41199,
+    "failed": 0
+  },
+  "predictions": {
+    "path": "predictions.parquet",
+    "sha256": "b8d32656e11c3f662f798e986aeaf3496d0c90c8c83ac8beed1f0a64ab5398bd",
+    "rows": 41199
+  },
+  "traces": null,
+  "started_at": "2026-10-01T05:50:00+00:00",
+  "finished_at": "2026-10-01T05:50:08+00:00"
+}

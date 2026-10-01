@@ -1,0 +1,21 @@
+# Direct scorer with a fine-tuned ModernBERT encoder and joint candidate encoding: each
+# candidate is encoded together with the question and context (N passes per request).
+# 384 tokens and gradient checkpointing fit a 6 GB GPU (RTX 2060) at ~5.5 examples/s.
+name = "direct_modernbert_ft_joint"
+
+[encoder]
+kind = "hf"
+model = "answerdotai/ModernBERT-base"
+revision = "8949b909ec900327062f0ebf497f51aef5e6f0c8"
+max_length = 384
+pooling = "mean"
+frozen = false
+gradient_checkpointing = true
+
+[scorer]
+kind = "direct"
+latent_dim = 256
+heads = 4
+hidden_dim = 512
+dropout = 0.1
+candidate_encoding = "joint"

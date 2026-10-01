@@ -1,0 +1,46 @@
+Loading weights:   0%|          | 0/134 [00:00<?, ?it/s]Loading weights: 100%|██████████| 134/134 [00:00<00:00, 14751.23it/s]
+[transformers] [1mModernBertModel LOAD REPORT[0m from: answerdotai/ModernBERT-base
+Key               | Status     |  | 
+------------------+------------+--+-
+head.dense.weight | UNEXPECTED |  | 
+decoder.bias      | UNEXPECTED |  | 
+head.norm.weight  | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+{"epoch": 0, "step": 50, "of": 1250, "train_loss": 1.4785998743772506, "elapsed_seconds": 255.7}
+{"epoch": 0, "step": 100, "of": 1250, "train_loss": 1.3914069044589996, "elapsed_seconds": 514.9}
+checkpoint artifacts/predictors/ws_latent_reasoning_v1_warm20k.incomplete/checkpoints/step_0000125
+{"epoch": 0, "step": 150, "of": 1250, "train_loss": 1.387842551469803, "elapsed_seconds": 773.8}
+{"epoch": 0, "step": 200, "of": 1250, "train_loss": 1.3891993701457976, "elapsed_seconds": 1028.5}
+{"epoch": 0, "step": 250, "of": 1250, "train_loss": 1.3894738322496414, "elapsed_seconds": 1282.3}
+checkpoint artifacts/predictors/ws_latent_reasoning_v1_warm20k.incomplete/checkpoints/step_0000250
+{"epoch": 0, "step": 300, "of": 1250, "train_loss": 1.384899731874466, "elapsed_seconds": 1538.7}
+{"epoch": 0, "step": 350, "of": 1250, "train_loss": 1.3887289947271346, "elapsed_seconds": 1794.1}
+checkpoint artifacts/predictors/ws_latent_reasoning_v1_warm20k.incomplete/checkpoints/step_0000375
+{"epoch": 0, "step": 400, "of": 1250, "train_loss": 1.3863398325443268, "elapsed_seconds": 2048.6}
+{"epoch": 0, "step": 450, "of": 1250, "train_loss": 1.3758046978712082, "elapsed_seconds": 2302.9}
+{"epoch": 0, "step": 500, "of": 1250, "train_loss": 1.250452963411808, "elapsed_seconds": 2556.3}
+checkpoint artifacts/predictors/ws_latent_reasoning_v1_warm20k.incomplete/checkpoints/step_0000500
+{"epoch": 0, "step": 550, "of": 1250, "train_loss": 0.8214132877066731, "elapsed_seconds": 2810.0}
+{"epoch": 0, "step": 600, "of": 1250, "train_loss": 0.33470763456417446, "elapsed_seconds": 3065.3}
+checkpoint artifacts/predictors/ws_latent_reasoning_v1_warm20k.incomplete/checkpoints/step_0000625
+{"epoch": 0, "step": 650, "of": 1250, "train_loss": 0.0732309984204424, "elapsed_seconds": 3318.9}
+{"epoch": 0, "step": 700, "of": 1250, "train_loss": 0.06540594295035072, "elapsed_seconds": 3567.9}
+{"epoch": 0, "step": 750, "of": 1250, "train_loss": 0.03493822492045344, "elapsed_seconds": 3819.8}
+checkpoint artifacts/predictors/ws_latent_reasoning_v1_warm20k.incomplete/checkpoints/step_0000750
+{"epoch": 0, "step": 800, "of": 1250, "train_loss": 0.019118189132625956, "elapsed_seconds": 4072.1}
+{"epoch": 0, "step": 850, "of": 1250, "train_loss": 0.0035014292804423563, "elapsed_seconds": 4320.8}
+checkpoint artifacts/predictors/ws_latent_reasoning_v1_warm20k.incomplete/checkpoints/step_0000875
+{"epoch": 0, "step": 900, "of": 1250, "train_loss": 0.02777733368349858, "elapsed_seconds": 4570.4}
+{"epoch": 0, "step": 950, "of": 1250, "train_loss": 2.604532290499506e-05, "elapsed_seconds": 4820.6}
+{"epoch": 0, "step": 1000, "of": 1250, "train_loss": 0.005488533904898749, "elapsed_seconds": 5068.1}
+checkpoint artifacts/predictors/ws_latent_reasoning_v1_warm20k.incomplete/checkpoints/step_0001000
+{"epoch": 0, "step": 1050, "of": 1250, "train_loss": 0.00015064673177750176, "elapsed_seconds": 5320.6}
+{"epoch": 0, "step": 1100, "of": 1250, "train_loss": 0.013124586775603948, "elapsed_seconds": 5570.0}
+checkpoint artifacts/predictors/ws_latent_reasoning_v1_warm20k.incomplete/checkpoints/step_0001125
+{"epoch": 0, "step": 1150, "of": 1250, "train_loss": 0.002442885148429732, "elapsed_seconds": 5822.7}
+{"epoch": 0, "step": 1200, "of": 1250, "train_loss": 0.006296937430667749, "elapsed_seconds": 6071.1}
+{"epoch": 0, "step": 1250, "of": 1250, "train_loss": 0.007799652455072006, "elapsed_seconds": 6319.3}
+{"epoch": 0, "step": 1250, "train_loss": 0.609526843262338, "dev_loss": 0.0015309846436469777, "dev_logit_spread": 20.792059612870215, "grad_norm_encoder": 8.969179845230768, "grad_norm_scorer": 0.5861671721892044, "grad_norm_workspace": 0.010501903295692151, "nonfinite_grad_steps": 6, "elapsed_seconds": 6353.0}
+wrote artifacts/predictors/ws_latent_reasoning_v1_warm20k: ws_latent_640@1a8013668375

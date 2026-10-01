@@ -1,0 +1,907 @@
+{
+  "analysis_version": 1,
+  "analysis_id": "branch_v2_none_knowledge_v0_knowledge_v0_r3__vs__branch_v2_focused_knowledge_v0_knowledge_v0_r3__knowledge_v0-r1",
+  "kind": "compare",
+  "inputs": {
+    "a": {
+      "run_id": "branch_v2_none_knowledge_v0_knowledge_v0_r3",
+      "predictor_id": "branch_v2_none@9d4fae379848",
+      "predictions_sha256": "eae55626cf0a63d1385645f786f74867080a04ee9741d20581149516dc40da11"
+    },
+    "b": {
+      "run_id": "branch_v2_focused_knowledge_v0_knowledge_v0_r3",
+      "predictor_id": "branch_v2_focused@950c83d9e163",
+      "predictions_sha256": "15d22f767250e885e91c6931ab3fdad69ebed7c039639e606c94437a0ccee19a"
+    },
+    "direction": "b - a",
+    "accepted_mismatches": []
+  },
+  "specification": {
+    "spec_id": "knowledge_v0",
+    "revision": 1,
+    "splits": [
+      "dev",
+      "calibration",
+      "test"
+    ],
+    "metrics": [
+      "accuracy",
+      "nll",
+      "brier",
+      "ece"
+    ],
+    "ece_bins": 15,
+    "slice_by": [
+      "source"
+    ],
+    "bootstrap_resamples": 1000,
+    "bootstrap_seed": 0,
+    "confidence": 0.95,
+    "nll_floor": 1e-15
+  },
+  "analysis_revision": "metanoia_analysis-0.1.0",
+  "environment": {
+    "python": "3.12.13",
+    "implementation": "CPython",
+    "platform": "Linux-7.0.7-arch2-1-x86_64-with-glibc2.43",
+    "machine": "x86_64",
+    "packages": {
+      "metanoia": "0.1.0",
+      "pydantic": "2.13.5",
+      "torch": "2.11.0+cu128",
+      "transformers": "5.17.0",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "pyarrow": "25.0.1"
+    },
+    "accelerator": null
+  },
+  "counts": {
+    "a": {
+      "expected": 27070,
+      "attempted": 27070,
+      "completed": 27070,
+      "failed": 0
+    },
+    "b": {
+      "expected": 27070,
+      "attempted": 27070,
+      "completed": 27070,
+      "failed": 0
+    }
+  },
+  "metrics": [
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "accuracy_diff",
+      "value": -0.05488721804511278,
+      "ci_low": -0.08422932330827065,
+      "ci_high": -0.027048872180451145,
+      "n": 665
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "nll_diff",
+      "value": 0.07508104430837206,
+      "ci_low": 0.046904244171747655,
+      "ci_high": 0.10585970713336156,
+      "n": 665
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "brier_diff",
+      "value": 0.04540372573344083,
+      "ci_low": 0.02999404948506592,
+      "ci_high": 0.0625497338014796,
+      "n": 665
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "wrong_to_right",
+      "value": 0.045112781954887216,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 665
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "right_to_wrong",
+      "value": 0.09924812030075188,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 665
+    },
+    {
+      "split": "dev",
+      "budget_id": "p4",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "accuracy_diff",
+      "value": -0.02030075187969925,
+      "ci_low": -0.05340225563909773,
+      "ci_high": 0.012781954887218045,
+      "n": 665
+    },
+    {
+      "split": "dev",
+      "budget_id": "p4",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "nll_diff",
+      "value": -0.0058310151884930035,
+      "ci_low": -0.04989366227497123,
+      "ci_high": 0.03800150649042204,
+      "n": 665
+    },
+    {
+      "split": "dev",
+      "budget_id": "p4",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "brier_diff",
+      "value": 0.004528502672859177,
+      "ci_low": -0.022599064909458757,
+      "ci_high": 0.029844379656625234,
+      "n": 665
+    },
+    {
+      "split": "dev",
+      "budget_id": "p4",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "wrong_to_right",
+      "value": 0.09022556390977443,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 665
+    },
+    {
+      "split": "dev",
+      "budget_id": "p4",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "right_to_wrong",
+      "value": 0.10977443609022557,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 665
+    },
+    {
+      "split": "dev",
+      "budget_id": "p8",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "accuracy_diff",
+      "value": -0.008270676691729323,
+      "ci_low": -0.04586466165413534,
+      "ci_high": 0.02857142857142857,
+      "n": 665
+    },
+    {
+      "split": "dev",
+      "budget_id": "p8",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "nll_diff",
+      "value": -0.04333463793995583,
+      "ci_low": -0.09208165690964422,
+      "ci_high": 0.005046521078017289,
+      "n": 665
+    },
+    {
+      "split": "dev",
+      "budget_id": "p8",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "brier_diff",
+      "value": -0.015558646498068394,
+      "ci_low": -0.044596064380335636,
+      "ci_high": 0.011953785216690152,
+      "n": 665
+    },
+    {
+      "split": "dev",
+      "budget_id": "p8",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "wrong_to_right",
+      "value": 0.11127819548872181,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 665
+    },
+    {
+      "split": "dev",
+      "budget_id": "p8",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "right_to_wrong",
+      "value": 0.11879699248120301,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 665
+    },
+    {
+      "split": "dev",
+      "budget_id": "p16",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "accuracy_diff",
+      "value": 0.02180451127819549,
+      "ci_low": -0.014285714285714285,
+      "ci_high": 0.05488721804511278,
+      "n": 665
+    },
+    {
+      "split": "dev",
+      "budget_id": "p16",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "nll_diff",
+      "value": -0.06942973721047549,
+      "ci_low": -0.11909174419647162,
+      "ci_high": -0.019236201282472703,
+      "n": 665
+    },
+    {
+      "split": "dev",
+      "budget_id": "p16",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "brier_diff",
+      "value": -0.0340504758017715,
+      "ci_low": -0.06275781487508891,
+      "ci_high": -0.007575679195913533,
+      "n": 665
+    },
+    {
+      "split": "dev",
+      "budget_id": "p16",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "wrong_to_right",
+      "value": 0.11879699248120301,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 665
+    },
+    {
+      "split": "dev",
+      "budget_id": "p16",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "right_to_wrong",
+      "value": 0.0962406015037594,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 665
+    },
+    {
+      "split": "dev",
+      "budget_id": "p32",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "accuracy_diff",
+      "value": 0.014285714285714285,
+      "ci_low": -0.019548872180451128,
+      "ci_high": 0.04663533834586465,
+      "n": 665
+    },
+    {
+      "split": "dev",
+      "budget_id": "p32",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "nll_diff",
+      "value": -0.07865044923667652,
+      "ci_low": -0.1304340258663649,
+      "ci_high": -0.024591958355771864,
+      "n": 665
+    },
+    {
+      "split": "dev",
+      "budget_id": "p32",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "brier_diff",
+      "value": -0.04207603445589877,
+      "ci_low": -0.06853057804124794,
+      "ci_high": -0.01616901842590751,
+      "n": 665
+    },
+    {
+      "split": "dev",
+      "budget_id": "p32",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "wrong_to_right",
+      "value": 0.10827067669172932,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 665
+    },
+    {
+      "split": "dev",
+      "budget_id": "p32",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "right_to_wrong",
+      "value": 0.09323308270676692,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 665
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "accuracy_diff",
+      "value": -0.007823613086770981,
+      "ci_low": -0.038424608819345646,
+      "ci_high": 0.01991465149359886,
+      "n": 703
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "nll_diff",
+      "value": 0.0338200544048876,
+      "ci_low": 0.0037336143698627083,
+      "ci_high": 0.06271636018537949,
+      "n": 703
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "brier_diff",
+      "value": 0.022971681001854396,
+      "ci_low": 0.006180101960189319,
+      "ci_high": 0.040811256047825734,
+      "n": 703
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "wrong_to_right",
+      "value": 0.07681365576102418,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 703
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "right_to_wrong",
+      "value": 0.08392603129445235,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 703
+    },
+    {
+      "split": "calibration",
+      "budget_id": "p4",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "accuracy_diff",
+      "value": 0.031294452347083924,
+      "ci_low": -0.00499644381223327,
+      "ci_high": 0.06829658605974394,
+      "n": 703
+    },
+    {
+      "split": "calibration",
+      "budget_id": "p4",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "nll_diff",
+      "value": -0.03917955187851518,
+      "ci_low": -0.08716850510194878,
+      "ci_high": 0.005997110751493678,
+      "n": 703
+    },
+    {
+      "split": "calibration",
+      "budget_id": "p4",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "brier_diff",
+      "value": -0.026886165756171476,
+      "ci_low": -0.05269740150079076,
+      "ci_high": -0.0028883015361543273,
+      "n": 703
+    },
+    {
+      "split": "calibration",
+      "budget_id": "p4",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "wrong_to_right",
+      "value": 0.13655761024182078,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 703
+    },
+    {
+      "split": "calibration",
+      "budget_id": "p4",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "right_to_wrong",
+      "value": 0.10526315789473684,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 703
+    },
+    {
+      "split": "calibration",
+      "budget_id": "p8",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "accuracy_diff",
+      "value": 0.024893314366998577,
+      "ci_low": -0.011397581792318619,
+      "ci_high": 0.06116642958748222,
+      "n": 703
+    },
+    {
+      "split": "calibration",
+      "budget_id": "p8",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "nll_diff",
+      "value": -0.0416280461952792,
+      "ci_low": -0.09509537302117609,
+      "ci_high": 0.009435214242838353,
+      "n": 703
+    },
+    {
+      "split": "calibration",
+      "budget_id": "p8",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "brier_diff",
+      "value": -0.02333600548813179,
+      "ci_low": -0.052185366406228534,
+      "ci_high": 0.0018663978181469388,
+      "n": 703
+    },
+    {
+      "split": "calibration",
+      "budget_id": "p8",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "wrong_to_right",
+      "value": 0.13655761024182078,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 703
+    },
+    {
+      "split": "calibration",
+      "budget_id": "p8",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "right_to_wrong",
+      "value": 0.11095305832147938,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 703
+    },
+    {
+      "split": "calibration",
+      "budget_id": "p16",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "accuracy_diff",
+      "value": 0.02844950213371266,
+      "ci_low": -0.007823613086770981,
+      "ci_high": 0.06614509246088193,
+      "n": 703
+    },
+    {
+      "split": "calibration",
+      "budget_id": "p16",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "nll_diff",
+      "value": -0.05617960325239673,
+      "ci_low": -0.11452384210751115,
+      "ci_high": -0.008065027794768644,
+      "n": 703
+    },
+    {
+      "split": "calibration",
+      "budget_id": "p16",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "brier_diff",
+      "value": -0.026149195464712602,
+      "ci_low": -0.05646236962173856,
+      "ci_high": -4.14024064651484e-05,
+      "n": 703
+    },
+    {
+      "split": "calibration",
+      "budget_id": "p16",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "wrong_to_right",
+      "value": 0.1465149359886202,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 703
+    },
+    {
+      "split": "calibration",
+      "budget_id": "p16",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "right_to_wrong",
+      "value": 0.11806543385490754,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 703
+    },
+    {
+      "split": "calibration",
+      "budget_id": "p32",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "accuracy_diff",
+      "value": 0.03769559032716927,
+      "ci_low": 0.0,
+      "ci_high": 0.07754267425320055,
+      "n": 703
+    },
+    {
+      "split": "calibration",
+      "budget_id": "p32",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "nll_diff",
+      "value": -0.06331665758752332,
+      "ci_low": -0.11859535585844926,
+      "ci_high": -0.013522347119248677,
+      "n": 703
+    },
+    {
+      "split": "calibration",
+      "budget_id": "p32",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "brier_diff",
+      "value": -0.029953920534460284,
+      "ci_low": -0.05976795442887129,
+      "ci_high": -0.0016913245140387125,
+      "n": 703
+    },
+    {
+      "split": "calibration",
+      "budget_id": "p32",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "wrong_to_right",
+      "value": 0.15220483641536273,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 703
+    },
+    {
+      "split": "calibration",
+      "budget_id": "p32",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "right_to_wrong",
+      "value": 0.11379800853485064,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 703
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "accuracy_diff",
+      "value": -0.019649036085022244,
+      "ci_low": -0.03163618388531883,
+      "ci_high": -0.007167572911517549,
+      "n": 4046
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "nll_diff",
+      "value": 0.047523824280413046,
+      "ci_low": 0.03603042079772713,
+      "ci_high": 0.060352545195410424,
+      "n": 4046
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "brier_diff",
+      "value": 0.02375313577608775,
+      "ci_low": 0.017625756884646963,
+      "ci_high": 0.030555137892949384,
+      "n": 4046
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "wrong_to_right",
+      "value": 0.06648541769649036,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 4046
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "right_to_wrong",
+      "value": 0.08601087493821058,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 4046
+    },
+    {
+      "split": "test",
+      "budget_id": "p4",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "accuracy_diff",
+      "value": 0.04127533366287692,
+      "ci_low": 0.027434503213049927,
+      "ci_high": 0.055863816114681164,
+      "n": 4046
+    },
+    {
+      "split": "test",
+      "budget_id": "p4",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "nll_diff",
+      "value": -0.0793521445040122,
+      "ci_low": -0.09832885949444714,
+      "ci_high": -0.05966072894352461,
+      "n": 4046
+    },
+    {
+      "split": "test",
+      "budget_id": "p4",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "brier_diff",
+      "value": -0.04663576110840876,
+      "ci_low": -0.057114098980763764,
+      "ci_high": -0.03552126010771628,
+      "n": 4046
+    },
+    {
+      "split": "test",
+      "budget_id": "p4",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "wrong_to_right",
+      "value": 0.13494809688581316,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 4046
+    },
+    {
+      "split": "test",
+      "budget_id": "p4",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "right_to_wrong",
+      "value": 0.09391992090954028,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 4046
+    },
+    {
+      "split": "test",
+      "budget_id": "p8",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "accuracy_diff",
+      "value": 0.05338606030647553,
+      "ci_low": 0.03867399901136925,
+      "ci_high": 0.069086752347998,
+      "n": 4046
+    },
+    {
+      "split": "test",
+      "budget_id": "p8",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "nll_diff",
+      "value": -0.1027093744021445,
+      "ci_low": -0.12433653492241768,
+      "ci_high": -0.08073903073132015,
+      "n": 4046
+    },
+    {
+      "split": "test",
+      "budget_id": "p8",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "brier_diff",
+      "value": -0.0595141466739174,
+      "ci_low": -0.07112667484687796,
+      "ci_high": -0.047815543150613864,
+      "n": 4046
+    },
+    {
+      "split": "test",
+      "budget_id": "p8",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "wrong_to_right",
+      "value": 0.15076618882847256,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 4046
+    },
+    {
+      "split": "test",
+      "budget_id": "p8",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "right_to_wrong",
+      "value": 0.09738012852199704,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 4046
+    },
+    {
+      "split": "test",
+      "budget_id": "p16",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "accuracy_diff",
+      "value": 0.06401384083044982,
+      "ci_low": 0.049555116164112706,
+      "ci_high": 0.07958477508650519,
+      "n": 4046
+    },
+    {
+      "split": "test",
+      "budget_id": "p16",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "nll_diff",
+      "value": -0.11708029820090542,
+      "ci_low": -0.13838071818657718,
+      "ci_high": -0.09421839790076095,
+      "n": 4046
+    },
+    {
+      "split": "test",
+      "budget_id": "p16",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "brier_diff",
+      "value": -0.06913916627698058,
+      "ci_low": -0.08074436889039975,
+      "ci_high": -0.05786393800434572,
+      "n": 4046
+    },
+    {
+      "split": "test",
+      "budget_id": "p16",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "wrong_to_right",
+      "value": 0.15842807711319823,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 4046
+    },
+    {
+      "split": "test",
+      "budget_id": "p16",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "right_to_wrong",
+      "value": 0.09441423628274839,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 4046
+    },
+    {
+      "split": "test",
+      "budget_id": "p32",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "accuracy_diff",
+      "value": 0.07019278299555116,
+      "ci_low": 0.05585145823035097,
+      "ci_high": 0.08675852694018783,
+      "n": 4046
+    },
+    {
+      "split": "test",
+      "budget_id": "p32",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "nll_diff",
+      "value": -0.1360491432033597,
+      "ci_low": -0.15943563379914263,
+      "ci_high": -0.11322489195829817,
+      "n": 4046
+    },
+    {
+      "split": "test",
+      "budget_id": "p32",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "brier_diff",
+      "value": -0.07758085953080543,
+      "ci_low": -0.08928438538793222,
+      "ci_high": -0.0659715317691508,
+      "n": 4046
+    },
+    {
+      "split": "test",
+      "budget_id": "p32",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "wrong_to_right",
+      "value": 0.16806722689075632,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 4046
+    },
+    {
+      "split": "test",
+      "budget_id": "p32",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "right_to_wrong",
+      "value": 0.09787444389520514,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 4046
+    }
+  ],
+  "tables": {},
+  "limitations": [
+    "ECE uses top-label confidence with equal-width bins; it depends on binning and sample size.",
+    "Intervals are percentile bootstraps over groups (worlds), not over individual examples.",
+    "Calibration quality is established only for the evaluated distribution and budgets."
+  ],
+  "created_at": "2026-09-29T18:58:36+00:00"
+}

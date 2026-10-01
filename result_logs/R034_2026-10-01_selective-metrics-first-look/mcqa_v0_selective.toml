@@ -1,0 +1,12 @@
+spec_id = "mcqa_v0"
+revision = 2
+splits = ["dev", "calibration", "test"]
+metrics = ["accuracy", "nll", "brier", "ece"]
+ece_bins = 15
+slice_by = ["source"]
+bootstrap_resamples = 1000
+bootstrap_seed = 0
+confidence = 0.95
+nll_floor = 1e-15
+# Revision 2 adds selective metrics (PLAN_V3 A4); metrics and slices are unchanged.
+selective_precisions = [0.9, 0.95, 0.99]

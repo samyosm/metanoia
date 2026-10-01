@@ -1,0 +1,81 @@
+{
+  "memory_version": 1,
+  "memory_id": "wordnet_v0",
+  "source": {
+    "kind": "wordnet",
+    "version": "3.0",
+    "wordnet_zip_sha256": "cbda5ea6eef7f36a97a43d4a75f85e07fccbb4f23657d27b4ccbc93e2646ab59",
+    "config": {
+      "memory_id": "wordnet_v0",
+      "source": "wordnet",
+      "nltk_data": "artifacts/nltk_data",
+      "wordnet_zip_sha256": "cbda5ea6eef7f36a97a43d4a75f85e07fccbb4f23657d27b4ccbc93e2646ab59",
+      "encoder": {
+        "model": "BAAI/bge-small-en-v1.5",
+        "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+        "pooling": "cls",
+        "max_length": 128,
+        "query_prefix": "Represent this sentence for searching relevant passages: "
+      },
+      "device": "cuda",
+      "batch_size": 512
+    }
+  },
+  "text_template": "{name}: {gloss}",
+  "encoder": {
+    "model": "BAAI/bge-small-en-v1.5",
+    "requested_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+    "resolved_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+    "pooling": "cls",
+    "max_length": 128,
+    "query_prefix": "Represent this sentence for searching relevant passages: ",
+    "normalized": true
+  },
+  "concepts": {
+    "path": "concepts.jsonl",
+    "sha256": "f1f7f17302cf04aab9305382722f0e82cb5b7f3e48bc0f4535ec2078e9f41e99",
+    "rows": 117659
+  },
+  "vectors": {
+    "path": "vectors.npy",
+    "sha256": "9bcfff87cc62cd18157cf3a38892011872f66f7e533fd751917628d90c8304b0",
+    "rows": 117659
+  },
+  "dim": 384,
+  "environment": {
+    "python": "3.12.13",
+    "implementation": "CPython",
+    "platform": "Linux-7.0.7-arch2-1-x86_64-with-glibc2.43",
+    "machine": "x86_64",
+    "packages": {
+      "metanoia": "0.1.0",
+      "pydantic": "2.13.5",
+      "torch": "2.11.0+cu128",
+      "transformers": "5.17.0",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "pyarrow": "25.0.1"
+    },
+    "accelerator": {
+      "requested_device": "cuda",
+      "torch_cuda": "12.8",
+      "cuda_available": true,
+      "cudnn_version": 91900,
+      "cudnn_deterministic": false,
+      "cudnn_benchmark": false,
+      "deterministic_algorithms": false,
+      "matmul_tf32": false,
+      "gpu_name": "NVIDIA GeForce RTX 2060",
+      "gpu_capability": "7.5",
+      "gpu_memory_bytes": 6017122304,
+      "driver_version": "595.71.05"
+    }
+  },
+  "code_source": {
+    "vcs": "git",
+    "commit": "78e30d3727e8df6f8e661cd505d43d0fcb0e310e",
+    "dirty": true,
+    "diff_sha256": "d27731ecbf23d167dddd788987ed44f21c70cccae9c0f924bb8160255fce5f8b"
+  },
+  "created_at": "2026-09-28T18:47:23+00:00"
+}

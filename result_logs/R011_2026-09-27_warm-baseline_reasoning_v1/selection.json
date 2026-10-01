@@ -1,0 +1,69 @@
+{
+  "selection_version": 1,
+  "selection_id": "select-4d0b909ed685",
+  "split": "dev",
+  "budget_id": "b0",
+  "metric": "nll",
+  "rule": "min",
+  "labels_sha256": "ace50c606346bd9205c544859f75c9e2be112772d7f5cddf29761a5832e18a94",
+  "candidates": [
+    {
+      "run_id": "mbft640_joint_reasoning_v1_warm__dev__final",
+      "predictor_id": "direct_modernbert_ft_joint_640@aec6ecf34c53",
+      "predictor_path": "artifacts/predictors/mbft640_joint_reasoning_v1_warm",
+      "predictions_sha256": "1b9c01c52da14ef58ce870c7d136cccce6ef8ccc86dd397d113c7c2f9975ed70",
+      "value": 0.5861278149048533,
+      "n": 800
+    },
+    {
+      "run_id": "mbft640_joint_reasoning_v1_warm__dev__step_0000050",
+      "predictor_id": "direct_modernbert_ft_joint_640@3d7a191eb08a",
+      "predictor_path": "artifacts/predictors/mbft640_joint_reasoning_v1_warm/checkpoints/step_0000050",
+      "predictions_sha256": "e9ee77ffb15e454e272d7d720b4910b6ee8f5140337bf77a0925a9afd553307b",
+      "value": 1.3839021081229221,
+      "n": 800
+    },
+    {
+      "run_id": "mbft640_joint_reasoning_v1_warm__dev__step_0000100",
+      "predictor_id": "direct_modernbert_ft_joint_640@1ed7f62b8719",
+      "predictor_path": "artifacts/predictors/mbft640_joint_reasoning_v1_warm/checkpoints/step_0000100",
+      "predictions_sha256": "84a72c877cfb1b39f0e133980d58418bebc313cbbdea5fe6f2f023ee14448c31",
+      "value": 1.3790565471314835,
+      "n": 800
+    },
+    {
+      "run_id": "mbft640_joint_reasoning_v1_warm__dev__step_0000150",
+      "predictor_id": "direct_modernbert_ft_joint_640@aaa4b77e130e",
+      "predictor_path": "artifacts/predictors/mbft640_joint_reasoning_v1_warm/checkpoints/step_0000150",
+      "predictions_sha256": "f3ea9066c5eac6ff49ceb63d72e0c52285f36a77e2ac9ab28ae4d67cda4eb49d",
+      "value": 1.304440267694038,
+      "n": 800
+    },
+    {
+      "run_id": "mbft640_joint_reasoning_v1_warm__dev__step_0000200",
+      "predictor_id": "direct_modernbert_ft_joint_640@4a2872dd63e7",
+      "predictor_path": "artifacts/predictors/mbft640_joint_reasoning_v1_warm/checkpoints/step_0000200",
+      "predictions_sha256": "c5d105c17380c2d011f58fa85ff619c0c8cd866a23e1725f9f56debbd1f396ed",
+      "value": 0.8904442325799563,
+      "n": 800
+    },
+    {
+      "run_id": "mbft640_joint_reasoning_v1_warm__dev__step_0000250",
+      "predictor_id": "direct_modernbert_ft_joint_640@7d62599fa912",
+      "predictor_path": "artifacts/predictors/mbft640_joint_reasoning_v1_warm/checkpoints/step_0000250",
+      "predictions_sha256": "120cfa28d742907330212474e32a0c8393d20b55420fd329370ae6624d433bf4",
+      "value": 0.6558826665862465,
+      "n": 800
+    }
+  ],
+  "chosen": {
+    "run_id": "mbft640_joint_reasoning_v1_warm__dev__final",
+    "predictor_id": "direct_modernbert_ft_joint_640@aec6ecf34c53",
+    "predictor_path": "artifacts/predictors/mbft640_joint_reasoning_v1_warm",
+    "predictions_sha256": "1b9c01c52da14ef58ce870c7d136cccce6ef8ccc86dd397d113c7c2f9975ed70",
+    "value": 0.5861278149048533,
+    "n": 800
+  },
+  "analysis_revision": "metanoia_analysis-0.1.0",
+  "created_at": "2026-09-27T22:59:28+00:00"
+}

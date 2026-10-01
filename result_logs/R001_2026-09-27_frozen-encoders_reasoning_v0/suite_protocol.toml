@@ -1,0 +1,29 @@
+# Promoted suites are immutable: fix a bug by adding a new revision, not by editing.
+suite_id = "reasoning_v0"
+revision = 1
+task = "exclusive_choice"
+question = """
+Stage-1 measuring instrument: how well does a depth-zero predictor choose the entity
+that provably holds a target property in controlled Horn-rule micro-worlds, and are its
+probabilities reliable? Depth 4 appears only in test worlds.
+"""
+analysis_specification = "analysis/specifications/core_v0.toml"
+
+[dataset]
+# Regenerate with: metanoia-research prepare --config configs/data/microworld_v0.toml
+dataset_id = "microworld_v0"
+cases_sha256 = "50f2158869fd7587bf8e9836b17e78096659e22b6d30367aefec78e4b8e3d534"
+labels_sha256 = "251aabbf6b0f0fe05f6cc8e0ef8d4b6144c5ae9b520f3814da2bf0bd2f9c4482"
+
+[evaluation]
+splits = ["dev", "calibration", "test"]
+batch_size = 16
+repeats = 1
+base_seed = 0
+trace = "off"
+failure_policy = "uniform"
+timing_scope = "decide_call"
+
+[[budgets]]
+id = "b0"
+# All limits zero: the direct scorer without graph work.

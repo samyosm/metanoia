@@ -1,0 +1,416 @@
+# Model cards: what each trained predictor can do, grounded in RESULT_LOG.md.
+#
+# Rules (see CLAUDE.md):
+# - One card per bundle directory under metanoia/artifacts/predictors/.
+# - `predictor_id` must match the bundle; a card never describes other weights.
+# - `checkpoint` (optional) names the dev-selected checkpoint under the bundle's
+#   checkpoints/ that the interface serves; `predictor_id` is then that checkpoint's.
+# - Every claim comes from a logged result; cite its entry IDs in `evidence`.
+# - When a new result changes what a model is known to do, update its card in the same
+#   change as the RESULT_LOG entry.
+#
+# Fields: status is one of "recommended", "baseline", "not useful".
+# Chance on all current suites is 25% accuracy (4 options).
+
+[models.mbft_joint_mcqa_v0]
+predictor_id = "direct_modernbert_ft_joint@7345459d01da"
+status = "recommended"
+summary = "General reading-comprehension chooser. The only model here that is useful on real questions."
+headline = "Test accuracy 76.8% (RACE 73.0%, SciQ 95.6%), well calibrated (ECE 1.6%)."
+good_at = [
+  "Multiple-choice questions about a passage you supply: who, what or why, main idea, what a word refers to.",
+  "Science facts where the context mentions the answer (SciQ style): about 96% correct.",
+  "Honest confidence on questions like its training data: when it says 70%, it is right about 70% of the time on average.",
+]
+weak_at = [
+  "Questions needing inference beyond the text, such as character traits or the author's intent: often right but unsure (for example 53% against 33%).",
+  "Multi-step logic over rules (\"if A then B …\"): not tested on this model; every model tested on the rule suite is at chance.",
+  "Contexts longer than about 384 tokens: the end is cut off (the Path view warns).",
+  "No \"none of these\" option: it always spreads 100% over the candidates you give.",
+  "Science questions with no passage (OpenBookQA, ARC): 50.7%. Pasting one relevant fact as the context lifts OpenBookQA from 39% to 62%.",
+]
+different = "ModernBERT-base fine-tuned end to end on 99,459 RACE + SciQ questions (1 epoch, about 5 h). Each candidate is read together with the question and context (joint encoding)."
+evidence = ["R005", "R002", "R016", "R017"]
+
+[models.mbft_joint_sciq_quick]
+predictor_id = "direct_modernbert_ft_joint@98d789393a90"
+status = "baseline"
+summary = "Quick science-question model, trained in 8 minutes on 2,400 SciQ questions."
+headline = "SciQ test accuracy 91.0%, but RACE only 32.8%, barely above word overlap (31.4%)."
+good_at = [
+  "Short science questions with a supporting sentence, where the answer is named in the context.",
+]
+weak_at = [
+  "Longer passages and inference questions (RACE): close to a word-overlap shortcut.",
+  "Its fitted temperature makes easy science answers look less certain than they should (SciQ ECE 13.5% calibrated against 2.0% raw).",
+]
+different = "Same architecture as mbft_joint_mcqa_v0 but 40 times less training data, all from one source. Useful to show how much the full run's data matters."
+evidence = ["R004", "R002"]
+
+[models.seq_sciq_quick]
+predictor_id = "seq_modernbert_base@ee3ced731194"
+status = "baseline"
+summary = "Quick marker-encoding model (all options in one sequence), trained in 83 seconds on 2,400 SciQ questions."
+headline = "Test accuracy 45.2% (RACE 36.0%, SciQ 90.8%): 2.6 points above the joint-encoding model trained the same way. With 4-rotation averaging (`rotations = 4`): 47.8%, calibrated NLL 1.159."
+good_at = [
+  "Short science questions with a supporting sentence (SciQ): about 91% correct.",
+  "Transfers to RACE better than the joint quick model (36.0% against 32.8%) after seeing only SciQ.",
+  "Averaging over 4 rotations of the option order adds 2.6 points (RACE 38.9%, SciQ 92.2%) and improves calibration (ECE 2.8%), at 4 times the inference cost; use `--rotations 4`.",
+]
+weak_at = [
+  "Raw probabilities are overconfident (ECE 26%); a temperature of 3.5 fixes the whole set but makes easy science answers under-confident (SciQ ECE 14.8% calibrated against 1.8% raw).",
+  "Position bias of the marker format is not yet measured; options are read in the order given.",
+  "Trained on one source and one epoch: not a general model.",
+]
+different = "One encoder pass per question: every option is a marked slot in a single sequence and attends to the other options, scored by a two-layer head (decision 0015, after Laya)."
+evidence = ["R031", "R035", "R034", "R004", "R029"]
+
+[models.seq_reset_sciq_quick]
+predictor_id = "seq_modernbert_base_reset@422a07ee7ea0"
+status = "not useful"
+summary = "Marker-encoding model with every option reset to the same positions: it does not learn."
+headline = "Collapsed to uniform output (loss ln 4) after 150 steps; the 3-epoch run seq_reset_sciq_e3 also collapsed."
+good_at = []
+weak_at = [
+  "Answers are uniform: the marker of each option cannot tell its own tokens from other options' tokens when all share the same positions.",
+]
+different = "Same as seq_sciq_quick except `position_reset = true` (decision 0015). Kept to show why resets fail."
+evidence = ["R032"]
+
+[models.seq_reset_sciq_e3]
+predictor_id = "seq_modernbert_base_reset@fc9b3da8316d"
+status = "not useful"
+summary = "The position-reset marker model trained for 3 epochs (450 steps): still uniform output."
+headline = "Dev loss 1.386 = ln 4 at every epoch; logit spread under 0.002."
+good_at = []
+weak_at = [
+  "Answers are uniform; more steps did not help.",
+]
+different = "Same as seq_reset_sciq_quick with 3 epochs."
+evidence = ["R032"]
+
+[models.seq_hash_sciq_quick]
+predictor_id = "seq_modernbert_base_hash@d8699e6866a9"
+status = "baseline"
+summary = "Marker-encoding model with option positions hashed from option text, trained in 86 seconds on 2,400 SciQ questions."
+headline = "On a 400-question sample of mcqa_v0 test: 44.0% accuracy; the answer depends on option order for 26.5% of questions (67.3% for the sequential-position model)."
+good_at = [
+  "Less sensitive to the order of the options than seq_sciq_quick, at the same accuracy on the sample.",
+]
+weak_at = [
+  "Still not order-robust (answer changes with order on about a quarter of questions).",
+  "Evaluated only on a 400-question sample; no calibrated full-suite result.",
+]
+different = "Each option's start position is derived from its own text (decision 0015), so positions do not depend on the presented order but options stay distinguishable."
+evidence = ["R033", "R032"]
+
+[models.mbft_joint_reasoning_v0_e3]
+predictor_id = "direct_modernbert_ft_joint@32baf83cf99d"
+status = "not useful"
+summary = "Rule-reasoning attempt that has not learned yet: its answers are near-uniform guesses."
+headline = "Test accuracy 25.9% on reasoning_v0 (chance); even its training loss stayed at chance."
+good_at = []
+weak_at = [
+  "Everything: it outputs close to equal probabilities for every candidate.",
+]
+different = "Same architecture as the recommended model, trained for only 10 minutes (3 epochs, 339 steps) on 1,800 synthetic rule puzzles (\"Everything that is X is also Y …; which one is Z?\"). This is the final checkpoint; the dev-selected one (step 113) is also at chance. The 20k-example follow-up will tell whether more data helps."
+evidence = ["R006"]
+
+[models.direct_modernbert_v0]
+predictor_id = "direct_modernbert@471b2717df4f"
+status = "not useful"
+summary = "Frozen ModernBERT with a small trained scorer, trained on synthetic rule puzzles. At chance."
+headline = "Test accuracy 25.8% on reasoning_v0 (chance); it memorised its training worlds."
+good_at = []
+weak_at = [
+  "Everything: it did not generalise to new puzzles, and its probabilities are overconfident until calibrated to uniform.",
+]
+different = "The encoder is frozen (pretrained weights unchanged); only a small scorer (0.44M of 149M parameters) was trained. Candidates are encoded on their own, not with the context. Kept as a baseline showing that a frozen encoder is not enough."
+evidence = ["R001"]
+
+[models.direct_bert_v0]
+predictor_id = "direct_bert@7056aff3d45a"
+status = "not useful"
+summary = "Frozen BERT-base with a small trained scorer, trained on synthetic rule puzzles. At chance."
+headline = "Test accuracy 23.3% on reasoning_v0 (chance)."
+good_at = []
+weak_at = [
+  "Everything: same failure as direct_modernbert_v0.",
+]
+different = "Same setup as direct_modernbert_v0 with the older BERT-base-uncased encoder: the BERT-family comparison asked for in PLAN §3. Neither encoder helps when frozen."
+evidence = ["R001"]
+
+[models.mbft_joint_mcqa_smoke]
+predictor_id = "direct_modernbert_ft_joint@e2e17e2b2b77"
+status = "not useful"
+summary = "Aborted smoke test: 150 training steps on the first 2,400 RACE questions. Did not learn."
+headline = "Dev loss 1.386 (chance); never evaluated on the test split."
+good_at = []
+weak_at = ["Everything: near-uniform output."]
+different = "Pipeline check only. It showed that short RACE runs cannot tell a broken setup from a slow start."
+evidence = ["R003"]
+
+[models.mbft_joint_mcqa_smoke_random]
+predictor_id = "direct_modernbert_ft_joint@36bc7cc8c3db"
+status = "not useful"
+summary = "Aborted smoke test: 150 training steps on 2,400 random RACE + SciQ questions. Did not learn."
+headline = "Dev loss 1.386 (chance); never evaluated on the test split."
+good_at = []
+weak_at = ["Everything: near-uniform output."]
+different = "Like mbft_joint_mcqa_smoke but with a random sample of both sources."
+evidence = ["R003"]
+
+[models.mbft_joint_reasoning_train20k]
+predictor_id = "direct_modernbert_ft_joint@9a5fa4bebe73"
+status = "not useful"
+summary = "Rule-reasoning attempt on 20,000 synthetic puzzles that collapsed: it gives every candidate the same score."
+headline = "Test accuracy 26.9% on reasoning_v0 (chance); its training loss never left chance in 3,750 steps."
+good_at = []
+weak_at = [
+  "Everything: its scores are almost identical for every candidate (logit spread 0.001), on puzzles and on real questions alike.",
+]
+different = "Same architecture as the recommended model, trained from ModernBERT for about 1.8 h on 20k fresh rule puzzles (\"Everything that is X is also Y …; which one is Z?\"). Its failure is a training collapse, not a lack of data. This is the final weights; the dev-selected checkpoint (step 3,125) is also at chance."
+evidence = ["R007"]
+
+[models.mbft_joint_reasoning_warm_diag]
+predictor_id = "direct_modernbert_ft_joint@b5eb1b748344"
+status = "baseline"
+summary = "Reading-comprehension model further trained on rule puzzles. Solves 1–3-step rule chains and keeps most of its reading skill."
+headline = "reasoning_v0: depths 1–3 about 100%, unseen depth 4 78.6% (overconfident). mcqa_v0 dev 75.9% (R005: 78.1%)."
+good_at = [
+  "Rule chains of 1–3 steps written like the training puzzles (\"Everything that is X is also Y. Z is X. Which one is Y?\").",
+  "Simple English two-step deductions (qualitative check only).",
+  "Reading comprehension almost as well as the recommended model: RACE 72.4%, SciQ 93.8% on dev.",
+]
+weak_at = [
+  "Longer chains than it was trained on: 78.6% at depth 4, while still very confident (ECE 15%).",
+  "Extreme confidence in general (logits around +35). Its fitted temperature was set on short chains only, so it does not fix the overconfidence on longer ones.",
+  "Untested on negation, \"which is not\", binary relations or open-domain logic.",
+]
+different = "Warm-started from mbft_joint_mcqa_v0 and fine-tuned for 9 minutes on 4,800 rule puzzles. The only configuration so far that learned the puzzles: the same model started from plain ModernBERT collapsed (R007, R009). It is the direct baseline that any reasoning mechanism must beat on deeper chains."
+evidence = ["R008", "R005", "R007", "R009"]
+
+[models.mbft_joint_reasoning_d1_diag]
+predictor_id = "direct_modernbert_ft_joint@a30dafb645da"
+status = "not useful"
+summary = "Cold-start attempt on depth-1 rule puzzles only. Collapsed to uniform, like R007."
+headline = "Dev accuracy 24.7% on reasoning_v0 (chance); training loss never moved in 300 steps."
+good_at = []
+weak_at = ["Everything: near-uniform output."]
+different = "Diagnostic that shows an easier curriculum alone does not avoid the collapse, whereas a reading-comprehension warm start (R008) does."
+evidence = ["R009"]
+
+[models.mbft640_joint_reasoning_v1_warm]
+predictor_id = "direct_modernbert_ft_joint_640@aec6ecf34c53"
+status = "baseline"
+summary = "Rule-chain model on long, padded puzzles (46 sentences). Partly trained: stopped while still improving."
+headline = "reasoning_v1: 74% on 1-step chains, falling to about 40% at 5–8 steps (chance is 25%). Overconfident on long chains."
+good_at = [
+  "Short rule chains (1–2 steps) hidden among many irrelevant sentences: about 73–74%.",
+  "Contexts up to 640 tokens (about 46 sentences) without truncation.",
+]
+weak_at = [
+  "Chains of 4 or more steps: 32–48%, while too confident (ECE up to 26%).",
+  "Even 3-step chains it was trained on: 61%. It was stopped too early.",
+]
+different = "The 640-token version of the rule-chain baseline: warm-started from mbft_joint_mcqa_v0 and trained for 300 steps (25 min) on padded reasoning_v1 puzzles. Superseded as the reference once a longer-trained run exists."
+evidence = ["R011", "R010"]
+
+[models.mbft640_joint_reasoning_v1_warm20k]
+predictor_id = "direct_modernbert_ft_joint_640@4810281132d1"
+status = "baseline"
+summary = "Best rule-chain model so far: follows 1–4-step rule chains hidden in long texts, and still reads passages about as well as the recommended model."
+headline = "reasoning_v1: 1–3 steps 100%, 4 steps 91%, 5–8 steps 46–61% (chance 25%). mcqa_v0 dev 76.3%."
+good_at = [
+  "Rule chains of up to 4 steps, even among 46 sentences of irrelevant text (depth 4: 91%).",
+  "Reading comprehension close to the recommended model (RACE 72.9%, SciQ 94.1% on dev).",
+]
+weak_at = [
+  "Chains longer than it was trained on (5–8 steps: 46–61%), while very confident: when wrong it often gives the wrong answer near 100%.",
+  "Its probabilities are not trustworthy on hard or unusual questions (ECE 34–44% at 5–8 steps). No calibration is applied: the fitted one made this worse and was rejected.",
+]
+different = "The converged reference direct baseline of reasoning_v1: warm-started from mbft_joint_mcqa_v0 and trained for 1.7 h on 20,000 padded rule puzzles (640-token model). Any reasoning mechanism must beat it at 5–8 steps."
+evidence = ["R012", "R011"]
+
+[models.ws_statements_reasoning_v1_warm20k]
+predictor_id = "ws_statements_640@72808e8a2bb2"
+status = "not useful"
+summary = "First reasoning-workspace model: it can think for up to 16 rounds over the text's sentences, but it learned not to use them."
+headline = "Same answers at 0 and 16 rounds (reasoning_v1 76–78%, 5–8 steps 52–67%). The workspace stayed switched off."
+good_at = [
+  "As a plain model (rounds make no difference), about as good as the reasoning_v1 baseline: 1–4 steps 91–100%.",
+]
+weak_at = [
+  "Extra rounds do not help: its trained workspace barely changes the scores (readout weight norm 0.08, against scores spanning about ±25).",
+  "Overconfident at 5–8 steps, like the baseline.",
+]
+different = "Direct model plus a Stage-3a workspace (sentence and candidate nodes, one shared attention block per round), trained with 1–4 rounds. The direct path solved the training puzzles alone, so the workspace never learned a role. This is the final weights; the dev-selected checkpoint (step 1,000, @5259bb08c5e9) behaves the same."
+evidence = ["R012"]
+
+[models.ws_latent_reasoning_v1_warm20k]
+predictor_id = "ws_latent_640@1a8013668375"
+status = "not useful"
+summary = "Equal-cost control for the workspace: 16 abstract memory slots instead of sentences. Like the workspace, it ignores its rounds."
+headline = "Same answers at every budget (reasoning_v1 75.9%)."
+good_at = ["As a plain model, similar to the reasoning_v1 baseline."]
+weak_at = ["Extra rounds do not help (readout weight norm 0.07).", "Overconfident at 5–8 steps."]
+different = "The control the workspace must beat: the same block and training, but latent slots reading the sentences as fixed memory. It learned the puzzles later than the others (from about step 500)."
+evidence = ["R012"]
+
+[models.mbft_joint_knowledge_v0]
+predictor_id = "direct_modernbert_ft_joint@365477be31f5"
+checkpoint = "step_0000521"
+status = "baseline"
+summary = "Science-question chooser without a passage: the best model here when you give no context."
+headline = "knowledge_v0 test 58.1% (OpenBookQA 61.4%, ARC-Easy 61.7%, ARC-Challenge 49.4%), well calibrated (ECE 2.4%)."
+good_at = [
+  "Grade-school science multiple choice with no passage, relying on what it learned: 58% against R005's 51%.",
+  "Honest confidence on such questions (ECE 2.4%; a fitted temperature is about 1).",
+  "Uses a relevant fact if you paste it as the context: OpenBookQA 61% to 74%.",
+]
+weak_at = [
+  "Irrelevant or loosely related context hurts it (3 to 5 points), because it was trained with empty contexts.",
+  "Reading comprehension on passages (RACE, SciQ) was not measured after this fine-tuning; prefer mbft_joint_mcqa_v0 there.",
+  "No reasoning budget: it answers directly, whatever effort you choose.",
+]
+different = "R005 fine-tuned for one more epoch on knowledge_v0 (8,322 OpenBookQA and ARC questions, no passage). This is the dev-selected checkpoint (epoch 1); later epochs overfit badly (dev NLL 2.45 at epoch 3). It is the Stage-2 direct baseline that expansion must beat."
+evidence = ["R016", "R017"]
+
+[models.expand_v1_retrieved_knowledge_v0]
+predictor_id = "expand_v1_retrieved@65d4716203c1"
+checkpoint = "step_0001042"
+status = "not useful"
+summary = "First candidate-expansion model: each candidate expands into WordNet concepts and their evidence flows back, but it learned to ignore what the concepts say."
+headline = "knowledge_v0 test 51.9% at every budget from 8 to 128 concepts; identical to random concepts (difference 0.0 points)."
+good_at = [
+  "Shows the expansion tree: which concepts each candidate retrieved, their relevance and where the evidence came from.",
+  "Slightly better than its frozen R005 reader on OpenBookQA (53% against 39%), but a head with no concepts does the same.",
+]
+weak_at = [
+  "The concepts do not matter: its evidence correlates at 0.997 with the random-concept control and 0.986 with the no-concept control.",
+  "More concepts do not help: flat from 8 to 128.",
+  "6 points below the fine-tuned direct model (mbft_joint_knowledge_v0).",
+]
+different = "EXPAND v1 (decision 0011): the frozen R005 reader encodes each retrieved WordNet concept with the question into one vector, and a small trained head attends over all branches and adds evidence to each candidate's score. The pooled vector is dominated by the question (R017), so the head cannot tell concepts apart. Decision 0012 replaces this design."
+evidence = ["R016", "R017"]
+
+[models.expand_v1_random_knowledge_v0]
+predictor_id = "expand_v1_random@4426ed952cbe"
+checkpoint = "step_0001042"
+status = "not useful"
+summary = "Control for EXPAND v1: the same model, but each candidate expands into random WordNet concepts."
+headline = "knowledge_v0 test 51.9%, the same as with retrieved concepts."
+good_at = [
+  "Shows that EXPAND v1's gain over R005 does not come from concept content.",
+]
+weak_at = [
+  "Random concepts, by design: its expansion tree is meaningless.",
+  "6 points below the fine-tuned direct model.",
+]
+different = "EXPAND v1 with concepts drawn at random (deterministically per question and candidate), same training and cost as the retrieved model."
+evidence = ["R016"]
+
+[models.expand_v1_none_knowledge_v0]
+predictor_id = "expand_v1_none@a15da5c621af"
+checkpoint = "step_0001042"
+status = "not useful"
+summary = "Control for EXPAND v1: the same trained head with no concepts at all."
+headline = "knowledge_v0 test 51.6%, within 0.3 points of the retrieved-concept model."
+good_at = [
+  "Shows that EXPAND v1's gain over R005 comes from the extra trained head, not from expansion.",
+]
+weak_at = [
+  "Nothing is expanded: the path shows empty branches.",
+  "6 points below the fine-tuned direct model.",
+]
+different = "EXPAND v1 with zero vectors in place of concepts: the capacity control of the matched comparison."
+evidence = ["R016"]
+
+[models.branch_v2_retrieved_knowledge_v0]
+predictor_id = "branch_v2_retrieved@277ebb247391"
+status = "baseline"
+summary = "First model where expansion helps: each candidate reads statements retrieved about it, and more statements give better answers."
+headline = "knowledge_v0 test 61.1% with 8 statements per candidate, against 53.7% with none and 58.1% for the matched direct model; best calibrated at 16 statements in total."
+good_at = [
+  "Science questions without a passage, when you let it read statements (effort 8 to 32): 60.8–61.1%, +2.9 points over the matched direct model and +5.5 over random statements.",
+  "ARC-Easy style questions (\"which property…\", \"what happens when…\"): 67.4%, +6.4 points over the direct model.",
+  "Shows its work: each candidate's statements, and how much each one moves that candidate's score (leave-one-out).",
+]
+weak_at = [
+  "Without statements (effort 0) it is worse than the direct model (53.7% against 58.1%): it learned to rely on its branches.",
+  "OpenBookQA and ARC-Challenge questions gain nothing (OBQA −0.8, Challenge −2.3 points against the direct model): retrieval rarely finds the fact they need.",
+  "Retrieval follows the question's topic: about half of the statements are shared across candidates, and half of the branches never mention their own candidate at 2 per candidate.",
+]
+different = "EXPAND v2 (decision 0012): R005 fine-tuned for 2 epochs on knowledge_v0, with each candidate's joint input holding 0–8 GenericsKB statements retrieved from \"question candidate\". No extra weights; the reader itself learned to judge statements against its candidate. Final weights (epoch 2), selected on dev at 32 statements. Superseded by branch_v2_focused_knowledge_v0 (+4.1 points)."
+evidence = ["R020", "R021", "R024"]
+
+[models.branch_v2_random_knowledge_v0]
+predictor_id = "branch_v2_random@494a3b380220"
+checkpoint = "step_0000521"
+status = "not useful"
+summary = "Control for EXPAND v2: the same training, but each candidate's branch holds random statements."
+headline = "knowledge_v0 test 58.2% with no statements, falling to 55–56% as it reads random ones."
+good_at = [
+  "Shows that EXPAND v2's gain comes from what the retrieved statements say.",
+  "With effort 0 it is as good as the direct model (58.2%).",
+]
+weak_at = [
+  "Random statements by design: more effort makes it worse.",
+]
+different = "EXPAND v2 with random GenericsKB statements (deterministic per question and candidate); dev-selected at epoch 1."
+evidence = ["R020"]
+
+[models.branch_v2_none_knowledge_v0]
+predictor_id = "branch_v2_none@9d4fae379848"
+checkpoint = "step_0000521"
+status = "baseline"
+summary = "Direct control for EXPAND v2: the same training schedule with empty branches, so a plain direct model."
+headline = "knowledge_v0 test 58.1% (OBQA 62.2%, ARC-Easy 61.1%, ARC-Challenge 50.4%), well calibrated (ECE 1.6%)."
+good_at = [
+  "Science multiple choice without a passage, answering directly: as good as mbft_joint_knowledge_v0.",
+  "The best model here on ARC-Challenge-style questions (50.4%).",
+]
+weak_at = [
+  "No expansion: effort changes nothing.",
+  "Reading comprehension on passages was not measured after this fine-tuning.",
+]
+different = "R005 fine-tuned on knowledge_v0 with the EXPAND v2 schedule and empty branches; dev-selected at epoch 1 (it overfits by epoch 2). The matched baseline that branch reading must beat."
+evidence = ["R020"]
+
+[models.branch_v2_focused_knowledge_v0]
+predictor_id = "branch_v2_focused@950c83d9e163"
+checkpoint = "step_0000521"
+status = "recommended"
+summary = "Best model for science questions without a passage: each candidate reads statements about itself, and more statements give better answers."
+headline = "knowledge_v0 test 65.2% with 8 statements per candidate (direct model 58.1%), NLL 0.862, well calibrated (ECE 1.8%)."
+good_at = [
+  "Science multiple choice without a passage, with effort 16–32: 64.5–65.2%, +7.0 points over the matched direct model.",
+  "ARC-Easy style questions: 71.1% (+10 points over direct).",
+  "Harder ARC-Challenge questions: 54.9% (+4.5 over direct, +6.8 over the similarity model).",
+  "Shows its work: each candidate's statements, most of them about that candidate, with how much each moves its score.",
+]
+weak_at = [
+  "OpenBookQA-style questions that need a linking fact gain nothing (61.2% against 62.2% direct).",
+  "With effort 0 it is 2 points below the direct model.",
+  "Probabilities are raw (a temperature made them worse); ECE 1.8% overall but 6.4% on OBQA.",
+]
+different = "EXPAND v2 with focused proposals (decision 0013): the top 64 GenericsKB statements for \"question candidate\", reordered so statements mentioning the candidate come first, read in each candidate's own input. Same training as branch_v2_retrieved; dev-selected at epoch 1."
+evidence = ["R024"]
+
+[models.branch_v2_fused_knowledge_v0]
+predictor_id = "branch_v2_fused@78761cebebd7"
+checkpoint = "step_0000521"
+status = "baseline"
+summary = "EXPAND v2 whose statements are chosen by combining similarity with a reranker: as good as the focused model, not better."
+headline = "knowledge_v0 test 65.2% at 16 statements in total (focused 64.5%, direct 58.1%); the difference from focused is within noise."
+good_at = [
+  "Science questions without a passage with effort 16–32: +6.6 to +7.1 points over the matched direct model.",
+  "ARC-Easy (+10 points over direct) and ARC-Challenge (+3.3 at 16 statements).",
+]
+weak_at = [
+  "No better than branch_v2_focused_knowledge_v0, which is simpler and faster.",
+  "OpenBookQA-style questions gain nothing significant (+1.4, interval includes 0).",
+  "New questions on the interface run the reranker on the CPU: about 10 s more per question.",
+]
+different = "EXPAND v2 (decision 0014, round 2): the top 32 GenericsKB statements for \"question candidate\", ordered by reciprocal-rank fusion of retrieval similarity and a pinned bge-reranker-v2-m3; orderings for knowledge_v0 are precomputed in a verified proposal cache. Dev-selected at epoch 1."
+evidence = ["R026", "R027"]

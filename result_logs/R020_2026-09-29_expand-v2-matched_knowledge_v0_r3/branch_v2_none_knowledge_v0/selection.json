@@ -1,0 +1,37 @@
+{
+  "selection_version": 1,
+  "selection_id": "select-5281b6976b4c",
+  "split": "dev",
+  "budget_id": "p32",
+  "metric": "nll",
+  "rule": "min",
+  "labels_sha256": "5bdce011265d6d5cc246c17c2a37fbfd0f91250163825e734c8385f599dc06cf",
+  "candidates": [
+    {
+      "run_id": "branch_v2_none_knowledge_v0__dev-p32__final",
+      "predictor_id": "branch_v2_none@61c6658ba894",
+      "predictor_path": "artifacts/predictors/branch_v2_none_knowledge_v0",
+      "predictions_sha256": "fb601a049d7d0f4bc422f185b93054939cc5364c1d5cdf7d6c6f2b813bf9f043",
+      "value": 1.085954399589155,
+      "n": 665
+    },
+    {
+      "run_id": "branch_v2_none_knowledge_v0__dev-p32__step_0000521",
+      "predictor_id": "branch_v2_none@9d4fae379848",
+      "predictor_path": "artifacts/predictors/branch_v2_none_knowledge_v0/checkpoints/step_0000521",
+      "predictions_sha256": "8a733176da7476e0ded56bcf78c7fa5ffa530f3c62f607569b2c30ca480bce68",
+      "value": 0.9624264412426892,
+      "n": 665
+    }
+  ],
+  "chosen": {
+    "run_id": "branch_v2_none_knowledge_v0__dev-p32__step_0000521",
+    "predictor_id": "branch_v2_none@9d4fae379848",
+    "predictor_path": "artifacts/predictors/branch_v2_none_knowledge_v0/checkpoints/step_0000521",
+    "predictions_sha256": "8a733176da7476e0ded56bcf78c7fa5ffa530f3c62f607569b2c30ca480bce68",
+    "value": 0.9624264412426892,
+    "n": 665
+  },
+  "analysis_revision": "metanoia_analysis-0.1.0",
+  "created_at": "2026-09-29T15:45:19+00:00"
+}

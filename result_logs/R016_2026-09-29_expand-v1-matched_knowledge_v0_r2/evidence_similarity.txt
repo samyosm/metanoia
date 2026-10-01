@@ -1,0 +1,8 @@
+centered evidence corr retrieved vs none: 0.986
+centered evidence corr random vs none: 0.990
+centered evidence corr retrieved vs random: 0.997
+retrieved: centered evidence std 0.601
+random: centered evidence std 0.599
+none: centered evidence std 0.639
+retrieved p8 vs p128 corr 0.996
+n test examples 4046

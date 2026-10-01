@@ -1,0 +1,12 @@
+candidates with an anchored concept: 0.9363918844818132
+retrieved/k2 {'obqa': (0.604, 0.958), 'all': (0.61, 0.97), 'arc_easy': (0.667, 0.86), 'arc_challenge': (0.513, 1.201)} {'pairwise_jaccard': 0.347, 'mentions_own_words': 0.445, 'obqa_novel_fact_recall': 0.257}
+retrieved/k4 {'obqa': (0.598, 0.958), 'all': (0.6, 0.964), 'arc_easy': (0.647, 0.853), 'arc_challenge': (0.513, 1.184)} {'pairwise_jaccard': 0.346, 'mentions_own_words': 0.547, 'obqa_novel_fact_recall': 0.365}
+retrieved/k8 {'obqa': (0.584, 0.975), 'all': (0.603, 0.965), 'arc_easy': (0.668, 0.834), 'arc_challenge': (0.51, 1.195)} {'pairwise_jaccard': 0.356, 'mentions_own_words': 0.641, 'obqa_novel_fact_recall': 0.479}
+anchored/k2 {'obqa': (0.55, 1.08), 'all': (0.556, 1.085), 'arc_easy': (0.607, 0.997), 'arc_challenge': (0.47, 1.264)} {'pairwise_jaccard': 0.095, 'mentions_own_words': 0.915, 'obqa_novel_fact_recall': 0.192}
+anchored/k4 {'obqa': (0.542, 1.107), 'all': (0.543, 1.095), 'arc_easy': (0.584, 0.999), 'arc_challenge': (0.466, 1.259)} {'pairwise_jaccard': 0.094, 'mentions_own_words': 0.924, 'obqa_novel_fact_recall': 0.279}
+anchored/k8 {'obqa': (0.538, 1.124), 'all': (0.542, 1.105), 'arc_easy': (0.588, 0.992), 'arc_challenge': (0.463, 1.286)} {'pairwise_jaccard': 0.096, 'mentions_own_words': 0.933, 'obqa_novel_fact_recall': 0.382}
+chain/k2 {'obqa': (0.572, 1.065), 'all': (0.556, 1.092), 'arc_easy': (0.6, 1.007), 'arc_challenge': (0.443, 1.301)} {'pairwise_jaccard': 0.12, 'mentions_own_words': 0.907, 'obqa_novel_fact_recall': 0.208}
+chain/k4 {'obqa': (0.54, 1.095), 'all': (0.539, 1.111), 'arc_easy': (0.588, 1.031), 'arc_challenge': (0.446, 1.291)} {'pairwise_jaccard': 0.118, 'mentions_own_words': 0.919, 'obqa_novel_fact_recall': 0.276}
+chain/k8 {'obqa': (0.524, 1.104), 'all': (0.534, 1.115), 'arc_easy': (0.574, 1.041), 'arc_challenge': (0.473, 1.277)} {'pairwise_jaccard': 0.117, 'mentions_own_words': 0.929, 'obqa_novel_fact_recall': 0.374}
+
+[exited with code 0]

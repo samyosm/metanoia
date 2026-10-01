@@ -1,0 +1,149 @@
+{
+ "stats": {
+  "statements": 1015610,
+  "terms": 128816,
+  "index_seconds": 18.7,
+  "concepts_per_statement": 4.46,
+  "top_concepts": [
+   [
+    "people",
+    30948
+   ],
+   [
+    "water",
+    27655
+   ],
+   [
+    "plant",
+    25766
+   ],
+   [
+    "animal",
+    22183
+   ],
+   [
+    "food",
+    19157
+   ],
+   [
+    "human",
+    16958
+   ],
+   [
+    "live",
+    16703
+   ],
+   [
+    "body",
+    16138
+   ],
+   [
+    "cell",
+    15643
+   ],
+   [
+    "cause",
+    15349
+   ],
+   [
+    "life",
+    14419
+   ],
+   [
+    "form",
+    13417
+   ],
+   [
+    "time",
+    12682
+   ],
+   [
+    "energy",
+    12147
+   ],
+   [
+    "eat",
+    11972
+   ]
+  ],
+  "degree_percentiles": {
+   "1": 607,
+   "10": 28,
+   "50": 2,
+   "90": 1
+  }
+ },
+ "hub_cap": 2000,
+ "paths": {
+  "obqa": {
+   "gold": {
+    "n": 500,
+    "has_concept": 0.736,
+    "one_hop_any": 0.35,
+    "one_hop_mean": 3.97,
+    "two_hop_any": 0.63
+   },
+   "distractor": {
+    "n": 1500,
+    "has_concept": 0.6793333333333333,
+    "one_hop_any": 0.31466666666666665,
+    "one_hop_mean": 3.316,
+    "two_hop_any": 0.5906666666666667
+   }
+  },
+  "all": {
+   "gold": {
+    "n": 1368,
+    "has_concept": 0.7309941520467836,
+    "one_hop_any": 0.4817251461988304,
+    "one_hop_mean": 8.755116959064328,
+    "two_hop_any": 0.6666666666666666
+   },
+   "distractor": {
+    "n": 4103,
+    "has_concept": 0.7109432122836948,
+    "one_hop_any": 0.43456007799171337,
+    "one_hop_mean": 5.746526931513527,
+    "two_hop_any": 0.6565927370216914
+   }
+  },
+  "arc_easy": {
+   "gold": {
+    "n": 570,
+    "has_concept": 0.7263157894736842,
+    "one_hop_any": 0.5982456140350877,
+    "one_hop_mean": 12.884210526315789,
+    "two_hop_any": 0.6894736842105263
+   },
+   "distractor": {
+    "n": 1711,
+    "has_concept": 0.7440093512565751,
+    "one_hop_any": 0.5073056691992986,
+    "one_hop_mean": 7.0,
+    "two_hop_any": 0.7083576855639977
+   }
+  },
+  "arc_challenge": {
+   "distractor": {
+    "n": 892,
+    "has_concept": 0.7006726457399103,
+    "one_hop_any": 0.4966367713004484,
+    "one_hop_mean": 7.429372197309417,
+    "two_hop_any": 0.6681614349775785
+   },
+   "gold": {
+    "n": 298,
+    "has_concept": 0.7315436241610739,
+    "one_hop_any": 0.4798657718120805,
+    "one_hop_mean": 8.885906040268456,
+    "two_hop_any": 0.6845637583892618
+   }
+  }
+ },
+ "one_hop_ranking": {
+  "gold_most_links_alone": 297,
+  "no_links": 362,
+  "distractor_more": 637,
+  "gold_tied_most": 72
+ }
+}

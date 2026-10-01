@@ -1,0 +1,10 @@
+artifacts
+serving
+logs
+result_logs
+tests
+.venv
+**/node_modules
+**/.next
+**/__pycache__
+.git

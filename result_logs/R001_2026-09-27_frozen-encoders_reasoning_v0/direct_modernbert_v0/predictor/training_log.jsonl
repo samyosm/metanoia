@@ -1,0 +1,15 @@
+{"dev_loss":1.387809437115987,"epoch":0,"grad_norm_encoder":0.0,"grad_norm_scorer":0.468243527307845,"train_loss":1.3916444109197248}
+{"dev_loss":1.3943605740865073,"epoch":1,"grad_norm_encoder":0.0,"grad_norm_scorer":0.4743084144174007,"train_loss":1.3799971342086792}
+{"dev_loss":1.398845551808675,"epoch":2,"grad_norm_encoder":0.0,"grad_norm_scorer":0.5430185888942919,"train_loss":1.3733242666512204}
+{"dev_loss":1.4052594645818075,"epoch":3,"grad_norm_encoder":0.0,"grad_norm_scorer":0.7282666982265941,"train_loss":1.366906113791884}
+{"dev_loss":1.402986323038737,"epoch":4,"grad_norm_encoder":0.0,"grad_norm_scorer":0.7113725553479111,"train_loss":1.3610512541051496}
+{"dev_loss":1.4114816331863402,"epoch":5,"grad_norm_encoder":0.0,"grad_norm_scorer":0.7503059579615008,"train_loss":1.3515540779682629}
+{"dev_loss":1.4108404032389323,"epoch":6,"grad_norm_encoder":0.0,"grad_norm_scorer":0.8868773684167025,"train_loss":1.3405818981036806}
+{"dev_loss":1.4267084964116414,"epoch":7,"grad_norm_encoder":0.0,"grad_norm_scorer":0.917822397591775,"train_loss":1.3361714471850479}
+{"dev_loss":1.4770928684870401,"epoch":8,"grad_norm_encoder":0.0,"grad_norm_scorer":1.1629436894467002,"train_loss":1.3122494199819732}
+{"dev_loss":1.4934410603841146,"epoch":9,"grad_norm_encoder":0.0,"grad_norm_scorer":1.4324825353789747,"train_loss":1.2936813601276331}
+{"dev_loss":1.463992943763733,"epoch":10,"grad_norm_encoder":0.0,"grad_norm_scorer":1.6473104514573749,"train_loss":1.273906159819218}
+{"dev_loss":1.5544897349675497,"epoch":11,"grad_norm_encoder":0.0,"grad_norm_scorer":1.951579108572843,"train_loss":1.2417209294804357}
+{"dev_loss":1.7107541767756145,"epoch":12,"grad_norm_encoder":0.0,"grad_norm_scorer":2.3625823552148386,"train_loss":1.1963270432070683}
+{"dev_loss":1.5928532775243123,"epoch":13,"grad_norm_encoder":0.0,"grad_norm_scorer":2.7625914958485387,"train_loss":1.1743797461191814}
+{"dev_loss":1.6088763538996378,"epoch":14,"grad_norm_encoder":0.0,"grad_norm_scorer":3.075466327499925,"train_loss":1.1304364078923275}

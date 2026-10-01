@@ -1,0 +1,37 @@
+{
+  "selection_version": 1,
+  "selection_id": "select-3dc787a993fb",
+  "split": "dev",
+  "budget_id": "p32",
+  "metric": "nll",
+  "rule": "min",
+  "labels_sha256": "5bdce011265d6d5cc246c17c2a37fbfd0f91250163825e734c8385f599dc06cf",
+  "candidates": [
+    {
+      "run_id": "branch_v2_random_knowledge_v0__dev-p32__final",
+      "predictor_id": "branch_v2_random@09b03a24d866",
+      "predictor_path": "artifacts/predictors/branch_v2_random_knowledge_v0",
+      "predictions_sha256": "ce8087a48b3ac415474bb04ad4fc4b8d861c38253895369abb895b4455fb88ef",
+      "value": 1.0508654635456667,
+      "n": 665
+    },
+    {
+      "run_id": "branch_v2_random_knowledge_v0__dev-p32__step_0000521",
+      "predictor_id": "branch_v2_random@494a3b380220",
+      "predictor_path": "artifacts/predictors/branch_v2_random_knowledge_v0/checkpoints/step_0000521",
+      "predictions_sha256": "c6c1b8e2eaf7461b3d202372d3099565e9741629b132d69cc7d479b00b774e80",
+      "value": 1.016820923425557,
+      "n": 665
+    }
+  ],
+  "chosen": {
+    "run_id": "branch_v2_random_knowledge_v0__dev-p32__step_0000521",
+    "predictor_id": "branch_v2_random@494a3b380220",
+    "predictor_path": "artifacts/predictors/branch_v2_random_knowledge_v0/checkpoints/step_0000521",
+    "predictions_sha256": "c6c1b8e2eaf7461b3d202372d3099565e9741629b132d69cc7d479b00b774e80",
+    "value": 1.016820923425557,
+    "n": 665
+  },
+  "analysis_revision": "metanoia_analysis-0.1.0",
+  "created_at": "2026-09-29T15:28:12+00:00"
+}

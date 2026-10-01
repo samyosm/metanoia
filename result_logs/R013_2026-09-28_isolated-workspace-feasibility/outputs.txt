@@ -1,0 +1,9 @@
+CPU probe 1: isolated workspace, hashing encoder layers=0 (bag of words), 30 epochs
+  train loss 1.387 -> 0.194; held-out-world test accuracy at depths 1/2/3 stays 0.21-0.34 at every round count (0-8).
+CPU probe 2: same with hashing encoder layers=2 (order-aware sentences), 24 epochs
+  train loss stays 1.36-1.39 (collapse); test at chance.
+CPU probe 3: memory-network hops (position-weighted sentence sums, recurrent query, 1-4 hops trained), 40 epochs
+  train loss 7.7 -> 0.117; held-out-world test at depths 1-4 stays 0.19-0.33 for 1-8 hops.
+GPU smoke: isolated statement workspace on ModernBERT-640 warm-started from R005, 150 steps
+  (2,400 microworld_v1_train20k examples, rounds 1-6), 249 s at ~9.8 examples/s:
+  train loss 1.388, dev loss 1.3868, dev logit spread 0.010 (collapse).

@@ -1,0 +1,13 @@
+paired test accuracy differences, fused minus control (95% group bootstrap, 1000)
+  vs none     p16  obqa          +0.014 [-0.024, +0.054]
+  vs none     p16  arc_easy      +0.102 [+0.082, +0.123]
+  vs none     p16  arc_challenge +0.033 [+0.003, +0.062]
+  vs none     p32  obqa          +0.006 [-0.032, +0.046]
+  vs none     p32  arc_easy      +0.099 [+0.080, +0.119]
+  vs none     p32  arc_challenge +0.025 [-0.002, +0.052]
+  vs focused  p16  obqa          +0.036 [-0.004, +0.076]
+  vs focused  p16  arc_easy      +0.005 [-0.011, +0.021]
+  vs focused  p16  arc_challenge +0.000 [-0.026, +0.026]
+  vs focused  p32  obqa          +0.016 [-0.020, +0.054]
+  vs focused  p32  arc_easy      -0.001 [-0.016, +0.015]
+  vs focused  p32  arc_challenge -0.020 [-0.045, +0.005]

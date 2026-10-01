@@ -1,0 +1,157 @@
+{
+  "run_version": 1,
+  "run_id": "mbft640_joint_reasoning_v1_warm20k_mcqa_v0_dev",
+  "status": "complete",
+  "suite": {
+    "suite_id": "mcqa_v0",
+    "revision": 1,
+    "path": "suites/mcqa_v0",
+    "splits": [
+      "dev"
+    ]
+  },
+  "protocol_sha256": "a38b292dd38ee6910e85c56cf5ac06beded1f05430633e6aa27c75aa07613ec5",
+  "protocol": {
+    "suite_id": "mcqa_v0",
+    "revision": 1,
+    "task": "exclusive_choice",
+    "question": "Stage-1 realistic instrument: how well does a direct predictor choose the correct option\nof human-written multiple-choice reading-comprehension questions (RACE all + SciQ), and\nare its probabilities reliable? Dev and calibration come from the sources' validation\nsplits (grouped by passage); test is the sources' test splits.\n",
+    "analysis_specification": "analysis/specifications/mcqa_v0.toml",
+    "dataset": {
+      "dataset_id": "mcqa_v0",
+      "cases_sha256": "03fa885ea3d3b2a7450287d68532723268a071ac21da21ccec3033f4ef5510e0",
+      "labels_sha256": "aabdd466f6702dcf30e47d7ee708249281b7c6f02b5bad9196be05c9b29f4cc5"
+    },
+    "evaluation": {
+      "splits": [
+        "dev",
+        "calibration",
+        "test"
+      ],
+      "batch_size": 8,
+      "repeats": 1,
+      "base_seed": 0,
+      "trace": "off",
+      "failure_policy": "uniform",
+      "timing_scope": "decide_call"
+    },
+    "budgets": [
+      {
+        "id": "b0"
+      }
+    ]
+  },
+  "dataset_id": "mcqa_v0",
+  "cases_sha256": "03fa885ea3d3b2a7450287d68532723268a071ac21da21ccec3033f4ef5510e0",
+  "labels_sha256": "aabdd466f6702dcf30e47d7ee708249281b7c6f02b5bad9196be05c9b29f4cc5",
+  "predictor": {
+    "predictor_id": "direct_modernbert_ft_joint_640@4810281132d1",
+    "kind": "torch_direct",
+    "model_config": {
+      "model": {
+        "config_version": 1,
+        "name": "direct_modernbert_ft_joint_640",
+        "encoder": {
+          "kind": "hf",
+          "model": "answerdotai/ModernBERT-base",
+          "revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+          "max_length": 640,
+          "pooling": "mean",
+          "frozen": false,
+          "gradient_checkpointing": true
+        },
+        "scorer": {
+          "kind": "direct",
+          "latent_dim": 256,
+          "heads": 4,
+          "hidden_dim": 512,
+          "dropout": 0.1,
+          "candidate_encoding": "joint"
+        },
+        "workspace": null
+      },
+      "encoder_identity": {
+        "kind": "hf",
+        "model": "answerdotai/ModernBERT-base",
+        "requested_revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+        "resolved_revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+        "pooling": "mean",
+        "max_length": 640,
+        "frozen": false
+      },
+      "input_rendering": "question-context-observations/1"
+    },
+    "encoder": {
+      "kind": "hf",
+      "model": "answerdotai/ModernBERT-base",
+      "requested_revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+      "resolved_revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+      "pooling": "mean",
+      "max_length": 640,
+      "frozen": false
+    },
+    "calibration": {
+      "status": "uncalibrated",
+      "calibrator_id": null,
+      "temperature": 1.0
+    },
+    "precision": "fp16",
+    "spec": {
+      "kind": "bundle",
+      "path": "artifacts/predictors/mbft640_joint_reasoning_v1_warm20k",
+      "calibration": null,
+      "device": "cuda",
+      "precision": "fp16"
+    }
+  },
+  "runner_revision": "runner/1+metanoia_research-0.1.0",
+  "environment": {
+    "python": "3.12.13",
+    "implementation": "CPython",
+    "platform": "Linux-7.0.7-arch2-1-x86_64-with-glibc2.43",
+    "machine": "x86_64",
+    "packages": {
+      "metanoia": "0.1.0",
+      "pydantic": "2.13.5",
+      "torch": "2.11.0+cu128",
+      "transformers": "5.17.0",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "pyarrow": "25.0.1"
+    },
+    "accelerator": {
+      "requested_device": "cuda",
+      "torch_cuda": "12.8",
+      "cuda_available": true,
+      "cudnn_version": 91900,
+      "cudnn_deterministic": false,
+      "cudnn_benchmark": false,
+      "deterministic_algorithms": false,
+      "matmul_tf32": false,
+      "gpu_name": "NVIDIA GeForce RTX 2060",
+      "gpu_capability": "7.5",
+      "gpu_memory_bytes": 6017122304,
+      "driver_version": "595.71.05"
+    }
+  },
+  "source": {
+    "vcs": "git",
+    "commit": "c66da2bcc144167338571c09e24554f9120d8333",
+    "dirty": true,
+    "diff_sha256": "3dd86d7abe0290b6777110b0e1b5bbc98b4e929a9fcce44bcc6e5eeb2b7255ad"
+  },
+  "counts": {
+    "expected": 2890,
+    "attempted": 2890,
+    "completed": 2890,
+    "failed": 0
+  },
+  "predictions": {
+    "path": "predictions.parquet",
+    "sha256": "01b9c897f83a57881692e8eb65703d151f974fa820be9631a7ba9afef5b3b517",
+    "rows": 2890
+  },
+  "traces": null,
+  "started_at": "2026-09-28T16:23:49+00:00",
+  "finished_at": "2026-09-28T16:26:35+00:00"
+}

@@ -1,0 +1,626 @@
+{
+ "memory": "generics_v0",
+ "memory_manifest_id": "generics_v0",
+ "results": {
+  "none": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.392,
+    "nll": 1.4857696828140845
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.4722222222222222,
+    "nll": 1.274148745098391
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.5947368421052631,
+    "nll": 0.970261866930111
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.3724832214765101,
+    "nll": 1.5003401937496426
+   }
+  },
+  "branch/empty": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.392,
+    "nll": 1.4857696828140845
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.4722222222222222,
+    "nll": 1.274148745098391
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.5947368421052631,
+    "nll": 0.970261866930111
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.3724832214765101,
+    "nll": 1.5003401937496426
+   }
+  },
+  "branch/retrieved/k1": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.406,
+    "nll": 1.643501392686686
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.5058479532163743,
+    "nll": 1.3502716451333994
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.6421052631578947,
+    "nll": 0.9786954767137965
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.412751677852349,
+    "nll": 1.569008364000951
+   }
+  },
+  "shared/retrieved/k1": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.424,
+    "nll": 1.7463843332486475
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.5073099415204678,
+    "nll": 1.3944940181292638
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.631578947368421,
+    "nll": 1.0238914267853623
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.40939597315436244,
+    "nll": 1.5129447547276935
+   }
+  },
+  "branch/retrieved/k2": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.414,
+    "nll": 1.8546087165660774
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.4992690058479532,
+    "nll": 1.4621055648464718
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.6350877192982456,
+    "nll": 1.0233723552705327
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.3825503355704698,
+    "nll": 1.6427309124923866
+   }
+  },
+  "shared/retrieved/k2": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.456,
+    "nll": 1.672404413362414
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.5409356725146199,
+    "nll": 1.3241372285403223
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.6578947368421053,
+    "nll": 0.9536692854888746
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.4597315436241611,
+    "nll": 1.4484094940714605
+   }
+  },
+  "branch/retrieved/k4": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.396,
+    "nll": 1.8827019428162046
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.4824561403508772,
+    "nll": 1.4930755010543306
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.6192982456140351,
+    "nll": 1.0830653923843532
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.36577181208053694,
+    "nll": 1.623587383809197
+   }
+  },
+  "branch/retrieved/k8": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.408,
+    "nll": 1.746502746874821
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.5109649122807017,
+    "nll": 1.3902641557838635
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.6543859649122807,
+    "nll": 0.983602369020311
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.40939597315436244,
+    "nll": 1.5703914138702595
+   }
+  },
+  "branch/random/k1": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.356,
+    "nll": 1.6408343730157307
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.40862573099415206,
+    "nll": 1.4659031268612936
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.48771929824561405,
+    "nll": 1.2554300852859042
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.34563758389261745,
+    "nll": 1.5749769880047613
+   }
+  },
+  "shared/random/k1": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.4,
+    "nll": 1.3194459335506232
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.4692982456140351,
+    "nll": 1.2229300169973425
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.5701754385964912,
+    "nll": 1.0400178236904725
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.3926174496644295,
+    "nll": 1.4108561643405493
+   }
+  },
+  "branch/random/k2": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.358,
+    "nll": 1.6583310745250435
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.3983918128654971,
+    "nll": 1.5023871051659974
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.45087719298245615,
+    "nll": 1.3317017860292972
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.36577181208053694,
+    "nll": 1.5672147804290715
+   }
+  },
+  "shared/random/k2": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.43,
+    "nll": 1.2700262564878455
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.46637426900584794,
+    "nll": 1.202877758834702
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.543859649122807,
+    "nll": 1.0620448750059275
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.37919463087248323,
+    "nll": 1.359590829156278
+   }
+  },
+  "branch/random/k4": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.348,
+    "nll": 1.6786274035667896
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.3932748538011696,
+    "nll": 1.5076833342548457
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.45087719298245615,
+    "nll": 1.3514821288128296
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.35906040268456374,
+    "nll": 1.5196385438051045
+   }
+  },
+  "branch/random/k8": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.334,
+    "nll": 1.5378964498810759
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.38084795321637427,
+    "nll": 1.4386855670330703
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.4280701754385965,
+    "nll": 1.331604537742308
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.3691275167785235,
+    "nll": 1.477043772642908
+   }
+  }
+ },
+ "examples": [
+  {
+   "example_id": "knowledge_v0-obqa-validation-000000",
+   "question": "Frilled sharks and angler fish live far beneath the surface of the ocean, which is why they are known as",
+   "label": "a",
+   "branches": {
+    "a": [
+     "Most angler fish live in deep sea.",
+     "Angler fish live in deep sea.",
+     "Most fish live in the deep water, just below the ocean surface.",
+     "Most fish live in deep oceans."
+    ],
+    "b": [
+     "Sharks are fish that live throughout the world's oceans.",
+     "Most fish live in the deep water, just below the ocean surface.",
+     "Most angler fish live in deep sea.",
+     "Sharks are fish because they have gills and get their oxygen from the water."
+    ],
+    "c": [
+     "Most angler fish live in deep sea.",
+     "Sharks are fish that live throughout the world's oceans.",
+     "Angler fish live in deep sea.",
+     "Most fish live in deep oceans."
+    ],
+    "d": [
+     "Sharks are fish that live throughout the world's oceans.",
+     "Some species of sharks live in coastal waters, but others dwell far out at sea.",
+     "Most sharks live in shallow sea.",
+     "Most species of sharks reside in saltwater which means they are found in the oceans."
+    ]
+   }
+  },
+  {
+   "example_id": "knowledge_v0-obqa-validation-000006",
+   "question": "A person can grow cabbage in January with the help of what product?",
+   "label": "a",
+   "branches": {
+    "a": [
+     "Cabbage is a cool season vegetable which can be produced in the spring, fall and winter in Georgia.",
+     "Green vegetables include cabbages.",
+     "Green leaves produce food for plant growth next year.",
+     "Chinese cabbage develops best during cool weather and is an excellent vegetable for fall gardeners."
+    ],
+    "b": [
+     "Cabbage isa vegetable.",
+     "Cabbages are plants.",
+     "Cabbage is a cool season vegetable which can be produced in the spring, fall and winter in Georgia.",
+     "Cabbage grown commercially under normal conditions is a biennial."
+    ],
+    "c": [
+     "Cabbage is a cool season vegetable which can be produced in the spring, fall and winter in Georgia.",
+     "Cabbage grown commercially under normal conditions is a biennial.",
+     "Cabbages are plants.",
+     "Cabbage isa vegetable."
+    ],
+    "d": [
+     "Cabbage is a cool season vegetable which can be produced in the spring, fall and winter in Georgia.",
+     "Chinese cabbage develops best during cool weather and is an excellent vegetable for fall gardeners.",
+     "Cabbage isa vegetable.",
+     "Cabbage is a cruciferous vegetable which is thought to help protect against carcinogens."
+    ]
+   }
+  },
+  {
+   "example_id": "knowledge_v0-obqa-validation-000012",
+   "question": "An animal can hunt by cracking open a",
+   "label": "c",
+   "branches": {
+    "a": [
+     "Most animals use strong claws.",
+     "Claws also help land animals to run faster.",
+     "Animals have hunt techniques.",
+     "Most animals use claws."
+    ],
+    "b": [
+     "Animals have hunt techniques.",
+     "Most animals have hunt techniques.",
+     "Animals hunt animals.",
+     "Some houses possess animals."
+    ],
+    "c": [
+     "Some creatures have tough shells.",
+     "Animals have hunt techniques.",
+     "Some shells help animals.",
+     "Some animals have hard shells."
+    ],
+    "d": [
+     "Some hunters prefer to cut the pelvic bone and breast bone when opening the animal.",
+     "Animals has-part bones.",
+     "Animals often suffer broken bones.",
+     "Bones are located in animals."
+    ]
+   }
+  },
+  {
+   "example_id": "knowledge_v0-obqa-validation-000018",
+   "question": "Tunnels",
+   "label": "a",
+   "branches": {
+    "a": [
+     "Soil compaction reduces earthworm tunneling.",
+     "Clay soils are less susceptible when crusts are dry.",
+     "Deep soils have less potential for contamination than shallow soils.",
+     "Some soils are more porous than others."
+    ],
+    "b": [
+     "Soil compaction reduces earthworm tunneling.",
+     "Habitats have tunnels.",
+     "Tunnels connect tunnels.",
+     "Some soil compaction affects permeability."
+    ],
+    "c": [
+     "Tunnels occupy territory.",
+     "Tunnels have (part) shafts.",
+     "Shafts are part of tunnels.",
+     "Tunnels have (part) sections."
+    ],
+    "d": [
+     "Tunnels provide protection.",
+     "Soil crusts prevent erosion.",
+     "Erosion causes reductions.",
+     "Erosion has effects."
+    ]
+   }
+  },
+  {
+   "example_id": "knowledge_v0-obqa-validation-000024",
+   "question": "Winter solstice occurs on a day when",
+   "label": "d",
+   "branches": {
+    "a": [
+     "A winter solstice is a solstice",
+     "Winter solstices are solstices.",
+     "Winter solstices are part of winter.",
+     "Winter begins around the winter solstice."
+    ],
+    "b": [
+     "A winter solstice is a solstice",
+     "Winter solstices are solstices.",
+     "Winter solstices are part of winter.",
+     "Winter solstice is the day with the fewest hours of sunlight during the whole year."
+    ],
+    "c": [
+     "A winter solstice is a solstice",
+     "Winter solstices are solstices.",
+     "Winter solstices are part of winter.",
+     "Winter solstice is the day with the fewest hours of sunlight during the whole year."
+    ],
+    "d": [
+     "Winter solstice brings the greatest darkness, and summer solstice the brightest light.",
+     "A winter solstice is a solstice",
+     "Winter solstices are solstices.",
+     "Winter solstices are part of winter."
+    ]
+   }
+  },
+  {
+   "example_id": "knowledge_v0-obqa-validation-000030",
+   "question": "The epidermis is part of",
+   "label": "a",
+   "branches": {
+    "a": [
+     "Skin is the body's largest organ.",
+     "Skin is the largest organ of the body.",
+     "Skin is a semipermeable membrane and is the largest organ of the body.",
+     "Skin is the largest organ of a human body."
+    ],
+    "b": [
+     "Skin is the largest organ with liver being the second largest.",
+     "Skin is the largest organ in humans.",
+     "Skin is the body's largest organ.",
+     "Skin is the largest organ of a human body."
+    ],
+    "c": [
+     "Some toxins are produced by skin.",
+     "Some skin contains toxins.",
+     "Some skin produces toxins.",
+     "Epidermises are part of skin."
+    ],
+    "d": [
+     "Melanocytes are part of the epidermis.",
+     "Sunlight damages the epidermis and sunburn is the inflammatory response to radiation injury.",
+     "Skin is composed of the epidermis and the dermis.",
+     "Epidermises are part of skin."
+    ]
+   }
+  },
+  {
+   "example_id": "knowledge_v0-obqa-validation-000036",
+   "question": "Where would animals shiver the most?",
+   "label": "a",
+   "branches": {
+    "a": [
+     "Most animals exist in arctic wildernesses.",
+     "Most animals inhabit polar regions.",
+     "Most arctic mammals have extremities.",
+     "Most animals survive arctic temperature."
+    ],
+    "b": [
+     "Sumatran tigers are mammals.",
+     "Sumatran orangutans are located on the island of Sumatra.",
+     "Sumatran tigers persist in isolated populations across Sumatra.",
+     "Sumatran has (part) heads."
+    ],
+    "c": [
+     "Many mammals shiver at low temperatures.",
+     "Most animals live in cold climates.",
+     "Many mammals live in cold places.",
+     "Most wild animals inhabit regions."
+    ],
+    "d": [
+     "Most animals live in tropical rainforests.",
+     "Most animals live in rainforest areas.",
+     "Most animals live in rainforests.",
+     "Most solitary animals live in rainforest areas."
+    ]
+   }
+  },
+  {
+   "example_id": "knowledge_v0-obqa-validation-000042",
+   "question": "Which would best store new whale offspring?",
+   "label": "b",
+   "branches": {
+    "a": [
+     "Orcas feed on large whales.",
+     "Sea animals carry offspring.",
+     "Most sea animals carry offspring.",
+     "Whales get quite large."
+    ],
+    "b": [
+     "Large whales are whales.",
+     "Most giant whales feed on plankton.",
+     "Whales get quite large.",
+     "Some cetaceans grow to be very large."
+    ],
+    "c": [
+     "Bags design for storage.",
+     "Some whales carry children.",
+     "Most sea animals carry offspring.",
+     "Sea animals carry offspring."
+    ],
+    "d": [
+     "Most whales have holes.",
+     "Whales have holes.",
+     "Blowholes help to distinguish modern forms of whales.",
+     "Some whales are fed by bottom sediments."
+    ]
+   }
+  },
+  {
+   "example_id": "knowledge_v0-obqa-validation-000048",
+   "question": "A turtle may lay six eggs, and a sea turtle may lay a hundred eggs, and",
+   "label": "b",
+   "branches": {
+    "a": [
+     "Most turtles lay eggs.",
+     "Most turtles make eggs.",
+     "Some turtles possess eggs.",
+     "Some eggs come from turtles."
+    ],
+    "b": [
+     "Most turtles lay eggs.",
+     "Most turtles make eggs.",
+     "Some turtles possess eggs.",
+     "Some eggs come from turtles."
+    ],
+    "c": [
+     "Most turtles lay eggs.",
+     "Most turtles make eggs.",
+     "Some turtles possess eggs.",
+     "Turtles lay eggs."
+    ],
+    "d": [
+     "Most turtles lay eggs.",
+     "Most turtles make eggs.",
+     "Some turtles possess eggs.",
+     "Turtles lay eggs."
+    ]
+   }
+  },
+  {
+   "example_id": "knowledge_v0-obqa-validation-000054",
+   "question": "Pumpkin pie spice comes from",
+   "label": "b",
+   "branches": {
+    "a": [
+     "Food comes from animals.",
+     "Some food products come from animals.",
+     "Meat comes from animals.",
+     "Some foods come from animals and some foods come from plants."
+    ],
+    "b": [
+     "Some spices come from plants.",
+     "Spices come from plants, and they get their flavor from oils in the seeds or bark.",
+     "Corn comes from plants.",
+     "Mustard comes from plants."
+    ],
+    "c": [
+     "Pie has spices.",
+     "Pumpkin pie is pie",
+     "Spices come from plants, and they get their flavor from oils in the seeds or bark.",
+     "Pies typically contain cloves."
+    ],
+    "d": [
+     "Pumpkin pie is pie",
+     "Pumpkins have (part) kernels.",
+     "Pie has spices.",
+     "Pumpkins are an ingredient in pies, breads, soups, and other foods."
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,22 @@
+name = "expand_v1_none_knowledge_v0"
+# EXPAND v1 (concepts = none), matched to mbft_joint_knowledge_v0: same data, schedule,
+# seed and initialization (R005); the direct path is frozen, only the expansion trains.
+model_config_path = "configs/models/expand_v1_none.toml"
+init_from = "artifacts/predictors/mbft_joint_mcqa_v0"
+dataset = "artifacts/datasets/knowledge_v0"
+train_split = "train"
+dev_split = "dev"
+batch_size = 16
+micro_batch_size = 4
+learning_rate = 1e-4
+encoder_learning_rate = 2e-5
+weight_decay = 0.01
+warmup_fraction = 0.06
+schedule = "linear"
+precision = "fp16-mixed"
+grad_clip = 1.0
+seed = 0
+device = "cuda"
+log_every_steps = 50
+epochs = 3
+checkpoint_each_epoch = true

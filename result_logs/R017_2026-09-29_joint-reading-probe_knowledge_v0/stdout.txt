@@ -1,0 +1,11 @@
+r005 none {'obqa': 0.388, 'all': 0.507, 'arc_easy': 0.587, 'arc_challenge': 0.395}
+r005 retrieved {'obqa': 0.426, 'all': 0.519, 'arc_easy': 0.592, 'arc_challenge': 0.41}
+r005 random {'obqa': 0.408, 'all': 0.497, 'arc_easy': 0.565, 'arc_challenge': 0.398}
+r005 qret {'obqa': 0.446, 'all': 0.526, 'arc_easy': 0.595, 'arc_challenge': 0.422}
+r005 gold {'obqa': 0.618, 'all': 0.618}
+kv0 none {'obqa': 0.614, 'all': 0.581, 'arc_easy': 0.618, 'arc_challenge': 0.494}
+kv0 retrieved {'obqa': 0.566, 'all': 0.553, 'arc_easy': 0.599, 'arc_challenge': 0.454}
+kv0 random {'obqa': 0.562, 'all': 0.535, 'arc_easy': 0.563, 'arc_challenge': 0.465}
+kv0 qret {'obqa': 0.558, 'all': 0.541, 'arc_easy': 0.576, 'arc_challenge': 0.461}
+kv0 gold {'obqa': 0.736, 'all': 0.736}
+{'mean_cos_between_concepts_same_input': 0.9313506269827485, 'mean_cos_between_inputs': 0.8933095335960388, 'n_inputs': 64, 'concepts_per_input': 16}

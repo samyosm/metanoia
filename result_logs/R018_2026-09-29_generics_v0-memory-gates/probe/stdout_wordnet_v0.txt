@@ -1,0 +1,10 @@
+none {'obqa': (0.392, 1.486), 'all': (0.472, 1.274), 'arc_easy': (0.595, 0.97), 'arc_challenge': (0.372, 1.5)}
+branch/empty {'obqa': (0.392, 1.486), 'all': (0.472, 1.274), 'arc_easy': (0.595, 0.97), 'arc_challenge': (0.372, 1.5)}
+branch/retrieved/k1 {'obqa': (0.374, 1.816), 'all': (0.462, 1.457), 'arc_easy': (0.584, 1.073), 'arc_challenge': (0.376, 1.587)}
+shared/retrieved/k1 {'obqa': (0.358, 1.588), 'all': (0.452, 1.317), 'arc_easy': (0.582, 1.002), 'arc_challenge': (0.362, 1.468)}
+branch/retrieved/k2 {'obqa': (0.368, 1.842), 'all': (0.446, 1.53), 'arc_easy': (0.544, 1.203), 'arc_challenge': (0.389, 1.63)}
+shared/retrieved/k2 {'obqa': (0.4, 1.491), 'all': (0.487, 1.244), 'arc_easy': (0.611, 0.971), 'arc_challenge': (0.396, 1.354)}
+branch/random/k1 {'obqa': (0.362, 1.812), 'all': (0.397, 1.607), 'arc_easy': (0.46, 1.344), 'arc_challenge': (0.336, 1.764)}
+shared/random/k1 {'obqa': (0.402, 1.302), 'all': (0.467, 1.203), 'arc_easy': (0.565, 1.048), 'arc_challenge': (0.389, 1.332)}
+branch/random/k2 {'obqa': (0.33, 1.974), 'all': (0.352, 1.797), 'arc_easy': (0.402, 1.586), 'arc_challenge': (0.292, 1.904)}
+shared/random/k2 {'obqa': (0.426, 1.27), 'all': (0.471, 1.209), 'arc_easy': (0.561, 1.091), 'arc_challenge': (0.372, 1.333)}

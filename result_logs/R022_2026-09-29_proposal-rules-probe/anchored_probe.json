@@ -1,0 +1,1074 @@
+{
+ "bundle": "artifacts/predictors/branch_v2_retrieved_knowledge_v0",
+ "predictor_id": "branch_v2_retrieved@277ebb247391",
+ "anchored_rate": 0.9363918844818132,
+ "results": {
+  "retrieved/k2": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.604,
+    "nll": 0.9584768587508545
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.6103801169590644,
+    "nll": 0.9704207780492045
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.6666666666666666,
+    "nll": 0.8603319744414192
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.5134228187919463,
+    "nll": 1.2010334549136763
+   }
+  },
+  "retrieved/k4": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.598,
+    "nll": 0.958268458836702
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.6001461988304093,
+    "nll": 0.9636013548784984
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.6473684210526316,
+    "nll": 0.8530946986132892
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.5134228187919463,
+    "nll": 1.183920959214295
+   }
+  },
+  "retrieved/k8": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.584,
+    "nll": 0.9753232474145778
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.6030701754385965,
+    "nll": 0.9645698052741927
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.6684210526315789,
+    "nll": 0.8344573528869322
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.5100671140939598,
+    "nll": 1.1953999287324004
+   }
+  },
+  "anchored/k2": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.55,
+    "nll": 1.0799413628957588
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.5562865497076024,
+    "nll": 1.0854152544377778
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.6070175438596491,
+    "nll": 0.996944266851332
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.4697986577181208,
+    "nll": 1.263822666166918
+   }
+  },
+  "anchored/k4": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.542,
+    "nll": 1.1072508412216286
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.5431286549707602,
+    "nll": 1.0950193821011383
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.5842105263157895,
+    "nll": 0.9987491835083494
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.4664429530201342,
+    "nll": 1.258637783569743
+   }
+  },
+  "anchored/k8": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.538,
+    "nll": 1.1244667466541636
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.5423976608187134,
+    "nll": 1.1046054693386835
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.5877192982456141,
+    "nll": 0.9921686854456102
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.46308724832214765,
+    "nll": 1.2863448255846959
+   }
+  },
+  "chain/k2": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.572,
+    "nll": 1.0648806808413591
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.5555555555555556,
+    "nll": 1.0919706565117058
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.6,
+    "nll": 1.0065773625908447
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.4429530201342282,
+    "nll": 1.300759802048834
+   }
+  },
+  "chain/k4": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.54,
+    "nll": 1.0952681361224719
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.5394736842105263,
+    "nll": 1.1111848121804333
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.5877192982456141,
+    "nll": 1.0313701508316615
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.4463087248322148,
+    "nll": 1.2905562719045303
+   }
+  },
+  "chain/k8": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.524,
+    "nll": 1.1035810456730224
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.533625730994152,
+    "nll": 1.1150199521768913
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.5736842105263158,
+    "nll": 1.0405165720521259
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.47315436241610737,
+    "nll": 1.2767192136636387
+   }
+  }
+ },
+ "quality": {
+  "retrieved/k2": {
+   "pairwise_jaccard": 0.3473034437946719,
+   "mentions_own_words": 0.44533582089552237,
+   "obqa_novel_fact_recall": 0.2569070569070569
+  },
+  "retrieved/k4": {
+   "pairwise_jaccard": 0.34610832637148425,
+   "mentions_own_words": 0.5466417910447762,
+   "obqa_novel_fact_recall": 0.36526514026514023
+  },
+  "retrieved/k8": {
+   "pairwise_jaccard": 0.35624882752075737,
+   "mentions_own_words": 0.6406716417910447,
+   "obqa_novel_fact_recall": 0.47904370404370406
+  },
+  "anchored/k2": {
+   "pairwise_jaccard": 0.09466374269005848,
+   "mentions_own_words": 0.9151119402985075,
+   "obqa_novel_fact_recall": 0.1924157674157674
+  },
+  "anchored/k4": {
+   "pairwise_jaccard": 0.09422746681518612,
+   "mentions_own_words": 0.9240671641791045,
+   "obqa_novel_fact_recall": 0.27926615426615425
+  },
+  "anchored/k8": {
+   "pairwise_jaccard": 0.09627014203037594,
+   "mentions_own_words": 0.9332089552238806,
+   "obqa_novel_fact_recall": 0.38242688242688244
+  },
+  "chain/k2": {
+   "pairwise_jaccard": 0.11980181936322287,
+   "mentions_own_words": 0.9067164179104478,
+   "obqa_novel_fact_recall": 0.20834488334488335
+  },
+  "chain/k4": {
+   "pairwise_jaccard": 0.11830270119743805,
+   "mentions_own_words": 0.9190298507462686,
+   "obqa_novel_fact_recall": 0.27636627636627636
+  },
+  "chain/k8": {
+   "pairwise_jaccard": 0.11706761670211963,
+   "mentions_own_words": 0.9292910447761195,
+   "obqa_novel_fact_recall": 0.3742205242205242
+  }
+ },
+ "examples": [
+  {
+   "question": "Frilled sharks and angler fish live far beneath the surface of the ocean, which is why they are known as",
+   "label": "a",
+   "retrieved": {
+    "Deep sea animals": [
+     "Most angler fish live in deep sea.",
+     "Angler fish live in deep sea.",
+     "Most fish live in the deep water, just below the ocean surface.",
+     "Most fish live in deep oceans."
+    ],
+    "fish": [
+     "Sharks are fish that live throughout the world's oceans.",
+     "Most fish live in the deep water, just below the ocean surface.",
+     "Most angler fish live in deep sea.",
+     "Sharks are fish because they have gills and get their oxygen from the water."
+    ],
+    "Long Sea Fish": [
+     "Most angler fish live in deep sea.",
+     "Sharks are fish that live throughout the world's oceans.",
+     "Angler fish live in deep sea.",
+     "Most fish live in deep oceans."
+    ],
+    "Far Sea Animals": [
+     "Sharks are fish that live throughout the world's oceans.",
+     "Some species of sharks live in coastal waters, but others dwell far out at sea.",
+     "Most sharks live in shallow sea.",
+     "Most species of sharks reside in saltwater which means they are found in the oceans."
+    ]
+   },
+   "anchored": {
+    "Deep sea animals": [
+     "Some sea animals live in oceans.",
+     "Seas have fish and fish have fins.",
+     "Seas have fish, and fish have fins.",
+     "Animals living in water are called as aquatic organisms."
+    ],
+    "fish": [
+     "Most fish live in the deep water, just below the ocean surface.",
+     "Most fish live in deep oceans.",
+     "Fish live in deep oceans.",
+     "Most fish live in shallow water environments."
+    ],
+    "Long Sea Fish": [
+     "Seas have fish and fish have fins.",
+     "Seas have fish, and fish have fins.",
+     "Sea is located in oceans.",
+     "Sea is used for sea life."
+    ],
+    "Far Sea Animals": [
+     "Some sea animals live in oceans.",
+     "Seas have fish and fish have fins.",
+     "Animals living in water are called as aquatic organisms.",
+     "Seas have fish, and fish have fins."
+    ]
+   },
+   "chain": {
+    "Deep sea animals": [
+     "Some sea animals live in oceans.",
+     "Fins are part of fish.",
+     "Seas have fish and fish have fins.",
+     "Fins are the most distinctive features of fish."
+    ],
+    "fish": [
+     "Most fish live in the deep water, just below the ocean surface.",
+     "Water comes from oceans.",
+     "Most fish live in deep oceans.",
+     "Water can also move vertically in the ocean."
+    ],
+    "Long Sea Fish": [
+     "Seas have fish and fish have fins.",
+     "Fins are part of fish.",
+     "Seas have fish, and fish have fins.",
+     "Fins are the most distinctive features of fish."
+    ],
+    "Far Sea Animals": [
+     "Some sea animals live in oceans.",
+     "Fins are part of fish.",
+     "Seas have fish and fish have fins.",
+     "Fins are the most distinctive features of fish."
+    ]
+   }
+  },
+  {
+   "question": "The epidermis is part of",
+   "label": "a",
+   "retrieved": {
+    "is the largest organ and also the body's first defense against germs": [
+     "Skin is the body's largest organ.",
+     "Skin is the largest organ of the body.",
+     "Skin is a semipermeable membrane and is the largest organ of the body.",
+     "Skin is the largest organ of a human body."
+    ],
+    "is used the second largest organ and used for breathing by humans": [
+     "Skin is the largest organ with liver being the second largest.",
+     "Skin is the largest organ in humans.",
+     "Skin is the body's largest organ.",
+     "Skin is the largest organ of a human body."
+    ],
+    "soaks in toxins in the air": [
+     "Some toxins are produced by skin.",
+     "Some skin contains toxins.",
+     "Some skin produces toxins.",
+     "Epidermises are part of skin."
+    ],
+    "repels sunlight and UV rays": [
+     "Melanocytes are part of the epidermis.",
+     "Sunlight damages the epidermis and sunburn is the inflammatory response to radiation injury.",
+     "Skin is composed of the epidermis and the dermis.",
+     "Epidermises are part of skin."
+    ]
+   },
+   "anchored": {
+    "is the largest organ and also the body's first defense against germs": [
+     "Organs include skin.",
+     "An organ is a body part",
+     "Some organs consist of glands.",
+     "Some organs contain tissue."
+    ],
+    "is used the second largest organ and used for breathing by humans": [
+     "Organs include skin.",
+     "An organ is a body part",
+     "Some organs consist of glands.",
+     "Some organs contain tissue."
+    ],
+    "soaks in toxins in the air": [
+     "Some toxins are produced by skin.",
+     "Air is brought into the body through spiracles located on each segment of the body.",
+     "Air enters the lungs through internal nares, which are located high in the forehead.",
+     "Air passes through tubes into the body tissues."
+    ],
+    "repels sunlight and UV rays": [
+     "Sunlight has (part) sections.",
+     "Sunlight damages the epidermis and sunburn is the inflammatory response to radiation injury.",
+     "Some rays produce skin.",
+     "Rays have (part) cytoplasm."
+    ]
+   },
+   "chain": {
+    "is the largest organ and also the body's first defense against germs": [
+     "Organs include skin.",
+     "Skin is composed of the epidermis and the dermis.",
+     "An organ is a body part",
+     "Skin has (part) sections."
+    ],
+    "is used the second largest organ and used for breathing by humans": [
+     "Organs include skin.",
+     "Skin is composed of the epidermis and the dermis.",
+     "An organ is a body part",
+     "Skin has (part) sections."
+    ],
+    "soaks in toxins in the air": [
+     "Some toxins are produced by skin.",
+     "Skin is composed of the epidermis and the dermis.",
+     "Air is brought into the body through spiracles located on each segment of the body.",
+     "Skin has (part) sections."
+    ],
+    "repels sunlight and UV rays": [
+     "Sunlight has (part) sections.",
+     "Sections are parts.",
+     "Sunlight damages the epidermis and sunburn is the inflammatory response to radiation injury.",
+     "Radiation penetrates outer skin layers."
+    ]
+   }
+  },
+  {
+   "question": "When going in the basement, it's better to have a laser than a",
+   "label": "c",
+   "retrieved": {
+    "flashlight": [
+     "Lasers work differently depending on what they're needed for.",
+     "Laser beams use a lower heat input, but higher intensity than an electron beam.",
+     "Light bulbs are located in basements.",
+     "Laser light is acheived by using laser diods and allow better penetration of the laser light."
+    ],
+    "light bulb": [
+     "Light bulbs are located in basements.",
+     "Laser beams use a lower heat input, but higher intensity than an electron beam.",
+     "Lasers deliver a type of light energy.",
+     "Most lasers are less harmful than sunlight."
+    ],
+    "radio": [
+     "Masers are the radio equivalent of lasers.",
+     "Lasers work differently depending on what they're needed for.",
+     "Laser beams use a lower heat input, but higher intensity than an electron beam.",
+     "Lasers are devices."
+    ],
+    "TV": [
+     "Lasers work differently depending on what they're needed for.",
+     "Electrical appliances are located in basements.",
+     "Electricity is located in basements.",
+     "Lasers can take things down to the wavelengths of light."
+    ]
+   },
+   "anchored": {
+    "flashlight": [
+     "Flashlights can help children see better.",
+     "Flashlight isa lamp.",
+     "Flashlights also work.",
+     "Flashlights help kids see better and be seen more clearly."
+    ],
+    "light bulb": [
+     "Light bulbs are located in basements.",
+     "Light is more powerful than darkness because one ray of light penetrates the dark.",
+     "Some light is beneficial to germination.",
+     "Light has lesser effects."
+    ],
+    "radio": [
+     "Radios often function better when off the ground and on a box or stool.",
+     "Radio Waves a form of light with a frequency that is much lower than visual light.",
+     "Some radios have a switch that selects high or low transmitter power.",
+     "Radio means sending energy with waves."
+    ],
+    "TV": [
+     "TV is for filling up time and numbing the neurons.",
+     "TV is a household appliance.",
+     "Tv is located in bedrooms.",
+     "Tv has (part) television tubes."
+    ]
+   },
+   "chain": {
+    "flashlight": [
+     "Flashlights can help children see better.",
+     "Most lamps use less energy.",
+     "Flashlight isa lamp.",
+     "Lamps give similar effects."
+    ],
+    "light bulb": [
+     "Light bulbs are located in basements.",
+     "Darkness is beneficial to germination.",
+     "Light is more powerful than darkness because one ray of light penetrates the dark.",
+     "Darkness is where the light is needed."
+    ],
+    "radio": [
+     "Radios often function better when off the ground and on a box or stool.",
+     "Boxs are located in basements.",
+     "Radio Waves a form of light with a frequency that is much lower than visual light.",
+     "Light is more powerful than darkness because one ray of light penetrates the dark."
+    ],
+    "TV": [
+     "TV is for filling up time and numbing the neurons.",
+     "Times refer to periods of continuous laser illumination.",
+     "TV is a household appliance.",
+     "Time is also one of the elements so use heat to accelerate that variable."
+    ]
+   }
+  },
+  {
+   "question": "As they are immobile, what is an example of how animal life helps the reproduction cycle of plants?",
+   "label": "a",
+   "retrieved": {
+    "squirrels dropping seeds": [
+     "Animals help plant reproduction by helping spread plant pollen and seeds.",
+     "Animals can also help plant reproduction by dispersing seeds around in different areas.",
+     "Squirrels reproduce asexually.",
+     "Some animals help plants to reproduce."
+    ],
+    "birds building nests": [
+     "Some animals help plants to reproduce.",
+     "Some animals help plants reproduce.",
+     "Most birds use plants to make nests.",
+     "Animals help plant reproduction by helping spread plant pollen and seeds."
+    ],
+    "human lumber industry": [
+     "Animals play an important role in plant reproduction.",
+     "Some animals help plants to reproduce.",
+     "Some animals help plants reproduce.",
+     "Plant reproduction is similar to animal reproduction."
+    ],
+    "bugs eating leaves": [
+     "Some animals help plants to reproduce.",
+     "Some animals help plants reproduce.",
+     "Bugs sleep, feed on the plants and reproduce.",
+     "Bugs feed on leaf tissue."
+    ]
+   },
+   "anchored": {
+    "squirrels dropping seeds": [
+     "Seeds are another way plants reproduce.",
+     "Seeds produced in the garden are a sexual form of reproduction.",
+     "Seeds represent a strategy for reproduction and survival.",
+     "Seeds let plants spread their embryos over large areas."
+    ],
+    "birds building nests": [
+     "Birds have internal fertilization.",
+     "Birds are powerful symbols of the cycle of life.",
+     "Most birds use plants to make nests.",
+     "Birds have a gland in the eye that controls reproduction."
+    ],
+    "human lumber industry": [
+     "Humans can be infertile , but animals and plants can too .",
+     "Humans can be infertile, but animals and plants can too.",
+     "Humans can help other organisms reproduce asexually.",
+     "Humans depend on plants and animals for survival."
+    ],
+    "bugs eating leaves": [
+     "Bugs sleep, feed on the plants and reproduce.",
+     "Bugs feed on plants.",
+     "Leaves help plants.",
+     "Bugs feed on plant tissue."
+    ]
+   },
+   "chain": {
+    "squirrels dropping seeds": [
+     "Seeds are another way plants reproduce.",
+     "Gardens benefit animals.",
+     "Seeds produced in the garden are a sexual form of reproduction.",
+     "Some gardens attract mammals."
+    ],
+    "birds building nests": [
+     "Birds have internal fertilization.",
+     "Internal fertilization occurs in mammals, insects, birds, reptiles.",
+     "Birds are powerful symbols of the cycle of life.",
+     "Some internal fertilization occurs in mammals."
+    ],
+    "human lumber industry": [
+     "Humans can be infertile , but animals and plants can too .",
+     "Humans can be infertile, but animals and plants can too.",
+     "Humans can help other organisms reproduce asexually.",
+     "Humans depend on plants and animals for survival."
+    ],
+    "bugs eating leaves": [
+     "Bugs sleep, feed on the plants and reproduce.",
+     "Sleep means different things to different forms of animal life.",
+     "Bugs feed on plants.",
+     "Sleep is ubiquitous among animals and is essential for life."
+    ]
+   }
+  },
+  {
+   "question": "A change in the Earth is",
+   "label": "b",
+   "retrieved": {
+    "a person's hair growing": [
+     "Hair grows at different rates.",
+     "Hair growing cycles vary in different cultures and parts of the world.",
+     "Hair grows in cycles.",
+     "Human hair grows in cycles."
+    ],
+    "a wooded area appearing on land that was once part of the ocean": [
+     "Water causes change around the earth.",
+     "Earth changes take place over many scales of time and space.",
+     "Regional changes occur over time at the surface of the earth that affect the watershed.",
+     "Water affects the climate of the Earth and changes the surface of the land."
+    ],
+    "a wooded area existing next to an ocean": [
+     "Water causes change around the earth.",
+     "Earth is located in trees.",
+     "Earth change is the way of nature.",
+     "Earth has a changing weather pattern."
+    ],
+    "the moon moving around the Earth": [
+     "Moon travels around the Earth.",
+     "Earth has one moon, which revolves around it.",
+     "Moon revolves as Earth spins.",
+     "Earth has the moon."
+    ]
+   },
+   "anchored": {
+    "a person's hair growing": [
+     "People study earth.",
+     "People change locations.",
+     "People are part of natural worlds.",
+     "People change diets."
+    ],
+    "a wooded area appearing on land that was once part of the ocean": [
+     "Land has many temperature changes.",
+     "Lands are part of earth.",
+     "Areas change over time.",
+     "Lands are located in earth."
+    ],
+    "a wooded area existing next to an ocean": [
+     "Areas change over time.",
+     "Oceans are located in earth.",
+     "Oceans have effects.",
+     "Oceans make up over two thirds of the Earth's surface."
+    ],
+    "the moon moving around the Earth": [
+     "Moon travels around the Earth.",
+     "Moon revolves as Earth spins.",
+     "Moon passes between the Earth and the Sun Moon's shadow cast on the Earth.",
+     "Moon takes just under a month to revolve around the Earth."
+    ]
+   },
+   "chain": {
+    "a person's hair growing": [
+     "People study earth.",
+     "People change the surface of the Earth by clear-cutting forests, which leads to flooding.",
+     "People change locations.",
+     "People change over time, so does their understanding of the world."
+    ],
+    "a wooded area appearing on land that was once part of the ocean": [
+     "Land has many temperature changes.",
+     "Temperature changes with time, as does the soil-water state.",
+     "Lands are part of earth.",
+     "Temperature increases with increasing depth into the Earth's crust ."
+    ],
+    "a wooded area existing next to an ocean": [
+     "Areas change over time.",
+     "Time is a measure of change.",
+     "Oceans are located in earth.",
+     "Time is measured by change."
+    ],
+    "the moon moving around the Earth": [
+     "Moon travels around the Earth.",
+     "Travels means direction of movement.",
+     "Moon revolves as Earth spins.",
+     "Travel is movement"
+    ]
+   }
+  },
+  {
+   "question": "Of the following household items, which is recyclable?",
+   "label": "d",
+   "retrieved": {
+    "cooking oil": [
+     "Many household products sold in plastic or glass containers are recyclable.",
+     "Recycled oil is used in making passenger car motor oils, diesel engine oils, and other products.",
+     "Some oil uses for meals.",
+     "Recycled oil is a valuable resource that can be burned as an industrial fuel or cleaned and reused."
+    ],
+    "banana peel": [
+     "Banana peels are peels.",
+     "Many household products sold in plastic or glass containers are recyclable.",
+     "Bananas have peels.",
+     "Banana peels are located in trash."
+    ],
+    "paint": [
+     "Paint is consumable products.",
+     "Some communities collect paint for recycling.",
+     "Many household products sold in plastic or glass containers are recyclable.",
+     "Paint is the largest component of the household hazardous waste stream."
+    ],
+    "soda can": [
+     "Many household products sold in plastic or glass containers are recyclable.",
+     "Recycling means reusing things.",
+     "Cans are used for soda.",
+     "Recycle bins are bins."
+    ]
+   },
+   "anchored": {
+    "cooking oil": [
+     "Oil includes petroleum fuel oil, sludge, oil refuse, vegetable oils, and oil mixed with wastes.",
+     "Oil is recycled for productive use.",
+     "Some oil uses for meals.",
+     "Oil is also a raw material in medicines, paints, plastics, fertilizer and pesticides."
+    ],
+    "banana peel": [
+     "Bananas provide materials.",
+     "Some peels are part of kiwi.",
+     "Banana peels are located in trash.",
+     "Some peels are part of baobabs."
+    ],
+    "paint": [
+     "Paint is consumable products.",
+     "Paint is the largest component of the household hazardous waste stream.",
+     "Paints used throughout the house reduce the evaporation of volatile organic compounds.",
+     "Many paints contain heavy metals such as cadmium, mercury, or lead."
+    ],
+    "soda can": [
+     "Soda contains carbon dioxide.",
+     "Sodas contain phosphorus.",
+     "Some soda contains oxide.",
+     "Some soda has nutrients."
+    ]
+   },
+   "chain": {
+    "cooking oil": [
+     "Oil includes petroleum fuel oil, sludge, oil refuse, vegetable oils, and oil mixed with wastes.",
+     "Petroleum is a product used as a solvent in many household cleaners among other products.",
+     "Oil is recycled for productive use.",
+     "Fuel is consumable products."
+    ],
+    "banana peel": [
+     "Bananas provide materials.",
+     "Materials use in products.",
+     "Some peels are part of kiwi.",
+     "Materials used in equipment can include plastics, glass, and metals."
+    ],
+    "paint": [
+     "Paint is consumable products.",
+     "Some hazardous waste is recycled into usable products.",
+     "Paint is the largest component of the household hazardous waste stream.",
+     "Waste contains products."
+    ],
+    "soda can": [
+     "Soda contains carbon dioxide.",
+     "Carbon dioxide is the waste product produced during strenuous activity such as mountain climbing.",
+     "Sodas contain phosphorus.",
+     "Carbon dioxide is an acidic, metabolic waste product in the form of a gas."
+    ]
+   }
+  },
+  {
+   "question": "Vaccines",
+   "label": "b",
+   "retrieved": {
+    "are only necessary for immuno-comprised people": [
+     "Vaccines are immunogen.",
+     "Some vaccines only protect against a specific subtype.",
+     "Vaccines contain antigen.",
+     "Some immunizations require only one dose of the vaccine."
+    ],
+    "help prevent outbreaks of once dormant diseases": [
+     "Vaccines can prevent outbreaks of disease and save lives.",
+     "Vaccination can prevent the onset of the disease.",
+     "Dormant bacteria contribute to the occurrence of seasonal epidemics.",
+     "Vaccines prevent diseases."
+    ],
+    "provide little protection against diseases": [
+     "Vaccines are one of few ways to prevent infectious disease outbreaks.",
+     "Most vaccines don t cause the diseases that are usually caused by viruses and bacteria.",
+     "Vaccines sometime appear to fail to protect from disease.",
+     "Vaccines prevent diseases."
+    ],
+    "are unimportant and under researched": [
+     "Influenza vaccine is underused in groups targeted for vaccination.",
+     "Vaccines reduce likelihood.",
+     "Mandatory vaccines violate the medical ethic of informed consent.",
+     "Vaccination interferes with diagnostic testing."
+    ]
+   },
+   "anchored": {
+    "are only necessary for immuno-comprised people": [
+     "People become immune after being vaccinated or after natural infection.",
+     "People develop immunity either as a result of becoming infected, or through vaccination.",
+     "Many people believe that the influenza vaccine can cause flu-like symptoms.",
+     "People are more at risk of getting meningitis if they have a viral infection already."
+    ],
+    "help prevent outbreaks of once dormant diseases": [
+     "Some diseases affect immune responses.",
+     "Diseases include measles.",
+     "Diseases are caused by influenza viruses.",
+     "Diseases are caused by several different viruses."
+    ],
+    "provide little protection against diseases": [
+     "Some diseases affect immune responses.",
+     "Protection comes in the form of antibodies.",
+     "Diseases include measles.",
+     "Diseases are caused by influenza viruses."
+    ],
+    "are unimportant and under researched": [
+     "Research has shown vaccine use reduces the amount of the virus and the length of viral shedding.",
+     "Research focuses on how antibodies kill viruses and the structure of various viral components.",
+     "Research shows that colds are caused by viruses.",
+     "Some research indicates it strengthens the immune system."
+    ]
+   },
+   "chain": {
+    "are only necessary for immuno-comprised people": [
+     "People become immune after being vaccinated or after natural infection.",
+     "Vaccination is a way of preventing diseases caused by viruses.",
+     "People develop immunity either as a result of becoming infected, or through vaccination.",
+     "Vaccination can prevent disease caused by influenza."
+    ],
+    "help prevent outbreaks of once dormant diseases": [
+     "Some diseases affect immune responses.",
+     "Some immune responses prevent diseases.",
+     "Diseases include measles.",
+     "Measles isa disease."
+    ],
+    "provide little protection against diseases": [
+     "Some diseases affect immune responses.",
+     "Antibodies provide immunity.",
+     "Protection comes in the form of antibodies.",
+     "Some immune responses prevent diseases."
+    ],
+    "are unimportant and under researched": [
+     "Research has shown vaccine use reduces the amount of the virus and the length of viral shedding.",
+     "Virus can still circulate after vaccination.",
+     "Research focuses on how antibodies kill viruses and the structure of various viral components.",
+     "Antibodies provide immunity."
+    ]
+   }
+  },
+  {
+   "question": "What do city-dwellers eat?",
+   "label": "d",
+   "retrieved": {
+    "dirt": [
+     "Dirt is where they live.",
+     "Most earthworms eat dirt.",
+     "Dirt is the stuff people track in houses.",
+     "Cities have food."
+    ],
+    "rocks": [
+     "Cities have eat establishments.",
+     "Cities have food.",
+     "Cities offer food.",
+     "Some dwellers eat plants."
+    ],
+    "Ohio State": [
+     "Cities have food.",
+     "Cities offer food.",
+     "Cities have eat establishments.",
+     "Mice eat a variety of foods, including fruits and vegetables."
+    ],
+    "crops": [
+     "Urban agriculture has many benefits for city dwellers.",
+     "Most mice eat crops.",
+     "Cities have food.",
+     "Mice eat crops."
+    ]
+   },
+   "anchored": {
+    "dirt": [
+     "Dirt is where they live.",
+     "Dirt is the stuff people track in houses.",
+     "Dirt is located in subways.",
+     "Dirt eating, or geophagy, goes back thousands of years."
+    ],
+    "rocks": [
+     "Rocks are the ultimate source of most nutrients in food chains.",
+     "Rocks also attract fish, try rocky shorelines.",
+     "Rocks make excellent habitat for crabs, mussels, and snails.",
+     "Rocks are natural substances."
+    ],
+    "Ohio State": [
+     "Most states produce their own milk, eggs, fruits, vegetables, and grains.",
+     "States are caused by intake.",
+     "Most states have mass.",
+     "Some states have hives."
+    ],
+    "crops": [
+     "Most crops provide food.",
+     "Crops provide food.",
+     "Crops provide basic food.",
+     "Crops consists of food groups used for life in general."
+    ]
+   },
+   "chain": {
+    "dirt": [
+     "Dirt is where they live.",
+     "People eat for a variety of reasons.",
+     "Dirt is the stuff people track in houses.",
+     "People like to eat foods that taste good."
+    ],
+    "rocks": [
+     "Rocks are the ultimate source of most nutrients in food chains.",
+     "Food is a big part of Kansas City's urban identity.",
+     "Rocks also attract fish, try rocky shorelines.",
+     "Food is chiefly rodents such as rats, mice and squirrels."
+    ],
+    "Ohio State": [
+     "Most states produce their own milk, eggs, fruits, vegetables, and grains.",
+     "Grain is on of the most common items that they eat.",
+     "States are caused by intake.",
+     "Intake comes from meals."
+    ],
+    "crops": [
+     "Most crops provide food.",
+     "Food is a big part of Kansas City's urban identity.",
+     "Crops provide food.",
+     "Food is chiefly rodents such as rats, mice and squirrels."
+    ]
+   }
+  },
+  {
+   "question": "What vitamins help heal bones?",
+   "label": "c",
+   "retrieved": {
+    "vitamin k": [
+     "Vitamin k consumption improves bone health.",
+     "Recent evidence suggests that vitamin K supplements can be helpful for preventing osteoporosis.",
+     "Vitamins help bone tissue.",
+     "Most vitamins help bone tissue."
+    ],
+    "vitamin c": [
+     "Vitamin C builds bones.",
+     "Vitamins help bone tissue.",
+     "Some experts believe vitamin C can help heal arthritis.",
+     "Vitamin C helps form the collagen that gives structure to bones, cartilage and muscles."
+    ],
+    "vitamin D meals": [
+     "Vitamin D protects against bone disease by helping deposit calcium into bones.",
+     "Vitamins help bone tissue.",
+     "Vitamin D works with calcium to increase bone strength and harden the bones.",
+     "Vitamin D helps the body absorb calcium and deposit it into bones."
+    ],
+    "human vitamins": [
+     "Vitamins help bone tissue.",
+     "Most vitamins help bone tissue.",
+     "Vitamins are essential to and assist in proper body functions and regeneration.",
+     "Vitamins play a significant role in promoting wound healing."
+    ]
+   },
+   "anchored": {
+    "vitamin k": [
+     "Vitamins help bone tissue.",
+     "Most vitamins help bone tissue.",
+     "Vitamins play a significant role in promoting wound healing.",
+     "Vitamins are essential to and assist in proper body functions and regeneration."
+    ],
+    "vitamin c": [
+     "Vitamin C builds bones.",
+     "Vitamin C helps form the collagen that gives structure to bones, cartilage and muscles.",
+     "Vitamin C helps form the collagen that gives structure to bones, cartilage, and muscles.",
+     "Vitamin C can help minerals crystallize in the urine."
+    ],
+    "vitamin D meals": [
+     "Vitamin D is another important nutrient in helping to prevent bone loss.",
+     "Vitamin D helps regulate bone rebuilding, blood calcium levels and the absorption of calcium.",
+     "Vitamin D works with calcium to increase bone strength and harden the bones.",
+     "Vitamin D is necessary for calcium metabolism and vitamin A aids in tissue growth and repair."
+    ],
+    "human vitamins": [
+     "Some humans use bones.",
+     "Humans can also make their own Vitamin D when skin is exposed to sunlight.",
+     "Some humans have bone structures.",
+     "Humans have bones."
+    ]
+   },
+   "chain": {
+    "vitamin k": [
+     "Vitamins help bone tissue.",
+     "Some bones provide important nutrients.",
+     "Most vitamins help bone tissue.",
+     "Bones do heal and regenerate under favorable conditions."
+    ],
+    "vitamin c": [
+     "Vitamin C builds bones.",
+     "Some collagen promotes bone growth.",
+     "Vitamin C helps form the collagen that gives structure to bones, cartilage and muscles.",
+     "Collagen crosslinks in metabolic bone disease."
+    ],
+    "vitamin D meals": [
+     "Vitamin D is another important nutrient in helping to prevent bone loss.",
+     "Calcium helps bones.",
+     "Vitamin D helps regulate bone rebuilding, blood calcium levels and the absorption of calcium.",
+     "Calcium supports bone growth and vitamin d boosts the calcium absorption."
+    ],
+    "human vitamins": [
+     "Some humans use bones.",
+     "Vitamin D is another important nutrient in helping to prevent bone loss.",
+     "Humans can also make their own Vitamin D when skin is exposed to sunlight.",
+     "Vitamin D helps regulate bone rebuilding, blood calcium levels and the absorption of calcium."
+    ]
+   }
+  },
+  {
+   "question": "The gravitational pull of the sun causes what phenomenon?",
+   "label": "a",
+   "retrieved": {
+    "planetary revolution": [
+     "Precession is caused by the constant pull of the sun and moon on the bulge of the Earth s equator.",
+     "Revolution refers motion about the sun.",
+     "Gravity attracts the planets to the sun.",
+     "Revolution is the earth s orbit around the sun."
+    ],
+    "creation of moons": [
+     "Gravitational pull is exerted by both the moon and the sun to the earth .",
+     "Tides are produced by the gravitational attraction of the sun and the moon upon the earth.",
+     "Precession is caused by the constant pull of the sun and moon on the bulge of the Earth s equator.",
+     "Tides are the result of gravitational influences of the moon, sun, and planets."
+    ],
+    "creation of rings": [
+     "Some gravity causes astronomical phenomena.",
+     "Precession is caused by the constant pull of the sun and moon on the bulge of the Earth s equator.",
+     "Gravitational pull is exerted by both the moon and the sun to the earth .",
+     "Some gravity causes phenomena."
+    ],
+    "planetary cooling": [
+     "Gravity attracts the planets to the sun.",
+     "Some gravity causes astronomical phenomena.",
+     "Gravitational pull is exerted by both the moon and the sun to the earth .",
+     "Precession is caused by the constant pull of the sun and moon on the bulge of the Earth s equator."
+    ]
+   },
+   "anchored": {
+    "planetary revolution": [
+     "Revolution is the earth s orbit around the sun.",
+     "Revolution refers motion about the sun.",
+     "Revolution is when the Earth orbits around the Sun , causing the year .",
+     "Revolution is the word describing earth's yearly orbit around the sun."
+    ],
+    "creation of moons": [
+     "Moon passes between the Sun and Earth occulting or blocking our view of the Sun.",
+     "Moon passes between the Earth and the Sun Moon's shadow cast on the Earth.",
+     "Moons are in orbit around planets, again due to the force of gravity.",
+     "Moons create gaps in the rings via their gravity."
+    ],
+    "creation of rings": [
+     "Creation refers to the fact that the scripture tells the story of creation.",
+     "Creation is the expression of motion.",
+     "Creation involves polarities and the emergence of form through their bisociation.",
+     "Creation is based on theological points of view and evolution is based on scientific theories."
+    ],
+    "planetary cooling": [
+     "Gravity attracts the planets to the sun.",
+     "Some gravity causes astronomical phenomena.",
+     "Gravitational pull is exerted by both the moon and the sun to the earth .",
+     "Precession is caused by the constant pull of the sun and moon on the bulge of the Earth s equator."
+    ]
+   },
+   "chain": {
+    "planetary revolution": [
+     "Revolution is the earth s orbit around the sun.",
+     "Earth revolves around the Sun because gravity keeps it in a roughly circular orbit around the Sun.",
+     "Revolution refers motion about the sun.",
+     "Earth orbits the Sun at a slant, which is why equinoxes and solstices happen."
+    ],
+    "creation of moons": [
+     "Moon passes between the Sun and Earth occulting or blocking our view of the Sun.",
+     "Earth revolves around the Sun because gravity keeps it in a roughly circular orbit around the Sun.",
+     "Moon passes between the Earth and the Sun Moon's shadow cast on the Earth.",
+     "Earth orbits the Sun at a slant, which is why equinoxes and solstices happen."
+    ],
+    "creation of rings": [
+     "Creation refers to the fact that the scripture tells the story of creation.",
+     "Some motion is caused by earth rotation.",
+     "Creation is the expression of motion.",
+     "Some motion is caused by rotation."
+    ],
+    "planetary cooling": [
+     "Gravity attracts the planets to the sun.",
+     "Some gravity causes astronomical phenomena.",
+     "Gravitational pull is exerted by both the moon and the sun to the earth .",
+     "Precession is caused by the constant pull of the sun and moon on the bulge of the Earth s equator."
+    ]
+   }
+  }
+ ]
+}

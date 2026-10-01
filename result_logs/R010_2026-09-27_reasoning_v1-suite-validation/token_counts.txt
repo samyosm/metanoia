@@ -1,0 +1,2 @@
+microworld_v1 trial (100 worlds, same settings): joint ModernBERT tokens median 481, p95 589, max 609.
+Unpadded revision-2 sizes (400 worlds): depth 1 median 8 sentences ... depth 8 median 29, max 45 -> pad_to_sentences = 46.

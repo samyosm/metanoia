@@ -1,0 +1,21 @@
+OBQA dev questions with a gold fact: 500
+  similarity >= 0.95: in the memory 0.094 | in the focused branches (8/cand) 0.028 | found when present 0.298
+  similarity >= 0.9: in the memory 0.486 | in the focused branches (8/cand) 0.238 | found when present 0.490
+  similarity >= 0.85: in the memory 0.906 | in the focused branches (8/cand) 0.550 | found when present 0.607
+  similarity >= 0.8: in the memory 0.990 | in the focused branches (8/cand) 0.790 | found when present 0.798
+median best similarity in memory 0.898 | in branches 0.857
+
+GOLD: deep sea animals live deep in the ocean
+  memory best (0.92): Some animals live in deep water.
+
+GOLD: An example of hunting is an otter cracking open clams with a rock
+  memory best (0.82): Sea otters use rocks to crush food like clams.
+
+GOLD: the amount of daylight is least on the winter solstice
+  memory best (0.90): Solstice marks the first day of winter, and it is the day with the least amount of daylight hours.
+
+GOLD: cold temperatures cause animals to shiver
+  memory best (0.92): Some animals shiver to produce heat.
+
+GOLD: as the number of eggs laid by an animal increases , the number of eggs that hatch will increase
+  memory best (0.89): Many animals hatch from eggs.

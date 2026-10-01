@@ -1,0 +1,7 @@
+# Realistic exclusive-choice reading comprehension (RACE all + SciQ), pinned revisions
+# in metanoia_research.data.mcqa. Pinned by suites/mcqa_v0.
+generator = "mcqa"
+dataset_id = "mcqa_v0"
+seed = 20260926
+sources = ["race", "sciq"]
+dev_fraction = 0.5

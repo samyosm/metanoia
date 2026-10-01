@@ -1,0 +1,140 @@
+{
+  "dataset_version": 1,
+  "dataset_id": "mix_v1",
+  "task": "exclusive_choice",
+  "generator": {
+    "revision": "mcqa/1",
+    "config": {
+      "generator": "mcqa",
+      "dataset_id": "mix_v1",
+      "seed": 20260926,
+      "sources": [
+        "race",
+        "sciq",
+        "arc_easy",
+        "arc_challenge",
+        "obqa",
+        "qasc",
+        "commonsenseqa",
+        "boolq",
+        "casehold",
+        "medmcqa"
+      ],
+      "dev_fraction": 0.5
+    },
+    "sources": {
+      "race": {
+        "repo": "ehovy/race",
+        "revision": "2fec9fd81f1dc971569a9b729c43f2f0e6436637",
+        "files": {
+          "train": "all/train-00000-of-00001.parquet",
+          "validation": "all/validation-00000-of-00001.parquet",
+          "test": "all/test-00000-of-00001.parquet"
+        }
+      },
+      "sciq": {
+        "repo": "allenai/sciq",
+        "revision": "2c94ad3e1aafab77146f384e23536f97a4849815",
+        "files": {
+          "train": "data/train-00000-of-00001.parquet",
+          "validation": "data/validation-00000-of-00001.parquet",
+          "test": "data/test-00000-of-00001.parquet"
+        }
+      },
+      "arc_easy": {
+        "repo": "allenai/ai2_arc",
+        "revision": "210d026faf9955653af8916fad021475a3f00453",
+        "files": {
+          "train": "ARC-Easy/train-00000-of-00001.parquet",
+          "validation": "ARC-Easy/validation-00000-of-00001.parquet",
+          "test": "ARC-Easy/test-00000-of-00001.parquet"
+        }
+      },
+      "arc_challenge": {
+        "repo": "allenai/ai2_arc",
+        "revision": "210d026faf9955653af8916fad021475a3f00453",
+        "files": {
+          "train": "ARC-Challenge/train-00000-of-00001.parquet",
+          "validation": "ARC-Challenge/validation-00000-of-00001.parquet",
+          "test": "ARC-Challenge/test-00000-of-00001.parquet"
+        }
+      },
+      "obqa": {
+        "repo": "allenai/openbookqa",
+        "revision": "388097ea7776314e93a529163e0fea805b8a6454",
+        "files": {
+          "train": "additional/train-00000-of-00001.parquet",
+          "validation": "additional/validation-00000-of-00001.parquet",
+          "test": "additional/test-00000-of-00001.parquet"
+        }
+      },
+      "qasc": {
+        "repo": "allenai/qasc",
+        "revision": "a34ba204eb9a33b919c10cc08f4f1c8dae5ec070",
+        "files": {
+          "train": "data/train-00000-of-00001.parquet",
+          "test": "data/validation-00000-of-00001.parquet"
+        }
+      },
+      "commonsenseqa": {
+        "repo": "tau/commonsense_qa",
+        "revision": "94630fe30dad47192a8546eb75f094926d47e155",
+        "files": {
+          "train": "data/train-00000-of-00001.parquet",
+          "test": "data/validation-00000-of-00001.parquet"
+        }
+      },
+      "boolq": {
+        "repo": "google/boolq",
+        "revision": "35b264d03638db9f4ce671b711558bf7ff0f80d5",
+        "files": {
+          "train": "data/train-00000-of-00001.parquet",
+          "test": "data/validation-00000-of-00001.parquet"
+        }
+      },
+      "casehold": {
+        "repo": "coastalcph/lex_glue",
+        "revision": "c23fdff1a6bf74e0e1a71cb86f1e781d37da888c",
+        "files": {
+          "train": "case_hold/train-00000-of-00001.parquet",
+          "validation": "case_hold/validation-00000-of-00001.parquet",
+          "test": "case_hold/test-00000-of-00001.parquet"
+        }
+      },
+      "medmcqa": {
+        "repo": "openlifescienceai/medmcqa",
+        "revision": "91c6572c454088bf71b679ad90aa8dffcd0d5868",
+        "files": {
+          "train": "data/train-00000-of-00001.parquet",
+          "test": "data/validation-00000-of-00001.parquet"
+        }
+      }
+    },
+    "skipped": {
+      "empty_option": 0,
+      "duplicate_option": 1021
+    }
+  },
+  "splits": {
+    "calibration": 9008,
+    "dev": 9073,
+    "test": 23118,
+    "train": 355114
+  },
+  "cases": {
+    "path": "cases.jsonl",
+    "sha256": "4ca9f0dd20ff457bab4bd9fc9dec04caadd9e20909eeff6ccc70b8f72fb8f7a8",
+    "rows": 396313
+  },
+  "labels": {
+    "path": "labels.parquet",
+    "sha256": "0279e83625f0140ec0bee90d0b441de0f013b54bd156b7b0f5633d99bf133565",
+    "rows": 396313
+  },
+  "proofs": {
+    "path": "proofs.jsonl",
+    "sha256": "8f82baff3c427a8f6713e30dfa8fb12c64e756cc8ace3ecf546b02dc35467abd",
+    "rows": 177380
+  },
+  "created_at": "2026-10-01T05:47:27+00:00"
+}

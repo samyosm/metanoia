@@ -1,0 +1,28 @@
+name = "ws_latent_reasoning_v1_warm20k"
+# Stage-3a workspace (mode latent) matched to the reference baseline
+# mbft640_joint_reasoning_v1_warm20k: same initialization (R005), data, schedule and
+# steps; rounds sampled from 1-4 per batch with deep supervision. ~2 h on an RTX 2060.
+model_config_path = "configs/models/ws_latent_640.toml"
+init_from = "artifacts/predictors/mbft_joint_mcqa_v0"
+dataset = "artifacts/datasets/microworld_v1_train20k"
+dev_dataset = "artifacts/datasets/microworld_v1"
+train_split = "train"
+dev_split = "dev"
+max_dev_examples = 400
+subset = "random"
+batch_size = 16
+micro_batch_size = 4
+learning_rate = 1e-4
+encoder_learning_rate = 2e-5
+weight_decay = 0.01
+warmup_fraction = 0.06
+schedule = "linear"
+precision = "fp16-mixed"
+grad_clip = 1.0
+seed = 0
+device = "cuda"
+log_every_steps = 50
+epochs = 1
+checkpoint_every_steps = 125
+train_rounds = [1, 4]
+eval_rounds = 4

@@ -1,0 +1,3 @@
+{"dev_logit_spread":1.254190362373689,"dev_loss":0.9876384153401941,"elapsed_seconds":275.4,"epoch":0,"grad_norm_encoder":20.274968346884084,"grad_norm_scorer":1.1545630091669006,"nonfinite_grad_steps":5,"step":521,"train_loss":1.0146312848906143}
+{"dev_logit_spread":2.346470403234313,"dev_loss":1.0574699029886634,"elapsed_seconds":560.1,"epoch":1,"grad_norm_encoder":21.160601830482484,"grad_norm_scorer":1.125361097751332,"nonfinite_grad_steps":1,"step":1042,"train_loss":0.5475936874679349}
+{"dev_logit_spread":7.452251981747778,"dev_loss":2.449131383304309,"elapsed_seconds":845.9,"epoch":2,"grad_norm_encoder":21.82206800030616,"grad_norm_scorer":0.8605146715859927,"nonfinite_grad_steps":0,"step":1563,"train_loss":0.16169258666962455}

@@ -1,0 +1,101 @@
+{
+  "selection_version": 1,
+  "selection_id": "select-9370acd3442a",
+  "split": "dev",
+  "budget_id": "r4",
+  "metric": "nll",
+  "rule": "min",
+  "labels_sha256": "ace50c606346bd9205c544859f75c9e2be112772d7f5cddf29761a5832e18a94",
+  "candidates": [
+    {
+      "run_id": "ws_statements_reasoning_v1_warm20k__dev-r4__final",
+      "predictor_id": "ws_statements_640@72808e8a2bb2",
+      "predictor_path": "artifacts/predictors/ws_statements_reasoning_v1_warm20k",
+      "predictions_sha256": "9aef74ade03396ee6247bafb18741070113a174ff50a32147c34d4cd51c06b3b",
+      "value": 1.8610980550618797e-06,
+      "n": 800
+    },
+    {
+      "run_id": "ws_statements_reasoning_v1_warm20k__dev-r4__step_0000125",
+      "predictor_id": "ws_statements_640@fea5a39bcadc",
+      "predictor_path": "artifacts/predictors/ws_statements_reasoning_v1_warm20k/checkpoints/step_0000125",
+      "predictions_sha256": "a3f1ea8f8b68d2065a92057b0178878c656ce4df335a2932fdf0ecbd901e6ffa",
+      "value": 1.3809094439634588,
+      "n": 800
+    },
+    {
+      "run_id": "ws_statements_reasoning_v1_warm20k__dev-r4__step_0000250",
+      "predictor_id": "ws_statements_640@36c3c7b6d08a",
+      "predictor_path": "artifacts/predictors/ws_statements_reasoning_v1_warm20k/checkpoints/step_0000250",
+      "predictions_sha256": "38f6341c1716abe1f0d7ef95667403e97ce4ab376f282f6eab20cfd3b49cd7ff",
+      "value": 0.2609939732326827,
+      "n": 800
+    },
+    {
+      "run_id": "ws_statements_reasoning_v1_warm20k__dev-r4__step_0000375",
+      "predictor_id": "ws_statements_640@261edc65b236",
+      "predictor_path": "artifacts/predictors/ws_statements_reasoning_v1_warm20k/checkpoints/step_0000375",
+      "predictions_sha256": "701811a7d4febd3553faf1c3c172b38829672a29ca528ff9ad5ea20618437ed0",
+      "value": 0.02372430721258911,
+      "n": 800
+    },
+    {
+      "run_id": "ws_statements_reasoning_v1_warm20k__dev-r4__step_0000500",
+      "predictor_id": "ws_statements_640@9f2d68209178",
+      "predictor_path": "artifacts/predictors/ws_statements_reasoning_v1_warm20k/checkpoints/step_0000500",
+      "predictions_sha256": "255965c8a329431b0597198bfd1f0eef5d6bbdc3667b9d621a64e2014ecbd829",
+      "value": 0.005758566020220976,
+      "n": 800
+    },
+    {
+      "run_id": "ws_statements_reasoning_v1_warm20k__dev-r4__step_0000625",
+      "predictor_id": "ws_statements_640@78586fea7a27",
+      "predictor_path": "artifacts/predictors/ws_statements_reasoning_v1_warm20k/checkpoints/step_0000625",
+      "predictions_sha256": "b743c3d0324a1bbb7f24e16c363b35fb767d9a3c5da762314e0cbc7594db993d",
+      "value": 0.0015393672954889367,
+      "n": 800
+    },
+    {
+      "run_id": "ws_statements_reasoning_v1_warm20k__dev-r4__step_0000750",
+      "predictor_id": "ws_statements_640@4b2836295cd1",
+      "predictor_path": "artifacts/predictors/ws_statements_reasoning_v1_warm20k/checkpoints/step_0000750",
+      "predictions_sha256": "2d394cbbe1056d183dd902ef78a26be40f9315de929d0a6b6700f1ce4b73c49b",
+      "value": 0.0031944500434482204,
+      "n": 800
+    },
+    {
+      "run_id": "ws_statements_reasoning_v1_warm20k__dev-r4__step_0000875",
+      "predictor_id": "ws_statements_640@dbcdfd169d56",
+      "predictor_path": "artifacts/predictors/ws_statements_reasoning_v1_warm20k/checkpoints/step_0000875",
+      "predictions_sha256": "0831b4d4891ec2f64937e0a0a7573618c1dc74d8ab9e8cd323b61ce675e1ccdf",
+      "value": 8.262022209413944e-07,
+      "n": 800
+    },
+    {
+      "run_id": "ws_statements_reasoning_v1_warm20k__dev-r4__step_0001000",
+      "predictor_id": "ws_statements_640@5259bb08c5e9",
+      "predictor_path": "artifacts/predictors/ws_statements_reasoning_v1_warm20k/checkpoints/step_0001000",
+      "predictions_sha256": "865e42adf56227f84e1938e8d5c4a9640e480f4f80263d3346519fe023e615de",
+      "value": 4.883250107021968e-07,
+      "n": 800
+    },
+    {
+      "run_id": "ws_statements_reasoning_v1_warm20k__dev-r4__step_0001125",
+      "predictor_id": "ws_statements_640@aead161cc6bf",
+      "predictor_path": "artifacts/predictors/ws_statements_reasoning_v1_warm20k/checkpoints/step_0001125",
+      "predictions_sha256": "a50bb8be95fb6462f6b5b759938e973af8b4956df8191aa7bcaa2fe9d68ae56b",
+      "value": 8.934465745906495e-07,
+      "n": 800
+    }
+  ],
+  "chosen": {
+    "run_id": "ws_statements_reasoning_v1_warm20k__dev-r4__step_0001000",
+    "predictor_id": "ws_statements_640@5259bb08c5e9",
+    "predictor_path": "artifacts/predictors/ws_statements_reasoning_v1_warm20k/checkpoints/step_0001000",
+    "predictions_sha256": "865e42adf56227f84e1938e8d5c4a9640e480f4f80263d3346519fe023e615de",
+    "value": 4.883250107021968e-07,
+    "n": 800
+  },
+  "analysis_revision": "metanoia_analysis-0.1.0",
+  "created_at": "2026-09-28T04:25:43+00:00"
+}

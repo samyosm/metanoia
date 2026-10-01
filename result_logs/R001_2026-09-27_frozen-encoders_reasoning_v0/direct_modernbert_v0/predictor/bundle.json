@@ -1,0 +1,109 @@
+{
+  "bundle_version": 1,
+  "predictor_id": "direct_modernbert@471b2717df4f",
+  "contract_version": 1,
+  "resolved_config": {
+    "model": {
+      "config_version": 1,
+      "name": "direct_modernbert",
+      "encoder": {
+        "kind": "hf",
+        "model": "answerdotai/ModernBERT-base",
+        "revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+        "max_length": 512,
+        "pooling": "mean",
+        "frozen": true
+      },
+      "scorer": {
+        "kind": "direct",
+        "latent_dim": 128,
+        "heads": 4,
+        "hidden_dim": 256,
+        "dropout": 0.1
+      }
+    },
+    "encoder_identity": {
+      "kind": "hf",
+      "model": "answerdotai/ModernBERT-base",
+      "requested_revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+      "resolved_revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+      "pooling": "mean",
+      "max_length": 512
+    },
+    "input_rendering": "question-context-observations/1"
+  },
+  "weights": {
+    "path": "weights.pt",
+    "sha256": "471b2717df4ff4f8da0bbfa51ec0d44b6287afd8a366ae69c5ca95eba3f0b6d1",
+    "rows": 0
+  },
+  "memory": null,
+  "training": {
+    "config": {
+      "config_version": 1,
+      "name": "direct_modernbert_v0",
+      "model_config_path": "configs/models/direct_modernbert.toml",
+      "dataset": "artifacts/datasets/microworld_v0",
+      "train_split": "train",
+      "dev_split": "dev",
+      "epochs": 15,
+      "batch_size": 32,
+      "learning_rate": 0.0003,
+      "weight_decay": 0.01,
+      "grad_clip": 1.0,
+      "seed": 0,
+      "device": "cuda",
+      "max_train_examples": null
+    },
+    "dataset_id": "microworld_v0",
+    "cases_sha256": "50f2158869fd7587bf8e9836b17e78096659e22b6d30367aefec78e4b8e3d534",
+    "labels_sha256": "251aabbf6b0f0fe05f6cc8e0ef8d4b6144c5ae9b520f3814da2bf0bd2f9c4482",
+    "train_examples": 1800,
+    "dev_examples": 300,
+    "parameters_total": 149458049,
+    "parameters_trainable": 443777,
+    "final_epoch": {
+      "epoch": 14,
+      "train_loss": 1.1304364078923275,
+      "dev_loss": 1.6088763538996378,
+      "grad_norm_encoder": 0.0,
+      "grad_norm_scorer": 3.075466327499925
+    }
+  },
+  "environment": {
+    "python": "3.12.13",
+    "implementation": "CPython",
+    "platform": "Linux-7.0.7-arch2-1-x86_64-with-glibc2.43",
+    "machine": "x86_64",
+    "packages": {
+      "metanoia": "0.1.0",
+      "pydantic": "2.13.5",
+      "torch": "2.11.0+cu128",
+      "transformers": "5.17.0",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "pyarrow": "25.0.1"
+    },
+    "accelerator": {
+      "requested_device": "cuda",
+      "torch_cuda": "12.8",
+      "cuda_available": true,
+      "cudnn_version": 91900,
+      "cudnn_deterministic": false,
+      "cudnn_benchmark": false,
+      "deterministic_algorithms": false,
+      "matmul_tf32": false,
+      "gpu_name": "NVIDIA GeForce RTX 2060",
+      "gpu_capability": "7.5",
+      "gpu_memory_bytes": 6017122304,
+      "driver_version": "595.71.05"
+    }
+  },
+  "source": {
+    "vcs": "git",
+    "commit": "d65d89c7c44e2ad553b5bcb9ecfdc55f10e342fb",
+    "dirty": true,
+    "diff_sha256": "a47dc25055f176e0646f3c4d5a232a3ba2685297cd66c7c381f011e26de2c1ac"
+  },
+  "created_at": "2026-09-27T03:39:59+00:00"
+}

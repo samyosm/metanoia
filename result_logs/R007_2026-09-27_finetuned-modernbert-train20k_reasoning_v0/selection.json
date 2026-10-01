@@ -1,0 +1,69 @@
+{
+  "selection_version": 1,
+  "selection_id": "select-2dd55bfaea28",
+  "split": "dev",
+  "budget_id": "b0",
+  "metric": "nll",
+  "rule": "min",
+  "labels_sha256": "251aabbf6b0f0fe05f6cc8e0ef8d4b6144c5ae9b520f3814da2bf0bd2f9c4482",
+  "candidates": [
+    {
+      "run_id": "mbft_joint_reasoning_train20k__dev__final",
+      "predictor_id": "direct_modernbert_ft_joint@9a5fa4bebe73",
+      "predictor_path": "artifacts/predictors/mbft_joint_reasoning_train20k",
+      "predictions_sha256": "328ba0fe71b1f369e2a4d41cfdd0a5532f630f9b60527042d78d1e95b35127e3",
+      "value": 1.3864061168319453,
+      "n": 300
+    },
+    {
+      "run_id": "mbft_joint_reasoning_train20k__dev__step_0000625",
+      "predictor_id": "direct_modernbert_ft_joint@f6fabf3d47be",
+      "predictor_path": "artifacts/predictors/mbft_joint_reasoning_train20k/checkpoints/step_0000625",
+      "predictions_sha256": "9b36882e71b097a5a96d6c7bdbe2e2bdc194213c4409578722e6f4b7ae167dde",
+      "value": 1.386269776227746,
+      "n": 300
+    },
+    {
+      "run_id": "mbft_joint_reasoning_train20k__dev__step_0001250",
+      "predictor_id": "direct_modernbert_ft_joint@db91875502d6",
+      "predictor_path": "artifacts/predictors/mbft_joint_reasoning_train20k/checkpoints/step_0001250",
+      "predictions_sha256": "6660d276a6c2bd69d57f4873093b80297ebb37acf01ffa4ae3cdf760b53822ad",
+      "value": 1.3862635500482694,
+      "n": 300
+    },
+    {
+      "run_id": "mbft_joint_reasoning_train20k__dev__step_0001875",
+      "predictor_id": "direct_modernbert_ft_joint@621d5f89b0bc",
+      "predictor_path": "artifacts/predictors/mbft_joint_reasoning_train20k/checkpoints/step_0001875",
+      "predictions_sha256": "02fb78d14117e255609005764bb1ea5218630d2982519752aaeffb9fc136787b",
+      "value": 1.3863058385561047,
+      "n": 300
+    },
+    {
+      "run_id": "mbft_joint_reasoning_train20k__dev__step_0002500",
+      "predictor_id": "direct_modernbert_ft_joint@ed5c3395c4db",
+      "predictor_path": "artifacts/predictors/mbft_joint_reasoning_train20k/checkpoints/step_0002500",
+      "predictions_sha256": "df1d8bb85d8101e8a98b1fa26433148ffa5b16ffd4af02b4df7d462f87d5a6ff",
+      "value": 1.3864900886670835,
+      "n": 300
+    },
+    {
+      "run_id": "mbft_joint_reasoning_train20k__dev__step_0003125",
+      "predictor_id": "direct_modernbert_ft_joint@105ca5406ccf",
+      "predictor_path": "artifacts/predictors/mbft_joint_reasoning_train20k/checkpoints/step_0003125",
+      "predictions_sha256": "76cbdf5c2f40370b05387e0f29aa9f311d9b150eeda05ecd8c2ddd5923067496",
+      "value": 1.3862473276821476,
+      "n": 300
+    }
+  ],
+  "chosen": {
+    "run_id": "mbft_joint_reasoning_train20k__dev__step_0003125",
+    "predictor_id": "direct_modernbert_ft_joint@105ca5406ccf",
+    "predictor_path": "artifacts/predictors/mbft_joint_reasoning_train20k/checkpoints/step_0003125",
+    "predictions_sha256": "76cbdf5c2f40370b05387e0f29aa9f311d9b150eeda05ecd8c2ddd5923067496",
+    "value": 1.3862473276821476,
+    "n": 300
+  },
+  "analysis_revision": "metanoia_analysis-0.1.0",
+  "created_at": "2026-09-27T19:10:42+00:00"
+}

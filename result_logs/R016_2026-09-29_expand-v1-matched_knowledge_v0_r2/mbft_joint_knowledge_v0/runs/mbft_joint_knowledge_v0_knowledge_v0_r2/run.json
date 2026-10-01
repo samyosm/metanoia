@@ -1,0 +1,200 @@
+{
+  "run_version": 1,
+  "run_id": "mbft_joint_knowledge_v0_knowledge_v0_r2",
+  "status": "complete",
+  "suite": {
+    "suite_id": "knowledge_v0",
+    "revision": 2,
+    "path": "suites/knowledge_v0_r2"
+  },
+  "protocol_sha256": "d000cfbd9ca1032e6f38e7375424214348a720a2109a7bfc6cad1391e0f23306",
+  "protocol": {
+    "suite_id": "knowledge_v0",
+    "revision": 2,
+    "task": "exclusive_choice",
+    "question": "Stage-2 testbed (decision 0010): science multiple choice without a passage (OpenBookQA,\nARC-Easy, ARC-Challenge). The direct model must rely on what it already knows; candidate\nexpansion over a concept memory should add evidence it lacks. The main endpoint is test\naccuracy and NLL per source, and (revision 2) their change with the expansion budget:\nthe total number of concepts the candidates may expand into (0, 8, 16, 32, 64, 128), at\ndepth 1 (decision 0011). A direct predictor answers identically at every budget.\n",
+    "analysis_specification": "analysis/specifications/knowledge_v0.toml",
+    "dataset": {
+      "dataset_id": "knowledge_v0",
+      "cases_sha256": "3fd83e1bb8027305b332401e6dce5b9693439591bb8f6bfc5142ee34a25d21b4",
+      "labels_sha256": "5bdce011265d6d5cc246c17c2a37fbfd0f91250163825e734c8385f599dc06cf"
+    },
+    "evaluation": {
+      "splits": [
+        "dev",
+        "calibration",
+        "test"
+      ],
+      "batch_size": 16,
+      "repeats": 1,
+      "base_seed": 0,
+      "trace": "off",
+      "failure_policy": "uniform",
+      "timing_scope": "decide_call"
+    },
+    "budgets": [
+      {
+        "id": "b0"
+      },
+      {
+        "id": "p8",
+        "budget": {
+          "max_depth": 1,
+          "max_queries": 8,
+          "max_proposals": 8,
+          "max_nodes": 8
+        }
+      },
+      {
+        "id": "p16",
+        "budget": {
+          "max_depth": 1,
+          "max_queries": 8,
+          "max_proposals": 16,
+          "max_nodes": 16
+        }
+      },
+      {
+        "id": "p32",
+        "budget": {
+          "max_depth": 1,
+          "max_queries": 8,
+          "max_proposals": 32,
+          "max_nodes": 32
+        }
+      },
+      {
+        "id": "p64",
+        "budget": {
+          "max_depth": 1,
+          "max_queries": 8,
+          "max_proposals": 64,
+          "max_nodes": 64
+        }
+      },
+      {
+        "id": "p128",
+        "budget": {
+          "max_depth": 1,
+          "max_queries": 8,
+          "max_proposals": 128,
+          "max_nodes": 128
+        }
+      }
+    ]
+  },
+  "dataset_id": "knowledge_v0",
+  "cases_sha256": "3fd83e1bb8027305b332401e6dce5b9693439591bb8f6bfc5142ee34a25d21b4",
+  "labels_sha256": "5bdce011265d6d5cc246c17c2a37fbfd0f91250163825e734c8385f599dc06cf",
+  "predictor": {
+    "predictor_id": "direct_modernbert_ft_joint@365477be31f5",
+    "kind": "torch_direct",
+    "model_config": {
+      "model": {
+        "config_version": 1,
+        "name": "direct_modernbert_ft_joint",
+        "encoder": {
+          "kind": "hf",
+          "model": "answerdotai/ModernBERT-base",
+          "revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+          "max_length": 384,
+          "pooling": "mean",
+          "frozen": false,
+          "gradient_checkpointing": true
+        },
+        "scorer": {
+          "kind": "direct",
+          "latent_dim": 256,
+          "heads": 4,
+          "hidden_dim": 512,
+          "dropout": 0.1,
+          "candidate_encoding": "joint"
+        },
+        "workspace": null,
+        "expansion": null
+      },
+      "encoder_identity": {
+        "kind": "hf",
+        "model": "answerdotai/ModernBERT-base",
+        "requested_revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+        "resolved_revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+        "pooling": "mean",
+        "max_length": 384,
+        "frozen": false
+      },
+      "input_rendering": "question-context-observations/1"
+    },
+    "encoder": {
+      "kind": "hf",
+      "model": "answerdotai/ModernBERT-base",
+      "requested_revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+      "resolved_revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+      "pooling": "mean",
+      "max_length": 384,
+      "frozen": false
+    },
+    "calibration": {
+      "status": "uncalibrated",
+      "calibrator_id": null,
+      "temperature": 1.0
+    },
+    "precision": "fp16",
+    "spec": {
+      "kind": "bundle",
+      "path": "artifacts/predictors/mbft_joint_knowledge_v0/checkpoints/step_0000521",
+      "calibration": null,
+      "device": "cuda",
+      "precision": "fp16"
+    }
+  },
+  "runner_revision": "runner/1+metanoia_research-0.1.0",
+  "environment": {
+    "python": "3.12.13",
+    "implementation": "CPython",
+    "platform": "Linux-7.0.7-arch2-1-x86_64-with-glibc2.43",
+    "machine": "x86_64",
+    "packages": {
+      "metanoia": "0.1.0",
+      "pydantic": "2.13.5",
+      "torch": "2.11.0+cu128",
+      "transformers": "5.17.0",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "pyarrow": "25.0.1"
+    },
+    "accelerator": {
+      "requested_device": "cuda",
+      "torch_cuda": "12.8",
+      "cuda_available": true,
+      "cudnn_version": 91900,
+      "cudnn_deterministic": false,
+      "cudnn_benchmark": false,
+      "deterministic_algorithms": false,
+      "matmul_tf32": false,
+      "gpu_name": "NVIDIA GeForce RTX 2060",
+      "gpu_capability": "7.5",
+      "gpu_memory_bytes": 6017122304,
+      "driver_version": "595.71.05"
+    }
+  },
+  "source": {
+    "vcs": "git",
+    "commit": "37b67512e8ba258f8171a21d18ce5b68e3f190ee",
+    "dirty": false,
+    "diff_sha256": null
+  },
+  "counts": {
+    "expected": 32484,
+    "attempted": 32484,
+    "completed": 32484,
+    "failed": 0
+  },
+  "predictions": {
+    "path": "predictions.parquet",
+    "sha256": "eee99b83111ef1acee755f4332412cd026bbabfc5c058fe9731610e856e9eecd",
+    "rows": 32484
+  },
+  "traces": null,
+  "started_at": "2026-09-28T21:16:32+00:00",
+  "finished_at": "2026-09-28T21:21:33+00:00"
+}

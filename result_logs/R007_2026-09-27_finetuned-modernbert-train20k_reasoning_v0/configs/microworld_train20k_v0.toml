@@ -1,0 +1,18 @@
+# Train-only micro-worlds for a data-scale study against suites/reasoning_v0. Same
+# generator settings as microworld_v0 except the seed and size; every world lands in
+# `train`, so depth 4 (held out in reasoning_v0 test) never appears here.
+generator = "microworld"
+dataset_id = "microworld_train20k_v0"
+seed = 20260927
+n_worlds = 4000
+examples_per_world = 5
+entities_per_world = 8
+predicates_per_world = 44
+n_candidates = 4
+depths = [1, 2, 3]
+heldout_depths = [4]
+heldout_depth_splits = ["test"]
+conjunction_probability = 0.3
+
+[splits]
+train = 1.0

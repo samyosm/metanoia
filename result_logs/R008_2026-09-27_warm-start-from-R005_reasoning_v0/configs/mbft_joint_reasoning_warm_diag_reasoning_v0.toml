@@ -1,0 +1,11 @@
+# E1 diagnostic (warm start from R005), final weights (single checkpoint).
+run_id = "mbft_joint_reasoning_warm_diag_reasoning_v0"
+suite = "suites/reasoning_v0"
+dataset = "artifacts/datasets/microworld_v0"
+output_root = "artifacts/runs"
+
+[predictor]
+kind = "bundle"
+path = "artifacts/predictors/mbft_joint_reasoning_warm_diag"
+device = "cuda"
+precision = "fp16"

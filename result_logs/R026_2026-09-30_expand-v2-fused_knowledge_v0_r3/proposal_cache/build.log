@@ -1,0 +1,31 @@
+Loading weights:   0%|          | 0/134 [00:00<?, ?it/s]Loading weights: 100%|██████████| 134/134 [00:00<00:00, 15328.97it/s]
+[transformers] [1mModernBertModel LOAD REPORT[0m from: answerdotai/ModernBERT-base
+Key               | Status     |  | 
+------------------+------------+--+-
+head.dense.weight | UNEXPECTED |  | 
+head.norm.weight  | UNEXPECTED |  | 
+decoder.bias      | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 13615.87it/s]
+Loading weights:   0%|          | 0/393 [00:00<?, ?it/s]Loading weights: 100%|██████████| 393/393 [00:00<00:00, 13373.80it/s]
+64/54563 pairs, 12 s
+3264/54563 pairs, 219 s
+6464/54563 pairs, 443 s
+9664/54563 pairs, 669 s
+12864/54563 pairs, 889 s
+16064/54563 pairs, 1106 s
+19264/54563 pairs, 1324 s
+22464/54563 pairs, 1552 s
+25664/54563 pairs, 1837 s
+28864/54563 pairs, 2151 s
+32064/54563 pairs, 2472 s
+35264/54563 pairs, 2783 s
+38464/54563 pairs, 3098 s
+41664/54563 pairs, 3419 s
+44864/54563 pairs, 3732 s
+48064/54563 pairs, 4073 s
+51264/54563 pairs, 4404 s
+54464/54563 pairs, 4754 s
+wrote artifacts/proposals/generics_v0_fused_knowledge_v0: 54563 orderings in 4763.9 s

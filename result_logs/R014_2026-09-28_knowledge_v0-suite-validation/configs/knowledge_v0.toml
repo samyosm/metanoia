@@ -1,0 +1,10 @@
+spec_id = "knowledge_v0"
+revision = 1
+splits = ["dev", "calibration", "test"]
+metrics = ["accuracy", "nll", "brier", "ece"]
+ece_bins = 15
+slice_by = ["source"]
+bootstrap_resamples = 1000
+bootstrap_seed = 0
+confidence = 0.95
+nll_floor = 1e-15

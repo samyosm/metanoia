@@ -1,0 +1,6 @@
+b54e93192b017333cd9ecdf420f32f9060fda074c32b2c0f17169553b6731fdd  ./analysis.json
+bf11f655406ac69fffbe1483b628f3dac54f02940a47335602ca44872ab975be  ./calibration.json
+881a4ba9dea091cba5c482d3e7e8fe61f23abc91563bf27f62c4cb1f574a48c3  ./compare_vs_R031.json
+2dfaf1c511ab35d120f78f3e302fffa8463059e5a67b3c1a9b54310360505205  ./run/predictions.parquet
+1946f4f4286485dba9b0dd29d4f72ed92ea99977b8b64c429cf1819bde06a35e  ./run/run.json
+7aaea53100b92ef361e915fff92f71f8fb22814fb6b35510792ab8ee2dad5b53  ./seq_sciq_quick_rot4_mcqa_v0_all.toml

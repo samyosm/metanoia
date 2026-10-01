@@ -1,0 +1,101 @@
+{
+  "selection_version": 1,
+  "selection_id": "select-e3c9b54d1554",
+  "split": "dev",
+  "budget_id": "r4",
+  "metric": "nll",
+  "rule": "min",
+  "labels_sha256": "ace50c606346bd9205c544859f75c9e2be112772d7f5cddf29761a5832e18a94",
+  "candidates": [
+    {
+      "run_id": "ws_latent_reasoning_v1_warm20k__dev-r4__final",
+      "predictor_id": "ws_latent_640@1a8013668375",
+      "predictor_path": "artifacts/predictors/ws_latent_reasoning_v1_warm20k",
+      "predictions_sha256": "b8d9d413e9fa3962a28d11a2f39039726d52a295f6b3b94ba09a6837d1d129d5",
+      "value": 0.0009544223734007211,
+      "n": 800
+    },
+    {
+      "run_id": "ws_latent_reasoning_v1_warm20k__dev-r4__step_0000125",
+      "predictor_id": "ws_latent_640@d85abfa13901",
+      "predictor_path": "artifacts/predictors/ws_latent_reasoning_v1_warm20k/checkpoints/step_0000125",
+      "predictions_sha256": "8b79542e7d7a70e747cdccbcf882aaa12fcdc2385de1bbdc15b7130f67c70c9f",
+      "value": 1.3860960922044512,
+      "n": 800
+    },
+    {
+      "run_id": "ws_latent_reasoning_v1_warm20k__dev-r4__step_0000250",
+      "predictor_id": "ws_latent_640@ee4ace2a21ac",
+      "predictor_path": "artifacts/predictors/ws_latent_reasoning_v1_warm20k/checkpoints/step_0000250",
+      "predictions_sha256": "01cd5c55b333a387fcaed063e3d33499e735ff02be2d74f1e71dc98fc0cfbe6a",
+      "value": 1.3863692177147322,
+      "n": 800
+    },
+    {
+      "run_id": "ws_latent_reasoning_v1_warm20k__dev-r4__step_0000375",
+      "predictor_id": "ws_latent_640@12fa64520f3e",
+      "predictor_path": "artifacts/predictors/ws_latent_reasoning_v1_warm20k/checkpoints/step_0000375",
+      "predictions_sha256": "af1bb85f1de358c1c2a63090ec7b22d612d0c5ea85c9704712e4f55b032976fb",
+      "value": 1.3846767795875325,
+      "n": 800
+    },
+    {
+      "run_id": "ws_latent_reasoning_v1_warm20k__dev-r4__step_0000500",
+      "predictor_id": "ws_latent_640@00f6e085c28b",
+      "predictor_path": "artifacts/predictors/ws_latent_reasoning_v1_warm20k/checkpoints/step_0000500",
+      "predictions_sha256": "26bf3c9de13c4959a4bd3b6f273a8ec459af587be2c6164345bcf118ec693886",
+      "value": 1.0510721472399016,
+      "n": 800
+    },
+    {
+      "run_id": "ws_latent_reasoning_v1_warm20k__dev-r4__step_0000625",
+      "predictor_id": "ws_latent_640@1b8ed48e59f2",
+      "predictor_path": "artifacts/predictors/ws_latent_reasoning_v1_warm20k/checkpoints/step_0000625",
+      "predictions_sha256": "3fef969a78f2ee628b86ab2da966b7d4c7aac6f45e2e7f864f47570948425d25",
+      "value": 0.11228959817282103,
+      "n": 800
+    },
+    {
+      "run_id": "ws_latent_reasoning_v1_warm20k__dev-r4__step_0000750",
+      "predictor_id": "ws_latent_640@ed4c4e6c6d86",
+      "predictor_path": "artifacts/predictors/ws_latent_reasoning_v1_warm20k/checkpoints/step_0000750",
+      "predictions_sha256": "a7642d9240eef64504c9550dcc391c2aadeefc6c0a5bfcd9a6c27b516833cf32",
+      "value": 0.02325984731722254,
+      "n": 800
+    },
+    {
+      "run_id": "ws_latent_reasoning_v1_warm20k__dev-r4__step_0000875",
+      "predictor_id": "ws_latent_640@111a449b5b7e",
+      "predictor_path": "artifacts/predictors/ws_latent_reasoning_v1_warm20k/checkpoints/step_0000875",
+      "predictions_sha256": "2b258aeb11ce701377e6f6a399661d9144831b6d001c51e51301e8a21577fb7a",
+      "value": 0.012564997319410486,
+      "n": 800
+    },
+    {
+      "run_id": "ws_latent_reasoning_v1_warm20k__dev-r4__step_0001000",
+      "predictor_id": "ws_latent_640@6668e32edeb6",
+      "predictor_path": "artifacts/predictors/ws_latent_reasoning_v1_warm20k/checkpoints/step_0001000",
+      "predictions_sha256": "62cfa6ffc4604e0f1e4aff101e334d40d46f45f9e8ae8b382d7503503095c5f1",
+      "value": 0.008200342103829129,
+      "n": 800
+    },
+    {
+      "run_id": "ws_latent_reasoning_v1_warm20k__dev-r4__step_0001125",
+      "predictor_id": "ws_latent_640@4851b53826b6",
+      "predictor_path": "artifacts/predictors/ws_latent_reasoning_v1_warm20k/checkpoints/step_0001125",
+      "predictions_sha256": "02e23edf7f77226c143fa55285aec296bef19ca147df38482498877908865f90",
+      "value": 0.0015049187203806358,
+      "n": 800
+    }
+  ],
+  "chosen": {
+    "run_id": "ws_latent_reasoning_v1_warm20k__dev-r4__final",
+    "predictor_id": "ws_latent_640@1a8013668375",
+    "predictor_path": "artifacts/predictors/ws_latent_reasoning_v1_warm20k",
+    "predictions_sha256": "b8d9d413e9fa3962a28d11a2f39039726d52a295f6b3b94ba09a6837d1d129d5",
+    "value": 0.0009544223734007211,
+    "n": 800
+  },
+  "analysis_revision": "metanoia_analysis-0.1.0",
+  "created_at": "2026-09-28T06:51:27+00:00"
+}

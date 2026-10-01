@@ -1,0 +1,30 @@
+# Stage-3a workspace (decision 0008), mode "statements", on the 640-token direct scorer.
+# Warm-starts from direct bundles: encoder and scorer load, the workspace starts fresh.
+name = "ws_statements_640"
+
+[encoder]
+kind = "hf"
+model = "answerdotai/ModernBERT-base"
+revision = "8949b909ec900327062f0ebf497f51aef5e6f0c8"
+max_length = 640
+pooling = "mean"
+frozen = false
+gradient_checkpointing = true
+
+[scorer]
+kind = "direct"
+latent_dim = 256
+heads = 4
+hidden_dim = 512
+dropout = 0.1
+candidate_encoding = "joint"
+
+[workspace]
+kind = "workspace"
+mode = "statements"
+dim = 256
+heads = 4
+hidden_dim = 512
+dropout = 0.0
+latent_slots = 16
+max_rounds = 32

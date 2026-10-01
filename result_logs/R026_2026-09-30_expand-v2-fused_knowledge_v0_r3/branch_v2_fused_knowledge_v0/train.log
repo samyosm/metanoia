@@ -1,0 +1,34 @@
+Loading weights:   0%|          | 0/134 [00:00<?, ?it/s]Loading weights: 100%|██████████| 134/134 [00:00<00:00, 13924.90it/s]
+[transformers] [1mModernBertModel LOAD REPORT[0m from: answerdotai/ModernBERT-base
+Key               | Status     |  | 
+------------------+------------+--+-
+decoder.bias      | UNEXPECTED |  | 
+head.norm.weight  | UNEXPECTED |  | 
+head.dense.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+{"epoch": 0, "step": 50, "of": 1042, "train_loss": 1.2855270111560821, "elapsed_seconds": 46.8}
+{"epoch": 0, "step": 100, "of": 1042, "train_loss": 1.0992567837238312, "elapsed_seconds": 89.1}
+{"epoch": 0, "step": 150, "of": 1042, "train_loss": 1.0044407254457475, "elapsed_seconds": 128.4}
+{"epoch": 0, "step": 200, "of": 1042, "train_loss": 0.9512073877453804, "elapsed_seconds": 167.5}
+{"epoch": 0, "step": 250, "of": 1042, "train_loss": 0.9778302237391472, "elapsed_seconds": 207.9}
+{"epoch": 0, "step": 300, "of": 1042, "train_loss": 0.9419236353039742, "elapsed_seconds": 246.1}
+{"epoch": 0, "step": 350, "of": 1042, "train_loss": 0.9018874400854111, "elapsed_seconds": 287.3}
+{"epoch": 0, "step": 400, "of": 1042, "train_loss": 0.8964470414817334, "elapsed_seconds": 328.9}
+{"epoch": 0, "step": 450, "of": 1042, "train_loss": 0.8868916025757789, "elapsed_seconds": 369.0}
+{"epoch": 0, "step": 500, "of": 1042, "train_loss": 0.8738111597299576, "elapsed_seconds": 410.1}
+{"epoch": 0, "step": 521, "train_loss": 0.9749891012960655, "dev_loss": 0.8637351430896529, "dev_logit_spread": 1.5967484952251714, "grad_norm_encoder": 14.142010865174594, "grad_norm_scorer": 1.1469394091852796, "nonfinite_grad_steps": 4, "elapsed_seconds": 440.3}
+checkpoint artifacts/predictors/branch_v2_fused_knowledge_v0.incomplete/checkpoints/step_0000521
+{"epoch": 1, "step": 550, "of": 1042, "train_loss": 0.5949333356372242, "elapsed_seconds": 464.8}
+{"epoch": 1, "step": 600, "of": 1042, "train_loss": 0.49996726911515, "elapsed_seconds": 504.8}
+{"epoch": 1, "step": 650, "of": 1042, "train_loss": 0.5078975985199213, "elapsed_seconds": 544.6}
+{"epoch": 1, "step": 700, "of": 1042, "train_loss": 0.5190850314963609, "elapsed_seconds": 583.1}
+{"epoch": 1, "step": 750, "of": 1042, "train_loss": 0.5274591038376093, "elapsed_seconds": 622.3}
+{"epoch": 1, "step": 800, "of": 1042, "train_loss": 0.5008309049531817, "elapsed_seconds": 660.5}
+{"epoch": 1, "step": 850, "of": 1042, "train_loss": 0.5490944678336382, "elapsed_seconds": 699.0}
+{"epoch": 1, "step": 900, "of": 1042, "train_loss": 0.6016777601093054, "elapsed_seconds": 738.1}
+{"epoch": 1, "step": 950, "of": 1042, "train_loss": 0.5038761703670025, "elapsed_seconds": 778.6}
+{"epoch": 1, "step": 1000, "of": 1042, "train_loss": 0.5653628055751324, "elapsed_seconds": 820.7}
+{"epoch": 1, "step": 1042, "train_loss": 0.5342252333076482, "dev_loss": 0.91020340865716, "dev_logit_spread": 2.3766961717908095, "grad_norm_encoder": 16.50012227257932, "grad_norm_scorer": 1.0844139056333881, "nonfinite_grad_steps": 0, "elapsed_seconds": 867.2}
+wrote artifacts/predictors/branch_v2_fused_knowledge_v0: branch_v2_fused@fa7602c3f76e

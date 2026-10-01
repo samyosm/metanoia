@@ -80,12 +80,23 @@ class HFEncoder(nn.Module):
             input_ids=input_ids, attention_mask=attention_mask, **kwargs
         ).last_hidden_state
 
+    def _resolved_revision(self) -> str | None:
+        """The checkpoint commit. Newer transformers releases may not record it on the
+        config; a full commit hash in ``revision`` is itself the resolved revision."""
+        recorded = getattr(self.model.config, "_commit_hash", None)
+        if recorded:
+            return str(recorded)
+        pinned = self.requested_revision
+        return (
+            pinned if len(pinned) == 40 and all(c in "0123456789abcdef" for c in pinned) else None
+        )
+
     def identity(self) -> dict[str, object]:
         identity: dict[str, object] = {
             "kind": "hf",
             "model": self.model_name,
             "requested_revision": self.requested_revision,
-            "resolved_revision": getattr(self.model.config, "_commit_hash", None),
+            "resolved_revision": self._resolved_revision(),
             "pooling": self.pooling,
             "max_length": self.max_length,
         }

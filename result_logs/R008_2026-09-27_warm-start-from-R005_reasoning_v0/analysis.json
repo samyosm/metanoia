@@ -1,0 +1,2525 @@
+{
+  "analysis_version": 1,
+  "analysis_id": "mbft_joint_reasoning_warm_diag_reasoning_v0__core_v0-r1__temperature-24bf559b1c52",
+  "kind": "analyze",
+  "inputs": {
+    "run_id": "mbft_joint_reasoning_warm_diag_reasoning_v0",
+    "run_predictions_sha256": "12377dfeee3ca1a717aff33e7a1a4efc3282108345ed8b398c6b41492aa4be51",
+    "predictor_id": "direct_modernbert_ft_joint@b5eb1b748344",
+    "suite": {
+      "suite_id": "reasoning_v0",
+      "revision": 1,
+      "path": "suites/reasoning_v0"
+    },
+    "protocol_sha256": "48a5cdedd3e893c2e8de5bf75cc647f8cd750207689a492e1f926a964d3b7cee",
+    "labels_sha256": "251aabbf6b0f0fe05f6cc8e0ef8d4b6144c5ae9b520f3814da2bf0bd2f9c4482",
+    "calibration": {
+      "calibration_version": 1,
+      "calibrator_id": "temperature-24bf559b1c52",
+      "method": "temperature",
+      "temperature": 0.7543692453263192,
+      "compatible_predictor_id": "direct_modernbert_ft_joint@b5eb1b748344",
+      "budget_id": "b0",
+      "budget": {
+        "max_nodes": 0,
+        "max_queries": 0,
+        "max_proposals": 0,
+        "max_pairs": 0,
+        "max_edges": 0,
+        "max_composites": 0,
+        "max_rounds": 0,
+        "max_depth": 0
+      },
+      "fitted_on": {
+        "run_id": "mbft_joint_reasoning_warm_diag_reasoning_v0",
+        "predictions_sha256": "12377dfeee3ca1a717aff33e7a1a4efc3282108345ed8b398c6b41492aa4be51",
+        "split": "calibration",
+        "n_examples": 300,
+        "nll_at_temperature_1": 0.0067455428438535905,
+        "nll_at_fitted_temperature": 0.006616804369135759,
+        "at_search_bound": false
+      },
+      "analysis_revision": "metanoia_analysis-0.1.0",
+      "created_at": "2026-09-27T19:26:26+00:00"
+    }
+  },
+  "specification": {
+    "spec_id": "core_v0",
+    "revision": 1,
+    "splits": [
+      "dev",
+      "calibration",
+      "test"
+    ],
+    "metrics": [
+      "accuracy",
+      "nll",
+      "brier",
+      "ece"
+    ],
+    "ece_bins": 15,
+    "slice_by": [
+      "depth",
+      "conjunctive"
+    ],
+    "bootstrap_resamples": 1000,
+    "bootstrap_seed": 0,
+    "confidence": 0.95,
+    "nll_floor": 1e-15
+  },
+  "analysis_revision": "metanoia_analysis-0.1.0",
+  "environment": {
+    "python": "3.12.13",
+    "implementation": "CPython",
+    "platform": "Linux-7.0.7-arch2-1-x86_64-with-glibc2.43",
+    "machine": "x86_64",
+    "packages": {
+      "metanoia": "0.1.0",
+      "pydantic": "2.13.5",
+      "torch": "2.11.0+cu128",
+      "transformers": "5.17.0",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "pyarrow": "25.0.1"
+    },
+    "accelerator": null
+  },
+  "counts": {
+    "dev": {
+      "attempted": 300,
+      "completed": 300,
+      "failed": 0
+    },
+    "calibration": {
+      "attempted": 300,
+      "completed": 300,
+      "failed": 0
+    },
+    "test": {
+      "attempted": 600,
+      "completed": 600,
+      "failed": 0
+    },
+    "run": {
+      "expected": 1200,
+      "attempted": 1200,
+      "completed": 1200,
+      "failed": 0
+    }
+  },
+  "metrics": [
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "accuracy",
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "n": 300
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "nll",
+      "value": 0.0015001643243515792,
+      "ci_low": 1.1945266207245551e-05,
+      "ci_high": 0.005475831332296009,
+      "n": 300
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "brier",
+      "value": 0.0007520699494205765,
+      "ci_low": 1.03741560500912e-08,
+      "ci_high": 0.0029862188389721553,
+      "n": 300
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "ece",
+      "value": 0.0012561622659728211,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 300
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=1",
+      "metric": "accuracy",
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "n": 113
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=1",
+      "metric": "nll",
+      "value": 2.9615430026794435e-06,
+      "ci_low": 9.560679853648989e-08,
+      "ci_high": 7.951782166623801e-06,
+      "n": 113
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=1",
+      "metric": "brier",
+      "value": 1.1595108413651883e-09,
+      "ci_low": 4.2646714702955274e-13,
+      "ci_high": 3.4414701200310997e-09,
+      "n": 113
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=1",
+      "metric": "ece",
+      "value": 2.9612530746403465e-06,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 113
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=2",
+      "metric": "accuracy",
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "n": 94
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=2",
+      "metric": "nll",
+      "value": 0.00013323612660556057,
+      "ci_low": 2.586068183531778e-06,
+      "ci_high": 0.0004193539057666821,
+      "n": 94
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=2",
+      "metric": "brier",
+      "value": 2.7831847861730132e-06,
+      "ci_low": 5.159091628755915e-10,
+      "ci_high": 9.33531704552259e-06,
+      "n": 94
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=2",
+      "metric": "ece",
+      "value": 0.00013253499285670323,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 94
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=3",
+      "metric": "accuracy",
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "n": 93
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=3",
+      "metric": "nll",
+      "value": 0.004700972548873637,
+      "ci_low": 1.2559044755951693e-05,
+      "ci_high": 0.016337024424069743,
+      "n": 93
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=3",
+      "metric": "brier",
+      "value": 0.0024232175745327695,
+      "ci_low": 3.805610417875884e-09,
+      "ci_high": 0.008797242342324067,
+      "n": 93
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=3",
+      "metric": "ece",
+      "value": 0.003914578159847642,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 93
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "conjunctive=False",
+      "metric": "accuracy",
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "n": 212
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "conjunctive=False",
+      "metric": "nll",
+      "value": 0.00014089087780473207,
+      "ci_low": 2.335303857710199e-06,
+      "ci_high": 0.00041046996092021883,
+      "n": 212
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "conjunctive=False",
+      "metric": "brier",
+      "value": 6.879072571492752e-06,
+      "ci_low": 6.922368196762682e-10,
+      "ci_high": 2.0899259889846447e-05,
+      "n": 212
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "conjunctive=False",
+      "metric": "ece",
+      "value": 0.00013913649744257128,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 212
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "conjunctive=True",
+      "metric": "accuracy",
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "n": 88
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "conjunctive=True",
+      "metric": "nll",
+      "value": 0.0047747776273962565,
+      "ci_low": 1.1497662408167677e-05,
+      "ci_high": 0.014392500850273913,
+      "n": 88
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "conjunctive=True",
+      "metric": "brier",
+      "value": 0.0025473025163751874,
+      "ci_low": 5.34294445247979e-09,
+      "ci_high": 0.007821679664692835,
+      "n": 88
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "conjunctive=True",
+      "metric": "ece",
+      "value": 0.003947178890159003,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 88
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "all",
+      "metric": "accuracy",
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "n": 300
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "all",
+      "metric": "nll",
+      "value": 0.0011647957662899431,
+      "ci_low": 8.470887680872148e-07,
+      "ci_high": 0.0045145111722734565,
+      "n": 300
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "all",
+      "metric": "brier",
+      "value": 0.000548599617799504,
+      "ci_low": 6.813527544607774e-11,
+      "ci_high": 0.002192304457323062,
+      "n": 300
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "all",
+      "metric": "ece",
+      "value": 0.0009941207431808149,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 300
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=1",
+      "metric": "accuracy",
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "n": 113
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=1",
+      "metric": "nll",
+      "value": 1.759248448071321e-07,
+      "ci_low": 1.2667655584010061e-09,
+      "ci_high": 4.918533089397886e-07,
+      "n": 113
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=1",
+      "metric": "brier",
+      "value": 4.939483155750083e-12,
+      "ci_low": 1.0536302487457142e-16,
+      "ci_high": 1.5029865964469894e-11,
+      "n": 113
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=1",
+      "metric": "ece",
+      "value": 1.7592361001295131e-07,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 113
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=2",
+      "metric": "accuracy",
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "n": 94
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=2",
+      "metric": "nll",
+      "value": 2.9540922024734647e-05,
+      "ci_low": 1.1690130662190127e-07,
+      "ci_high": 9.767506725138246e-05,
+      "n": 94
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=2",
+      "metric": "brier",
+      "value": 1.5464764734575256e-07,
+      "ci_low": 1.5935463606329741e-12,
+      "ci_high": 5.192614528588578e-07,
+      "n": 94
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=2",
+      "metric": "ece",
+      "value": 2.950219050712466e-05,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 94
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=3",
+      "metric": "accuracy",
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "n": 93
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=3",
+      "metric": "nll",
+      "value": 0.0037273333732171475,
+      "ci_low": 6.517112264171844e-07,
+      "ci_high": 0.013339371540484922,
+      "n": 93
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=3",
+      "metric": "brier",
+      "value": 0.0017695198699230008,
+      "ci_low": 1.553193588567203e-11,
+      "ci_high": 0.006450876960755156,
+      "n": 93
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=3",
+      "metric": "ece",
+      "value": 0.003176807932028598,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 93
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "conjunctive=False",
+      "metric": "accuracy",
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "n": 212
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "conjunctive=False",
+      "metric": "nll",
+      "value": 4.1344545323443414e-05,
+      "ci_low": 1.1676326247679163e-07,
+      "ci_high": 0.00012434990953134986,
+      "n": 212
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "conjunctive=False",
+      "metric": "brier",
+      "value": 6.893794965387382e-07,
+      "ci_low": 2.778621331466697e-12,
+      "ci_high": 2.0976001175177133e-06,
+      "n": 212
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "conjunctive=False",
+      "metric": "ece",
+      "value": 4.117118322521929e-05,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 212
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "conjunctive=True",
+      "metric": "accuracy",
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "n": 88
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "conjunctive=True",
+      "metric": "nll",
+      "value": 0.003871291889527419,
+      "ci_low": 6.939991494940496e-07,
+      "ci_high": 0.011883069152522747,
+      "n": 88
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "conjunctive=True",
+      "metric": "brier",
+      "value": 0.0018685651918930112,
+      "ci_low": 2.5391360301809337e-11,
+      "ci_high": 0.005737734750060575,
+      "n": 88
+    },
+    {
+      "split": "dev",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "conjunctive=True",
+      "metric": "ece",
+      "value": 0.003289862864891876,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 88
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "accuracy",
+      "value": 0.9933333333333333,
+      "ci_low": 0.9833333333333333,
+      "ci_high": 1.0,
+      "n": 300
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "nll",
+      "value": 0.006745542843853684,
+      "ci_low": 0.00012604685383299432,
+      "ci_high": 0.017546404862998292,
+      "n": 300
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "brier",
+      "value": 0.004237116503575376,
+      "ci_low": 1.9606294435975416e-06,
+      "ci_high": 0.011242470829223188,
+      "n": 300
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "ece",
+      "value": 0.0033119194582878803,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 300
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=1",
+      "metric": "accuracy",
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "n": 111
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=1",
+      "metric": "nll",
+      "value": 7.71792615495603e-06,
+      "ci_low": 3.1800743694873454e-07,
+      "ci_high": 2.353173441019599e-05,
+      "n": 111
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=1",
+      "metric": "brier",
+      "value": 8.540931944849913e-09,
+      "ci_low": 5.377595928777202e-12,
+      "ci_high": 3.0836046502978594e-08,
+      "n": 111
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=1",
+      "metric": "ece",
+      "value": 7.71578997893485e-06,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 111
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=2",
+      "metric": "accuracy",
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "n": 90
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=2",
+      "metric": "nll",
+      "value": 5.259452103003242e-07,
+      "ci_low": 8.521004120766251e-08,
+      "ci_high": 1.1707678508870611e-06,
+      "n": 90
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=2",
+      "metric": "brier",
+      "value": 1.703405580815072e-11,
+      "ci_low": 2.8715760839645457e-13,
+      "ci_high": 4.6034554500099304e-11,
+      "n": 90
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=2",
+      "metric": "ece",
+      "value": 5.25940951012771e-07,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 90
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=3",
+      "metric": "accuracy",
+      "value": 0.9797979797979798,
+      "ci_low": 0.9504950495049505,
+      "ci_high": 1.0,
+      "n": 99
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=3",
+      "metric": "nll",
+      "value": 0.020431907356403822,
+      "ci_low": 0.0003700700273616636,
+      "ci_high": 0.04982452108463475,
+      "n": 99
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=3",
+      "metric": "brier",
+      "value": 0.012839737388849517,
+      "ci_low": 6.786159488015388e-06,
+      "ci_high": 0.031112392559929643,
+      "n": 99
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=3",
+      "metric": "ece",
+      "value": 0.010026990405182538,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 99
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "conjunctive=False",
+      "metric": "accuracy",
+      "value": 0.9951690821256038,
+      "ci_low": 0.9849981155778894,
+      "ci_high": 1.0,
+      "n": 207
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "conjunctive=False",
+      "metric": "nll",
+      "value": 0.006046569100536392,
+      "ci_low": 6.156789898510988e-05,
+      "ci_high": 0.018290716983567785,
+      "n": 207
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "conjunctive=False",
+      "metric": "brier",
+      "value": 0.00339378311697842,
+      "ci_low": 2.9246853527612655e-07,
+      "ci_high": 0.010525647347049659,
+      "n": 207
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "conjunctive=False",
+      "metric": "ece",
+      "value": 0.0021748244918699533,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 207
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "conjunctive=True",
+      "metric": "accuracy",
+      "value": 0.989247311827957,
+      "ci_low": 0.9646953781512605,
+      "ci_high": 1.0,
+      "n": 93
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "conjunctive=True",
+      "metric": "nll",
+      "value": 0.008301323111237335,
+      "ci_low": 1.3394509412286783e-05,
+      "ci_high": 0.02701283307818956,
+      "n": 93
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "conjunctive=True",
+      "metric": "brier",
+      "value": 0.0061142133963234405,
+      "ci_low": 1.2058491412664164e-08,
+      "ci_high": 0.020072244359118765,
+      "n": 93
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "conjunctive=True",
+      "metric": "ece",
+      "value": 0.005842872770636965,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 93
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "all",
+      "metric": "accuracy",
+      "value": 0.9933333333333333,
+      "ci_low": 0.9833333333333333,
+      "ci_high": 1.0,
+      "n": 300
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "all",
+      "metric": "nll",
+      "value": 0.006616804369135978,
+      "ci_low": 2.1281228444296586e-05,
+      "ci_high": 0.017252140331672102,
+      "n": 300
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "all",
+      "metric": "brier",
+      "value": 0.0043730973755299225,
+      "ci_low": 7.332825916429418e-08,
+      "ci_high": 0.011574384304633504,
+      "n": 300
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "all",
+      "metric": "ece",
+      "value": 0.003326515650159395,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 300
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=1",
+      "metric": "accuracy",
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "n": 111
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=1",
+      "metric": "nll",
+      "value": 6.373730134587043e-07,
+      "ci_low": 6.201331939647259e-09,
+      "ci_high": 2.137069786222102e-06,
+      "n": 111
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=1",
+      "metric": "brier",
+      "value": 7.22003231208628e-11,
+      "ci_low": 3.9594745254357924e-15,
+      "ci_high": 2.650910769463889e-10,
+      "n": 111
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=1",
+      "metric": "ece",
+      "value": 6.373549625848796e-07,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 111
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=2",
+      "metric": "accuracy",
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "n": 90
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=2",
+      "metric": "nll",
+      "value": 1.3701070339075788e-08,
+      "ci_low": 1.065311697711402e-09,
+      "ci_high": 3.386573322065178e-08,
+      "n": 90
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=2",
+      "metric": "brier",
+      "value": 1.5218563017336976e-14,
+      "ci_low": 5.835939624632312e-17,
+      "ci_high": 4.395546939163855e-14,
+      "n": 90
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=2",
+      "metric": "ece",
+      "value": 1.3701066503557513e-08,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 90
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=3",
+      "metric": "accuracy",
+      "value": 0.9797979797979798,
+      "ci_low": 0.9504950495049505,
+      "ci_high": 1.0,
+      "n": 99
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=3",
+      "metric": "nll",
+      "value": 0.020050195244848173,
+      "ci_low": 7.176377785493031e-05,
+      "ci_high": 0.049439601600019346,
+      "n": 99
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=3",
+      "metric": "brier",
+      "value": 0.013251810147912836,
+      "ci_low": 2.4920315484971506e-07,
+      "ci_high": 0.0321759632469761,
+      "n": 99
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=3",
+      "metric": "ece",
+      "value": 0.010079623389404081,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 99
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "conjunctive=False",
+      "metric": "accuracy",
+      "value": 0.9951690821256038,
+      "ci_low": 0.9849981155778894,
+      "ci_high": 1.0,
+      "n": 207
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "conjunctive=False",
+      "metric": "nll",
+      "value": 0.005788395571854167,
+      "ci_low": 7.0391189220721815e-06,
+      "ci_high": 0.01787111308547904,
+      "n": 207
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "conjunctive=False",
+      "metric": "brier",
+      "value": 0.003479554933887086,
+      "ci_low": 5.146348145876315e-09,
+      "ci_high": 0.010804392041587247,
+      "n": 207
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "conjunctive=False",
+      "metric": "ece",
+      "value": 0.002184816372359438,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 207
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "conjunctive=True",
+      "metric": "accuracy",
+      "value": 0.989247311827957,
+      "ci_low": 0.9646953781512605,
+      "ci_high": 1.0,
+      "n": 93
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "conjunctive=True",
+      "metric": "nll",
+      "value": 0.008460682014698719,
+      "ci_low": 9.506277079216794e-07,
+      "ci_high": 0.027736464831770932,
+      "n": 93
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "conjunctive=True",
+      "metric": "brier",
+      "value": 0.006361949906928492,
+      "ci_low": 9.576513160408129e-11,
+      "ci_high": 0.020888270910853157,
+      "n": 93
+    },
+    {
+      "split": "calibration",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "conjunctive=True",
+      "metric": "ece",
+      "value": 0.005867717268488737,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 93
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "accuracy",
+      "value": 0.9416666666666667,
+      "ci_low": 0.9233333333333333,
+      "ci_high": 0.96,
+      "n": 600
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "nll",
+      "value": 0.2172227370811052,
+      "ci_low": 0.1390981834121478,
+      "ci_high": 0.30115165107102576,
+      "n": 600
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "brier",
+      "value": 0.09685163443947467,
+      "ci_low": 0.06822082685687868,
+      "ci_high": 0.1267960935615793,
+      "n": 600
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "all",
+      "metric": "ece",
+      "value": 0.04153682809140449,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 600
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=1",
+      "metric": "accuracy",
+      "value": 0.9935483870967742,
+      "ci_low": 0.9805194805194806,
+      "ci_high": 1.0,
+      "n": 155
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=1",
+      "metric": "nll",
+      "value": 0.013913549773384338,
+      "ci_low": 3.7095961334533755e-06,
+      "ci_high": 0.04197644810704328,
+      "n": 155
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=1",
+      "metric": "brier",
+      "value": 0.010084214952889385,
+      "ci_low": 8.568888738416781e-10,
+      "ci_high": 0.030449042412299617,
+      "n": 155
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=1",
+      "metric": "ece",
+      "value": 0.005716997408909736,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 155
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=2",
+      "metric": "accuracy",
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "n": 132
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=2",
+      "metric": "nll",
+      "value": 2.1539889156474197e-08,
+      "ci_low": 7.233698772963972e-09,
+      "ci_high": 3.8995230205315334e-08,
+      "n": 132
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=2",
+      "metric": "brier",
+      "value": 1.9583027066747734e-14,
+      "ci_low": 1.6723854157185182e-15,
+      "ci_high": 4.3130743917166494e-14,
+      "n": 132
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=2",
+      "metric": "ece",
+      "value": 2.1539884320631586e-08,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 132
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=3",
+      "metric": "accuracy",
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "n": 154
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=3",
+      "metric": "nll",
+      "value": 0.0019391779297437946,
+      "ci_low": 0.0004239155977519088,
+      "ci_high": 0.003864018093717052,
+      "n": 154
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=3",
+      "metric": "brier",
+      "value": 0.00025637829638647307,
+      "ci_low": 1.2398251240593714e-05,
+      "ci_high": 0.0006172849351086705,
+      "n": 154
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=3",
+      "metric": "ece",
+      "value": 0.0018704355305658137,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 154
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=4",
+      "metric": "accuracy",
+      "value": 0.7861635220125787,
+      "ci_low": 0.7211942405420666,
+      "ci_high": 0.8473079004329004,
+      "n": 159
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=4",
+      "metric": "nll",
+      "value": 0.8042667030776266,
+      "ci_low": 0.5242878465784876,
+      "ci_high": 1.1093187342505035,
+      "n": 159
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=4",
+      "metric": "brier",
+      "value": 0.35539902571283544,
+      "ci_low": 0.25573826447583337,
+      "ci_high": 0.4592482144511642,
+      "n": 159
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "depth=4",
+      "metric": "ece",
+      "value": 0.1530075664099505,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 159
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "conjunctive=False",
+      "metric": "accuracy",
+      "value": 0.9331742243436754,
+      "ci_low": 0.9095022147226324,
+      "ci_high": 0.9579238212282767,
+      "n": 419
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "conjunctive=False",
+      "metric": "nll",
+      "value": 0.27059823293279417,
+      "ci_low": 0.1592954383017692,
+      "ci_high": 0.3897122456406946,
+      "n": 419
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "conjunctive=False",
+      "metric": "brier",
+      "value": 0.11256038453959018,
+      "ci_low": 0.07235022801548509,
+      "ci_high": 0.15265330483620898,
+      "n": 419
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "conjunctive=False",
+      "metric": "ece",
+      "value": 0.05552660745755981,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 419
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "conjunctive=True",
+      "metric": "accuracy",
+      "value": 0.9613259668508287,
+      "ci_low": 0.9310298972853999,
+      "ci_high": 0.9842952388743456,
+      "n": 181
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "conjunctive=True",
+      "metric": "nll",
+      "value": 0.09366288756807942,
+      "ci_low": 0.043830346815798234,
+      "ci_high": 0.15619521816517595,
+      "n": 181
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "conjunctive=True",
+      "metric": "brier",
+      "value": 0.060487179787826056,
+      "ci_low": 0.02705376641053627,
+      "ci_high": 0.10229063222993967,
+      "n": 181
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "raw",
+      "slice": "conjunctive=True",
+      "metric": "ece",
+      "value": 0.0226788741667648,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 181
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "all",
+      "metric": "accuracy",
+      "value": 0.9416666666666667,
+      "ci_low": 0.9233333333333333,
+      "ci_high": 0.96,
+      "n": 600
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "all",
+      "metric": "nll",
+      "value": 0.27035484166912077,
+      "ci_low": 0.168405764420569,
+      "ci_high": 0.3801441990514429,
+      "n": 600
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "all",
+      "metric": "brier",
+      "value": 0.10147415663356857,
+      "ci_low": 0.07096735817270976,
+      "ci_high": 0.13406660916359298,
+      "n": 600
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "all",
+      "metric": "ece",
+      "value": 0.04281303132078564,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 600
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=1",
+      "metric": "accuracy",
+      "value": 0.9935483870967742,
+      "ci_low": 0.9805194805194806,
+      "ci_high": 1.0,
+      "n": 155
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=1",
+      "metric": "nll",
+      "value": 0.017795582839992705,
+      "ci_low": 1.8970603010872903e-07,
+      "ci_high": 0.05373061719944537,
+      "n": 155
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=1",
+      "metric": "brier",
+      "value": 0.011318753277538405,
+      "ci_low": 2.5786845445014185e-12,
+      "ci_high": 0.03417675464557831,
+      "n": 155
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=1",
+      "metric": "ece",
+      "value": 0.006041491101708596,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 155
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=2",
+      "metric": "accuracy",
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "n": 132
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=2",
+      "metric": "nll",
+      "value": 1.707264426767699e-10,
+      "ci_low": 3.6504091236641387e-11,
+      "ci_high": 3.330762956044983e-10,
+      "n": 132
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=2",
+      "metric": "brier",
+      "value": 1.7250217113392323e-18,
+      "ci_low": 5.983281356663352e-20,
+      "ci_high": 4.136231877570929e-18,
+      "n": 132
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=2",
+      "metric": "ece",
+      "value": 1.707264329908753e-10,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 132
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=3",
+      "metric": "accuracy",
+      "value": 1.0,
+      "ci_low": 1.0,
+      "ci_high": 1.0,
+      "n": 154
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=3",
+      "metric": "nll",
+      "value": 0.000795763248086218,
+      "ci_low": 9.32446184623836e-05,
+      "ci_high": 0.0017581226740022433,
+      "n": 154
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=3",
+      "metric": "brier",
+      "value": 6.166020181197843e-05,
+      "ci_low": 7.913254619323336e-07,
+      "ci_high": 0.00015664284135421652,
+      "n": 154
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=3",
+      "metric": "ece",
+      "value": 0.0007798180565082857,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 154
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=4",
+      "metric": "accuracy",
+      "value": 0.7861635220125787,
+      "ci_low": 0.7211942405420666,
+      "ci_high": 0.8473079004329004,
+      "n": 159
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=4",
+      "metric": "nll",
+      "value": 1.0020883150851094,
+      "ci_low": 0.6286184431794449,
+      "ci_high": 1.3992927356793754,
+      "n": 159
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=4",
+      "metric": "brier",
+      "value": 0.3718276198178846,
+      "ci_low": 0.2666445705258528,
+      "ci_high": 0.48465165884745426,
+      "n": 159
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "depth=4",
+      "metric": "ece",
+      "value": 0.15642440047135073,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 159
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "conjunctive=False",
+      "metric": "accuracy",
+      "value": 0.9331742243436754,
+      "ci_low": 0.9095022147226324,
+      "ci_high": 0.9579238212282767,
+      "n": 419
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "conjunctive=False",
+      "metric": "nll",
+      "value": 0.3406542394219043,
+      "ci_low": 0.19558088438119461,
+      "ci_high": 0.49576798132821254,
+      "n": 419
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "conjunctive=False",
+      "metric": "brier",
+      "value": 0.11777830573988687,
+      "ci_low": 0.07495332578162628,
+      "ci_high": 0.16043759052208437,
+      "n": 419
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "conjunctive=False",
+      "metric": "ece",
+      "value": 0.05203898920476669,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 419
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "conjunctive=True",
+      "metric": "accuracy",
+      "value": 0.9613259668508287,
+      "ci_low": 0.9310298972853999,
+      "ci_high": 0.9842952388743456,
+      "n": 181
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "conjunctive=True",
+      "metric": "nll",
+      "value": 0.10761756178836768,
+      "ci_low": 0.04430512826606307,
+      "ci_high": 0.18956857459819437,
+      "n": 181
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "conjunctive=True",
+      "metric": "brier",
+      "value": 0.06373140262501958,
+      "ci_low": 0.027223788867254427,
+      "ci_high": 0.10796076967523108,
+      "n": 181
+    },
+    {
+      "split": "test",
+      "budget_id": "b0",
+      "variant": "calibrated",
+      "slice": "conjunctive=True",
+      "metric": "ece",
+      "value": 0.02782153918402249,
+      "ci_low": null,
+      "ci_high": null,
+      "n": 181
+    }
+  ],
+  "tables": {
+    "reliability/dev/b0/raw": [
+      {
+        "bin": 0,
+        "low": 0.0,
+        "high": 0.06666666666666667,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 1,
+        "low": 0.06666666666666667,
+        "high": 0.13333333333333333,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 2,
+        "low": 0.13333333333333333,
+        "high": 0.2,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 3,
+        "low": 0.2,
+        "high": 0.26666666666666666,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 4,
+        "low": 0.26666666666666666,
+        "high": 0.3333333333333333,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 5,
+        "low": 0.3333333333333333,
+        "high": 0.4,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 6,
+        "low": 0.4,
+        "high": 0.4666666666666667,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 7,
+        "low": 0.4666666666666667,
+        "high": 0.5333333333333333,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 8,
+        "low": 0.5333333333333333,
+        "high": 0.6,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 9,
+        "low": 0.6,
+        "high": 0.6666666666666666,
+        "count": 1,
+        "mean_confidence": 0.6654082411296861,
+        "accuracy": 1.0
+      },
+      {
+        "bin": 10,
+        "low": 0.6666666666666666,
+        "high": 0.7333333333333333,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 11,
+        "low": 0.7333333333333333,
+        "high": 0.8,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 12,
+        "low": 0.8,
+        "high": 0.8666666666666667,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 13,
+        "low": 0.8666666666666667,
+        "high": 0.9333333333333333,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 14,
+        "low": 0.9333333333333333,
+        "high": 1.0,
+        "count": 299,
+        "mean_confidence": 0.9998586725052792,
+        "accuracy": 1.0
+      }
+    ],
+    "reliability/dev/b0/calibrated": [
+      {
+        "bin": 0,
+        "low": 0.0,
+        "high": 0.06666666666666667,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 1,
+        "low": 0.06666666666666667,
+        "high": 0.13333333333333333,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 2,
+        "low": 0.13333333333333333,
+        "high": 0.2,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 3,
+        "low": 0.2,
+        "high": 0.26666666666666666,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 4,
+        "low": 0.26666666666666666,
+        "high": 0.3333333333333333,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 5,
+        "low": 0.3333333333333333,
+        "high": 0.4,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 6,
+        "low": 0.4,
+        "high": 0.4666666666666667,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 7,
+        "low": 0.4666666666666667,
+        "high": 0.5333333333333333,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 8,
+        "low": 0.5333333333333333,
+        "high": 0.6,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 9,
+        "low": 0.6,
+        "high": 0.6666666666666666,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 10,
+        "low": 0.6666666666666666,
+        "high": 0.7333333333333333,
+        "count": 1,
+        "mean_confidence": 0.7132777993798648,
+        "accuracy": 1.0
+      },
+      {
+        "bin": 11,
+        "low": 0.7333333333333333,
+        "high": 0.8,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 12,
+        "low": 0.8,
+        "high": 0.8666666666666667,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 13,
+        "low": 0.8666666666666667,
+        "high": 0.9333333333333333,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 14,
+        "low": 0.9333333333333333,
+        "high": 1.0,
+        "count": 299,
+        "mean_confidence": 0.9999614915641,
+        "accuracy": 1.0
+      }
+    ],
+    "reliability/calibration/b0/raw": [
+      {
+        "bin": 0,
+        "low": 0.0,
+        "high": 0.06666666666666667,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 1,
+        "low": 0.06666666666666667,
+        "high": 0.13333333333333333,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 2,
+        "low": 0.13333333333333333,
+        "high": 0.2,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 3,
+        "low": 0.2,
+        "high": 0.26666666666666666,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 4,
+        "low": 0.26666666666666666,
+        "high": 0.3333333333333333,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 5,
+        "low": 0.3333333333333333,
+        "high": 0.4,
+        "count": 1,
+        "mean_confidence": 0.3978977100632365,
+        "accuracy": 0.0
+      },
+      {
+        "bin": 6,
+        "low": 0.4,
+        "high": 0.4666666666666667,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 7,
+        "low": 0.4666666666666667,
+        "high": 0.5333333333333333,
+        "count": 1,
+        "mean_confidence": 0.5331527571201353,
+        "accuracy": 0.0
+      },
+      {
+        "bin": 8,
+        "low": 0.5333333333333333,
+        "high": 0.6,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 9,
+        "low": 0.6,
+        "high": 0.6666666666666666,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 10,
+        "low": 0.6666666666666666,
+        "high": 0.7333333333333333,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 11,
+        "low": 0.7333333333333333,
+        "high": 0.8,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 12,
+        "low": 0.8,
+        "high": 0.8666666666666667,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 13,
+        "low": 0.8666666666666667,
+        "high": 0.9333333333333333,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 14,
+        "low": 0.9333333333333333,
+        "high": 1.0,
+        "count": 298,
+        "mean_confidence": 0.9997901833211309,
+        "accuracy": 1.0
+      }
+    ],
+    "reliability/calibration/b0/calibrated": [
+      {
+        "bin": 0,
+        "low": 0.0,
+        "high": 0.06666666666666667,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 1,
+        "low": 0.06666666666666667,
+        "high": 0.13333333333333333,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 2,
+        "low": 0.13333333333333333,
+        "high": 0.2,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 3,
+        "low": 0.2,
+        "high": 0.26666666666666666,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 4,
+        "low": 0.26666666666666666,
+        "high": 0.3333333333333333,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 5,
+        "low": 0.3333333333333333,
+        "high": 0.4,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 6,
+        "low": 0.4,
+        "high": 0.4666666666666667,
+        "count": 1,
+        "mean_confidence": 0.44083102228167026,
+        "accuracy": 0.0
+      },
+      {
+        "bin": 7,
+        "low": 0.4666666666666667,
+        "high": 0.5333333333333333,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 8,
+        "low": 0.5333333333333333,
+        "high": 0.6,
+        "count": 1,
+        "mean_confidence": 0.5439010487816375,
+        "accuracy": 0.0
+      },
+      {
+        "bin": 9,
+        "low": 0.6,
+        "high": 0.6666666666666666,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 10,
+        "low": 0.6666666666666666,
+        "high": 0.7333333333333333,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 11,
+        "low": 0.7333333333333333,
+        "high": 0.8,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 12,
+        "low": 0.8,
+        "high": 0.8666666666666667,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 13,
+        "low": 0.8666666666666667,
+        "high": 0.9333333333333333,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 14,
+        "low": 0.9333333333333333,
+        "high": 1.0,
+        "count": 298,
+        "mean_confidence": 0.9999556287785755,
+        "accuracy": 1.0
+      }
+    ],
+    "reliability/test/b0/raw": [
+      {
+        "bin": 0,
+        "low": 0.0,
+        "high": 0.06666666666666667,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 1,
+        "low": 0.06666666666666667,
+        "high": 0.13333333333333333,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 2,
+        "low": 0.13333333333333333,
+        "high": 0.2,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 3,
+        "low": 0.2,
+        "high": 0.26666666666666666,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 4,
+        "low": 0.26666666666666666,
+        "high": 0.3333333333333333,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 5,
+        "low": 0.3333333333333333,
+        "high": 0.4,
+        "count": 2,
+        "mean_confidence": 0.3791551815043702,
+        "accuracy": 0.5
+      },
+      {
+        "bin": 6,
+        "low": 0.4,
+        "high": 0.4666666666666667,
+        "count": 1,
+        "mean_confidence": 0.44344041139407686,
+        "accuracy": 1.0
+      },
+      {
+        "bin": 7,
+        "low": 0.4666666666666667,
+        "high": 0.5333333333333333,
+        "count": 4,
+        "mean_confidence": 0.5040961872980911,
+        "accuracy": 0.25
+      },
+      {
+        "bin": 8,
+        "low": 0.5333333333333333,
+        "high": 0.6,
+        "count": 3,
+        "mean_confidence": 0.5747423796921111,
+        "accuracy": 0.6666666666666666
+      },
+      {
+        "bin": 9,
+        "low": 0.6,
+        "high": 0.6666666666666666,
+        "count": 6,
+        "mean_confidence": 0.6412748049120983,
+        "accuracy": 0.8333333333333334
+      },
+      {
+        "bin": 10,
+        "low": 0.6666666666666666,
+        "high": 0.7333333333333333,
+        "count": 4,
+        "mean_confidence": 0.702749921671695,
+        "accuracy": 0.5
+      },
+      {
+        "bin": 11,
+        "low": 0.7333333333333333,
+        "high": 0.8,
+        "count": 7,
+        "mean_confidence": 0.7736362602424699,
+        "accuracy": 0.42857142857142855
+      },
+      {
+        "bin": 12,
+        "low": 0.8,
+        "high": 0.8666666666666667,
+        "count": 10,
+        "mean_confidence": 0.8285374578608369,
+        "accuracy": 0.7
+      },
+      {
+        "bin": 13,
+        "low": 0.8666666666666667,
+        "high": 0.9333333333333333,
+        "count": 19,
+        "mean_confidence": 0.9016235780695995,
+        "accuracy": 0.5789473684210527
+      },
+      {
+        "bin": 14,
+        "low": 0.9333333333333333,
+        "high": 1.0,
+        "count": 544,
+        "mean_confidence": 0.9982291595189103,
+        "accuracy": 0.9779411764705882
+      }
+    ],
+    "reliability/test/b0/calibrated": [
+      {
+        "bin": 0,
+        "low": 0.0,
+        "high": 0.06666666666666667,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 1,
+        "low": 0.06666666666666667,
+        "high": 0.13333333333333333,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 2,
+        "low": 0.13333333333333333,
+        "high": 0.2,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 3,
+        "low": 0.2,
+        "high": 0.26666666666666666,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 4,
+        "low": 0.26666666666666666,
+        "high": 0.3333333333333333,
+        "count": 0,
+        "mean_confidence": null,
+        "accuracy": null
+      },
+      {
+        "bin": 5,
+        "low": 0.3333333333333333,
+        "high": 0.4,
+        "count": 1,
+        "mean_confidence": 0.381945734400275,
+        "accuracy": 0.0
+      },
+      {
+        "bin": 6,
+        "low": 0.4,
+        "high": 0.4666666666666667,
+        "count": 1,
+        "mean_confidence": 0.44874812851544144,
+        "accuracy": 1.0
+      },
+      {
+        "bin": 7,
+        "low": 0.4666666666666667,
+        "high": 0.5333333333333333,
+        "count": 4,
+        "mean_confidence": 0.5055516112906399,
+        "accuracy": 0.5
+      },
+      {
+        "bin": 8,
+        "low": 0.5333333333333333,
+        "high": 0.6,
+        "count": 2,
+        "mean_confidence": 0.5840758811989674,
+        "accuracy": 0.5
+      },
+      {
+        "bin": 9,
+        "low": 0.6,
+        "high": 0.6666666666666666,
+        "count": 2,
+        "mean_confidence": 0.6084264574341836,
+        "accuracy": 0.5
+      },
+      {
+        "bin": 10,
+        "low": 0.6666666666666666,
+        "high": 0.7333333333333333,
+        "count": 5,
+        "mean_confidence": 0.6918857933214504,
+        "accuracy": 0.6
+      },
+      {
+        "bin": 11,
+        "low": 0.7333333333333333,
+        "high": 0.8,
+        "count": 5,
+        "mean_confidence": 0.772167384623892,
+        "accuracy": 0.8
+      },
+      {
+        "bin": 12,
+        "low": 0.8,
+        "high": 0.8666666666666667,
+        "count": 6,
+        "mean_confidence": 0.8438149888904354,
+        "accuracy": 0.5
+      },
+      {
+        "bin": 13,
+        "low": 0.8666666666666667,
+        "high": 0.9333333333333333,
+        "count": 11,
+        "mean_confidence": 0.8949706456110988,
+        "accuracy": 0.6363636363636364
+      },
+      {
+        "bin": 14,
+        "low": 0.9333333333333333,
+        "high": 1.0,
+        "count": 563,
+        "mean_confidence": 0.9979418312355333,
+        "accuracy": 0.9644760213143873
+      }
+    ]
+  },
+  "limitations": [
+    "ECE uses top-label confidence with equal-width bins; it depends on binning and sample size.",
+    "Intervals are percentile bootstraps over groups (worlds), not over individual examples.",
+    "Calibration quality is established only for the evaluated distribution and budgets.",
+    "Calibrated metrics apply temperature 0.7544 fitted on budget b0 only."
+  ],
+  "created_at": "2026-09-27T19:26:27+00:00"
+}

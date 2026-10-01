@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-REPO = Path(__file__).resolve().parents[2]
+REPO = Path(__file__).resolve().parents[1]
 CARDS = REPO / "model_cards.toml"
 FIELDS = {"predictor_id", "status", "summary", "headline", "good_at", "weak_at"}
 FIELDS |= {"different", "evidence"}
@@ -28,7 +28,7 @@ def test_cards_are_complete_and_cite_logged_results() -> None:
 
 
 def test_cards_match_local_bundles() -> None:
-    predictors = REPO / "metanoia" / "artifacts" / "predictors"
+    predictors = REPO / "artifacts" / "predictors"
     if not predictors.exists():
         pytest.skip("no local artifacts")
     for name, card in cards().items():

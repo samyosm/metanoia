@@ -1,0 +1,3 @@
+{"probe": "position_ids honoured", "attn_impl": "sdpa", "max_abs_diff_reset_vs_default": 38.288761138916016, "max_abs_diff_plain_vs_default_ids": 0.0}
+{"probe": "throughput", "config": "configs/models/seq_modernbert_base.toml", "batch": 8, "examples_per_s": 17.91, "peak_gb": 3.3, "last_loss": 1.412}
+{"probe": "throughput", "config": "configs/models/direct_modernbert_ft_joint.toml", "batch": 8, "examples_per_s": 5.89, "peak_gb": 3.47, "last_loss": 1.395}

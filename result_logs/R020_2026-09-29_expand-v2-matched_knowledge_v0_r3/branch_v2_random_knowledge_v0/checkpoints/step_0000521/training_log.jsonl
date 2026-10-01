@@ -1,0 +1,1 @@
+{"dev_logit_spread":1.0196283644135284,"dev_loss":1.0166429614662227,"elapsed_seconds":453.8,"epoch":0,"grad_norm_encoder":15.14963130194629,"grad_norm_scorer":1.184286910261165,"nonfinite_grad_steps":4,"step":521,"train_loss":1.0358383628663084}

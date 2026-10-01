@@ -1,0 +1,458 @@
+{
+ "memory": "wordnet_v0",
+ "memory_manifest_id": "wordnet_v0",
+ "results": {
+  "none": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.392,
+    "nll": 1.4857696828140845
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.4722222222222222,
+    "nll": 1.274148745098391
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.5947368421052631,
+    "nll": 0.970261866930111
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.3724832214765101,
+    "nll": 1.5003401937496426
+   }
+  },
+  "branch/empty": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.392,
+    "nll": 1.4857696828140845
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.4722222222222222,
+    "nll": 1.274148745098391
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.5947368421052631,
+    "nll": 0.970261866930111
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.3724832214765101,
+    "nll": 1.5003401937496426
+   }
+  },
+  "branch/retrieved/k1": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.374,
+    "nll": 1.8163466415589395
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.4619883040935672,
+    "nll": 1.4566294945897273
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.5842105263157895,
+    "nll": 1.072867442578406
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.37583892617449666,
+    "nll": 1.587118743454986
+   }
+  },
+  "shared/retrieved/k1": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.358,
+    "nll": 1.5877033609922369
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.45248538011695905,
+    "nll": 1.3173771382018582
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.5824561403508772,
+    "nll": 1.0017270030291383
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.3624161073825503,
+    "nll": 1.4675699759644794
+   }
+  },
+  "branch/retrieved/k2": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.368,
+    "nll": 1.842260238676532
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.44590643274853803,
+    "nll": 1.5296450792272205
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.543859649122807,
+    "nll": 1.2028368099124738
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.38926174496644295,
+    "nll": 1.6302260650820857
+   }
+  },
+  "shared/retrieved/k2": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.4,
+    "nll": 1.4907042419759295
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.4868421052631579,
+    "nll": 1.244225522354508
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.6105263157894737,
+    "nll": 0.9706052587807139
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.3959731543624161,
+    "nll": 1.354038241906024
+   }
+  },
+  "branch/random/k1": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.362,
+    "nll": 1.8120517444693185
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.3969298245614035,
+    "nll": 1.6065648455741735
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.45964912280701753,
+    "nll": 1.3440780351701729
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.33557046979865773,
+    "nll": 1.763860256589972
+   }
+  },
+  "shared/random/k1": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.402,
+    "nll": 1.3016788926643754
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.46710526315789475,
+    "nll": 1.2026550562854714
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.5649122807017544,
+    "nll": 1.0479580161444515
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.38926174496644295,
+    "nll": 1.3324047028993278
+   }
+  },
+  "branch/random/k2": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.33,
+    "nll": 1.9741266010460536
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.3516081871345029,
+    "nll": 1.7970785660023954
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.4017543859649123,
+    "nll": 1.5861153313865066
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.29194630872483224,
+    "nll": 1.903538385496447
+   }
+  },
+  "shared/random/k2": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.426,
+    "nll": 1.2696877705532956
+   },
+   "all": {
+    "n": 1368,
+    "accuracy": 0.47076023391812866,
+    "nll": 1.209125026238968
+   },
+   "arc_easy": {
+    "n": 570,
+    "accuracy": 0.5614035087719298,
+    "nll": 1.0910309915815033
+   },
+   "arc_challenge": {
+    "n": 298,
+    "accuracy": 0.3724832214765101,
+    "nll": 1.3333942463651118
+   }
+  }
+ },
+ "examples": [
+  {
+   "example_id": "knowledge_v0-obqa-validation-000000",
+   "question": "Frilled sharks and angler fish live far beneath the surface of the ocean, which is why they are known as",
+   "label": "a",
+   "branches": {
+    "a": [
+     "sand tiger: shallow-water shark with sharp jagged teeth found on both sides of Atlantic; sometimes dangerous to swimmers",
+     "groundfish: fish that live on the sea bottom (particularly the commercially important gadoid fish like cod and haddock, or flatfish like flounder)"
+    ],
+    "b": [
+     "groundfish: fish that live on the sea bottom (particularly the commercially important gadoid fish like cod and haddock, or flatfish like flounder)",
+     "whale shark: large spotted shark of warm surface waters worldwide; resembles a whale and feeds chiefly on plankton"
+    ],
+    "c": [
+     "whale shark: large spotted shark of warm surface waters worldwide; resembles a whale and feeds chiefly on plankton",
+     "needlefish: elongate European surface-dwelling predacious fishes with long toothed jaws; abundant in coastal waters"
+    ],
+    "d": [
+     "whale shark: large spotted shark of warm surface waters worldwide; resembles a whale and feeds chiefly on plankton",
+     "sand tiger: shallow-water shark with sharp jagged teeth found on both sides of Atlantic; sometimes dangerous to swimmers"
+    ]
+   }
+  },
+  {
+   "example_id": "knowledge_v0-obqa-validation-000006",
+   "question": "A person can grow cabbage in January with the help of what product?",
+   "label": "a",
+   "branches": {
+    "a": [
+     "savoy cabbage: cabbage plant with a compact head of crinkled leaves",
+     "chinese cabbage: plant with an elongated head of broad stalked leaves resembling celery; used as a vegetable in east Asia"
+    ],
+    "b": [
+     "cabbage: any of various types of cabbage",
+     "chinese cabbage: plant with an elongated head of broad stalked leaves resembling celery; used as a vegetable in east Asia"
+    ],
+    "c": [
+     "chinese cabbage: plant with an elongated head of broad stalked leaves resembling celery; used as a vegetable in east Asia",
+     "savoy cabbage: cabbage plant with a compact head of crinkled leaves"
+    ],
+    "d": [
+     "chinese cabbage: plant with an elongated head of broad stalked leaves resembling celery; used as a vegetable in east Asia",
+     "savoy cabbage: cabbage plant with a compact head of crinkled leaves"
+    ]
+   }
+  },
+  {
+   "example_id": "knowledge_v0-obqa-validation-000012",
+   "question": "An animal can hunt by cracking open a",
+   "label": "c",
+   "branches": {
+    "a": [
+     "claw: a bird's foot",
+     "bolt-hole: a hole through which an animal may bolt when pursued into its burrow or den"
+    ],
+    "b": [
+     "game: animal hunted for food or sport",
+     "canned hunt: a hunt for animals that have been raised on game ranches until they are mature enough to be killed for trophy collections"
+    ],
+    "c": [
+     "game: animal hunted for food or sport",
+     "hunting dog: a dog used in hunting game"
+    ],
+    "d": [
+     "bolt-hole: a hole through which an animal may bolt when pursued into its burrow or den",
+     "hunt: pursue for food or sport (as of wild animals)"
+    ]
+   }
+  },
+  {
+   "example_id": "knowledge_v0-obqa-validation-000018",
+   "question": "Tunnels",
+   "label": "a",
+   "branches": {
+    "a": [
+     "overburden: the surface soil that must be moved away to get at coal seams and mineral deposits",
+     "washout: the channel or break produced by erosion of relatively soft soil by water"
+    ],
+    "b": [
+     "hush: run water over the ground to erode (soil), revealing the underlying strata and valuable minerals",
+     "trench: a ditch dug as a fortification having a parapet of the excavated earth"
+    ],
+    "c": [
+     "elevated: raised above the ground",
+     "excavation: a hole in the ground made by excavating"
+    ],
+    "d": [
+     "soil conservation: protection of soil against erosion or deterioration",
+     "erosion: a gradual decline of something"
+    ]
+   }
+  },
+  {
+   "example_id": "knowledge_v0-obqa-validation-000024",
+   "question": "Winter solstice occurs on a day when",
+   "label": "d",
+   "branches": {
+    "a": [
+     "summer solstice: June 21, when the sun is at its northernmost point",
+     "solstice: either of the two times of the year when the sun is at its greatest distance from the celestial equator"
+    ],
+    "b": [
+     "winter solstice: December 22, when the sun is at its southernmost point",
+     "solstice: either of the two times of the year when the sun is at its greatest distance from the celestial equator"
+    ],
+    "c": [
+     "winter solstice: December 22, when the sun is at its southernmost point",
+     "solstice: either of the two times of the year when the sun is at its greatest distance from the celestial equator"
+    ],
+    "d": [
+     "solstice: either of the two times of the year when the sun is at its greatest distance from the celestial equator",
+     "winter solstice: December 22, when the sun is at its southernmost point"
+    ]
+   }
+  },
+  {
+   "example_id": "knowledge_v0-obqa-validation-000030",
+   "question": "The epidermis is part of",
+   "label": "a",
+   "branches": {
+    "a": [
+     "epidermis: the outer layer of the skin covering the exterior body surface of vertebrates",
+     "epithelium: membranous tissue covering internal organs and other internal surfaces of the body"
+    ],
+    "b": [
+     "epidermis: the outer layer of the skin covering the exterior body surface of vertebrates",
+     "external organ: an organ that is situated on or near the surface of the body"
+    ],
+    "c": [
+     "epidermis: the outer layer of the skin covering the exterior body surface of vertebrates",
+     "acantholysis: a breakdown of a cell layer in the epidermis (as in pemphigus)"
+    ],
+    "d": [
+     "epidermis: the outer layer of the skin covering the exterior body surface of vertebrates",
+     "epidermal cell: any of the cells making up the epidermis"
+    ]
+   }
+  },
+  {
+   "example_id": "knowledge_v0-obqa-validation-000036",
+   "question": "Where would animals shiver the most?",
+   "label": "a",
+   "branches": {
+    "a": [
+     "arctic archipelago: all the islands that lie to the north of mainland Canada and the Arctic Circle",
+     "arctic: the regions to the north of the Arctic Circle centered on the North Pole"
+    ],
+    "b": [
+     "sumatran: a native or inhabitant of Sumatra",
+     "sumatran: of or relating to the island of Sumatra or its inhabitants"
+    ],
+    "c": [
+     "shivery: cold enough to cause shivers",
+     "asiatic black bear: bear with a black coat living in central and eastern Asia"
+    ],
+    "d": [
+     "howler monkey: monkey of tropical South American forests having a loud howling cry",
+     "dugong: sirenian tusked mammal found from eastern Africa to Australia; the flat tail is bilobate"
+    ]
+   }
+  },
+  {
+   "example_id": "knowledge_v0-obqa-validation-000042",
+   "question": "Which would best store new whale offspring?",
+   "label": "b",
+   "branches": {
+    "a": [
+     "whale sucker: large blue Pacific remora that attaches to whales and dolphins",
+     "right whale: large Arctic whalebone whale; allegedly the `right' whale to hunt because of its valuable whalebone and oil"
+    ],
+    "b": [
+     "whale sucker: large blue Pacific remora that attaches to whales and dolphins",
+     "blue whale: largest mammal ever known; bluish-grey migratory whalebone whale mostly of southern hemisphere"
+    ],
+    "c": [
+     "whale sucker: large blue Pacific remora that attaches to whales and dolphins",
+     "kogia: pygmy sperm whales"
+    ],
+    "d": [
+     "spouter: a spouting whale",
+     "whale sucker: large blue Pacific remora that attaches to whales and dolphins"
+    ]
+   }
+  },
+  {
+   "example_id": "knowledge_v0-obqa-validation-000048",
+   "question": "A turtle may lay six eggs, and a sea turtle may lay a hundred eggs, and",
+   "label": "b",
+   "branches": {
+    "a": [
+     "sea turtle: any of various large turtles with limbs modified into flippers; widely distributed in warm seas",
+     "spawn: the mass of eggs deposited by fish or amphibians or molluscs"
+    ],
+    "b": [
+     "sea turtle: any of various large turtles with limbs modified into flippers; widely distributed in warm seas",
+     "spawn: the mass of eggs deposited by fish or amphibians or molluscs"
+    ],
+    "c": [
+     "sea turtle: any of various large turtles with limbs modified into flippers; widely distributed in warm seas",
+     "layer: a hen that lays eggs"
+    ],
+    "d": [
+     "sea turtle: any of various large turtles with limbs modified into flippers; widely distributed in warm seas",
+     "loggerhead: very large carnivorous sea turtle; wide-ranging in warm open seas"
+    ]
+   }
+  },
+  {
+   "example_id": "knowledge_v0-obqa-validation-000054",
+   "question": "Pumpkin pie spice comes from",
+   "label": "b",
+   "branches": {
+    "a": [
+     "pumpkin seed: the edible seed of a pumpkin",
+     "pumpkin pie: pie made of mashed pumpkin and milk and eggs and sugar"
+    ],
+    "b": [
+     "pie plant: long cultivated hybrid of Rheum palmatum; stems often cooked in pies or as sauce or preserves",
+     "clove: spice from dried unopened flower bud of the clove tree; used whole or ground"
+    ],
+    "c": [
+     "squash pie: similar to pumpkin pie but made with winter squash instead of pumpkin",
+     "burgoo: thick spicy stew of whatever meat and whatever vegetables are available; southern United States"
+    ],
+    "d": [
+     "pumpkin pie: pie made of mashed pumpkin and milk and eggs and sugar",
+     "squash pie: similar to pumpkin pie but made with winter squash instead of pumpkin"
+    ]
+   }
+  }
+ ]
+}

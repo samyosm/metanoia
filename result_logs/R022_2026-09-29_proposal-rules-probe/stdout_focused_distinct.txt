@@ -1,0 +1,9 @@
+candidates whose top-k retrieval mentions them: 0.6280387497715225
+retrieved/k2 {'obqa': (0.604, 0.96), 'all': (0.61, 0.969), 'arc_easy': (0.665, 0.859), 'arc_challenge': (0.517, 1.197)} {'pairwise_jaccard': 0.348, 'mentions_own_words': 0.444, 'obqa_novel_fact_recall': 0.253}
+retrieved/k8 {'obqa': (0.582, 0.977), 'all': (0.601, 0.966), 'arc_easy': (0.665, 0.835), 'arc_challenge': (0.51, 1.196)} {'pairwise_jaccard': 0.356, 'mentions_own_words': 0.641, 'obqa_novel_fact_recall': 0.479}
+focused/k2 {'obqa': (0.582, 1.002), 'all': (0.591, 0.991), 'arc_easy': (0.656, 0.864), 'arc_challenge': (0.483, 1.217)} {'pairwise_jaccard': 0.111, 'mentions_own_words': 0.852, 'obqa_novel_fact_recall': 0.28}
+focused/k8 {'obqa': (0.57, 1.016), 'all': (0.586, 0.98), 'arc_easy': (0.642, 0.846), 'arc_challenge': (0.507, 1.176)} {'pairwise_jaccard': 0.172, 'mentions_own_words': 0.852, 'obqa_novel_fact_recall': 0.491}
+distinct/k2 {'obqa': (0.58, 1.039), 'all': (0.58, 1.042), 'arc_easy': (0.633, 0.939), 'arc_challenge': (0.48, 1.241)} {'pairwise_jaccard': 0.007, 'mentions_own_words': 0.802, 'obqa_novel_fact_recall': 0.282}
+distinct/k8 {'obqa': (0.558, 1.048), 'all': (0.575, 1.029), 'arc_easy': (0.618, 0.929), 'arc_challenge': (0.52, 1.189)} {'pairwise_jaccard': 0.041, 'mentions_own_words': 0.835, 'obqa_novel_fact_recall': 0.517}
+
+[exited with code 0]

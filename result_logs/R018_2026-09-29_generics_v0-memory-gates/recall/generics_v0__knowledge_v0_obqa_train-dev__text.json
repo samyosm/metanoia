@@ -1,0 +1,61 @@
+{
+  "memory_id": "generics_v0",
+  "encoder": {
+    "model": "BAAI/bge-small-en-v1.5",
+    "requested_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+    "resolved_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+    "pooling": "cls",
+    "max_length": 128,
+    "query_prefix": "Represent this sentence for searching relevant passages: ",
+    "normalized": true
+  },
+  "dataset_id": "knowledge_v0",
+  "splits": [
+    "train",
+    "dev"
+  ],
+  "questions": 5202,
+  "questions_with_novel_fact_words": 5031,
+  "ks_per_candidate": [
+    4,
+    8,
+    16,
+    32
+  ],
+  "match": "text",
+  "recall": {
+    "all@4": {
+      "retrieved": 0.472034195246421,
+      "random": 0.08158850206139673
+    },
+    "all@8": {
+      "retrieved": 0.5550860941143517,
+      "random": 0.1471251782093775
+    },
+    "all@16": {
+      "retrieved": 0.6379664783932377,
+      "random": 0.24071331078251654
+    },
+    "all@32": {
+      "retrieved": 0.7164780011521672,
+      "random": 0.367705125836614
+    },
+    "novel@4": {
+      "retrieved": 0.3143823517854537,
+      "random": 0.08305068460107187
+    },
+    "novel@8": {
+      "retrieved": 0.41436211649389965,
+      "random": 0.1446204384188883
+    },
+    "novel@16": {
+      "retrieved": 0.5191424567393561,
+      "random": 0.24286607019165263
+    },
+    "novel@32": {
+      "retrieved": 0.622366070621885,
+      "random": 0.37793962425745364
+    }
+  },
+  "created_at": "2026-09-29T13:12:37+00:00"
+}

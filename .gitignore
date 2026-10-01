@@ -1,9 +1,11 @@
-# Bulk datasets, predictors, runs, calibrations, and analyses (see data/manifests for provenance).
+# Bulk data: datasets, trained models, runs, memories (see README for how to get them)
 artifacts/
+serving/
+logs/
 *.incomplete/
+.env
 .venv/
 __pycache__/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
-logs/

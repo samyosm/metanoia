@@ -1,0 +1,13 @@
+paired test differences, retrieved minus control (95% group bootstrap, 1000)
+  vs none   p8   obqa          acc -0.014 [-0.054, +0.028] n=500
+  vs none   p8   arc_easy      acc +0.063 [+0.043, +0.082] n=2375
+  vs none   p8   arc_challenge acc -0.030 [-0.060, -0.001] n=1171
+  vs none   p32  obqa          acc -0.008 [-0.052, +0.034] n=500
+  vs none   p32  arc_easy      acc +0.064 [+0.042, +0.085] n=2375
+  vs none   p32  arc_challenge acc -0.023 [-0.054, +0.008] n=1171
+  vs random p8   obqa          acc +0.026 [-0.020, +0.072] n=500
+  vs random p8   arc_easy      acc +0.081 [+0.062, +0.103] n=2375
+  vs random p8   arc_challenge acc -0.002 [-0.032, +0.028] n=1171
+  vs random p32  obqa          acc +0.036 [-0.014, +0.080] n=500
+  vs random p32  arc_easy      acc +0.084 [+0.062, +0.104] n=2375
+  vs random p32  arc_challenge acc +0.006 [-0.025, +0.037] n=1171

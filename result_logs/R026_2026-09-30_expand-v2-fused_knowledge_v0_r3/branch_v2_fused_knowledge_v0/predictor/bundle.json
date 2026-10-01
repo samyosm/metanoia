@@ -1,0 +1,193 @@
+{
+  "bundle_version": 1,
+  "predictor_id": "branch_v2_fused@fa7602c3f76e",
+  "contract_version": 1,
+  "resolved_config": {
+    "model": {
+      "config_version": 1,
+      "name": "branch_v2_fused",
+      "encoder": {
+        "kind": "hf",
+        "model": "answerdotai/ModernBERT-base",
+        "revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+        "max_length": 384,
+        "pooling": "mean",
+        "frozen": false,
+        "gradient_checkpointing": true
+      },
+      "scorer": {
+        "kind": "direct",
+        "latent_dim": 256,
+        "heads": 4,
+        "hidden_dim": 512,
+        "dropout": 0.1,
+        "candidate_encoding": "joint"
+      },
+      "workspace": null,
+      "expansion": null,
+      "branch": {
+        "kind": "branch",
+        "memory": "artifacts/memories/generics_v0",
+        "nodes": "retrieved",
+        "proposals": "fused",
+        "reranker": {
+          "model": "BAAI/bge-reranker-v2-m3",
+          "revision": "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e",
+          "max_length": 192
+        },
+        "proposal_cache": "artifacts/proposals/generics_v0_fused_knowledge_v0",
+        "train_widths": [
+          0,
+          1,
+          2,
+          4,
+          8
+        ],
+        "max_width": 8
+      }
+    },
+    "encoder_identity": {
+      "kind": "hf",
+      "model": "answerdotai/ModernBERT-base",
+      "requested_revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+      "resolved_revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+      "pooling": "mean",
+      "max_length": 384,
+      "frozen": false
+    },
+    "expansion_identity": {
+      "memory_id": "generics_v0",
+      "concepts_sha256": "75236aed99e05e698ebe4cc08ae6609a29d49262086931152038d63505ee4f9f",
+      "vectors_sha256": "bd78ee584d92f8cc926dca20b5a880bee03824b4b9b1664113aa857e9110b00b",
+      "retrieval_encoder": {
+        "model": "BAAI/bge-small-en-v1.5",
+        "requested_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+        "resolved_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+        "pooling": "cls",
+        "max_length": 128,
+        "query_prefix": "Represent this sentence for searching relevant passages: ",
+        "normalized": true
+      },
+      "proposals": {
+        "method": "fused",
+        "pool": 32,
+        "rrf_k": 60,
+        "memory_id": "generics_v0",
+        "vectors_sha256": "bd78ee584d92f8cc926dca20b5a880bee03824b4b9b1664113aa857e9110b00b",
+        "retrieval_encoder": {
+          "model": "BAAI/bge-small-en-v1.5",
+          "requested_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+          "resolved_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+          "pooling": "cls",
+          "max_length": 128,
+          "query_prefix": "Represent this sentence for searching relevant passages: ",
+          "normalized": true
+        },
+        "reranker": {
+          "model": "BAAI/bge-reranker-v2-m3",
+          "requested_revision": "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e",
+          "max_length": 192,
+          "query_format": "qa"
+        }
+      },
+      "proposal_cache": "f75035060d0f38ee214ee3862f0eac8047a3bbbf79c9b77d546097a5b5371f99"
+    },
+    "input_rendering": "question-context-observations/1"
+  },
+  "weights": {
+    "path": "weights.pt",
+    "sha256": "fa7602c3f76e55908e37ba9f3427aaa1fb271e839770cd35f11e67ad92ef1ee6",
+    "rows": 0
+  },
+  "memory": null,
+  "training": {
+    "config": {
+      "config_version": 1,
+      "name": "branch_v2_fused_knowledge_v0",
+      "model_config_path": "configs/models/branch_v2_fused.toml",
+      "dataset": "artifacts/datasets/knowledge_v0",
+      "dev_dataset": null,
+      "init_from": "artifacts/predictors/mbft_joint_mcqa_v0",
+      "train_split": "train",
+      "dev_split": "dev",
+      "epochs": 2,
+      "batch_size": 16,
+      "learning_rate": 0.0001,
+      "weight_decay": 0.01,
+      "grad_clip": 1.0,
+      "seed": 0,
+      "device": "cuda",
+      "max_train_examples": null,
+      "max_dev_examples": null,
+      "subset": "head",
+      "encoder_learning_rate": 2e-05,
+      "warmup_fraction": 0.06,
+      "schedule": "linear",
+      "precision": "fp16-mixed",
+      "micro_batch_size": 8,
+      "log_every_steps": 50,
+      "checkpoint_every_steps": null,
+      "checkpoint_each_epoch": true,
+      "train_rounds": null,
+      "eval_rounds": null
+    },
+    "dataset_id": "knowledge_v0",
+    "cases_sha256": "3fd83e1bb8027305b332401e6dce5b9693439591bb8f6bfc5142ee34a25d21b4",
+    "labels_sha256": "5bdce011265d6d5cc246c17c2a37fbfd0f91250163825e734c8385f599dc06cf",
+    "train_examples": 8322,
+    "dev_examples": 665,
+    "parameters_total": 150393345,
+    "parameters_trainable": 150393345,
+    "steps": 1042,
+    "final_epoch": {
+      "epoch": 1,
+      "step": 1042,
+      "train_loss": 0.5342252333076482,
+      "dev_loss": 0.91020340865716,
+      "dev_logit_spread": 2.3766961717908095,
+      "grad_norm_encoder": 16.50012227257932,
+      "grad_norm_scorer": 1.0844139056333881,
+      "nonfinite_grad_steps": 0,
+      "elapsed_seconds": 867.2
+    },
+    "wall_time_seconds": 867.2,
+    "train_examples_per_second": 19.19,
+    "initialized_from": "direct_modernbert_ft_joint@7345459d01da"
+  },
+  "environment": {
+    "python": "3.12.13",
+    "implementation": "CPython",
+    "platform": "Linux-7.0.7-arch2-1-x86_64-with-glibc2.43",
+    "machine": "x86_64",
+    "packages": {
+      "metanoia": "0.1.0",
+      "pydantic": "2.13.5",
+      "torch": "2.11.0+cu128",
+      "transformers": "5.17.0",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "pyarrow": "25.0.1"
+    },
+    "accelerator": {
+      "requested_device": "cuda",
+      "torch_cuda": "12.8",
+      "cuda_available": true,
+      "cudnn_version": 91900,
+      "cudnn_deterministic": false,
+      "cudnn_benchmark": false,
+      "deterministic_algorithms": false,
+      "matmul_tf32": false,
+      "gpu_name": "NVIDIA GeForce RTX 2060",
+      "gpu_capability": "7.5",
+      "gpu_memory_bytes": 6017122304,
+      "driver_version": "595.71.05"
+    }
+  },
+  "source": {
+    "vcs": "git",
+    "commit": "cc91ca589b54abf7f5c66850333dfe6545020ac5",
+    "dirty": false,
+    "diff_sha256": null
+  },
+  "created_at": "2026-09-29T21:57:26+00:00"
+}

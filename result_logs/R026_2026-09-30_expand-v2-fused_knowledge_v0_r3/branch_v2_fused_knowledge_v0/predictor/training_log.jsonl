@@ -1,0 +1,2 @@
+{"dev_logit_spread":1.5967484952251714,"dev_loss":0.8637351430896529,"elapsed_seconds":440.3,"epoch":0,"grad_norm_encoder":14.142010865174594,"grad_norm_scorer":1.1469394091852796,"nonfinite_grad_steps":4,"step":521,"train_loss":0.9749891012960655}
+{"dev_logit_spread":2.3766961717908095,"dev_loss":0.91020340865716,"elapsed_seconds":867.2,"epoch":1,"grad_norm_encoder":16.50012227257932,"grad_norm_scorer":1.0844139056333881,"nonfinite_grad_steps":0,"step":1042,"train_loss":0.5342252333076482}

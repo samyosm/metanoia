@@ -1,0 +1,74 @@
+{
+  "dataset_version": 1,
+  "dataset_id": "knowledge_v0",
+  "task": "exclusive_choice",
+  "generator": {
+    "revision": "mcqa/1",
+    "config": {
+      "generator": "mcqa",
+      "dataset_id": "knowledge_v0",
+      "seed": 20260928,
+      "sources": [
+        "obqa",
+        "arc_easy",
+        "arc_challenge"
+      ],
+      "dev_fraction": 0.5
+    },
+    "sources": {
+      "obqa": {
+        "repo": "allenai/openbookqa",
+        "revision": "388097ea7776314e93a529163e0fea805b8a6454",
+        "files": {
+          "train": "additional/train-00000-of-00001.parquet",
+          "validation": "additional/validation-00000-of-00001.parquet",
+          "test": "additional/test-00000-of-00001.parquet"
+        }
+      },
+      "arc_easy": {
+        "repo": "allenai/ai2_arc",
+        "revision": "210d026faf9955653af8916fad021475a3f00453",
+        "files": {
+          "train": "ARC-Easy/train-00000-of-00001.parquet",
+          "validation": "ARC-Easy/validation-00000-of-00001.parquet",
+          "test": "ARC-Easy/test-00000-of-00001.parquet"
+        }
+      },
+      "arc_challenge": {
+        "repo": "allenai/ai2_arc",
+        "revision": "210d026faf9955653af8916fad021475a3f00453",
+        "files": {
+          "train": "ARC-Challenge/train-00000-of-00001.parquet",
+          "validation": "ARC-Challenge/validation-00000-of-00001.parquet",
+          "test": "ARC-Challenge/test-00000-of-00001.parquet"
+        }
+      }
+    },
+    "skipped": {
+      "empty_option": 0,
+      "duplicate_option": 8
+    }
+  },
+  "splits": {
+    "calibration": 703,
+    "dev": 665,
+    "test": 4046,
+    "train": 8322
+  },
+  "cases": {
+    "path": "cases.jsonl",
+    "sha256": "3fd83e1bb8027305b332401e6dce5b9693439591bb8f6bfc5142ee34a25d21b4",
+    "rows": 13736
+  },
+  "labels": {
+    "path": "labels.parquet",
+    "sha256": "5bdce011265d6d5cc246c17c2a37fbfd0f91250163825e734c8385f599dc06cf",
+    "rows": 13736
+  },
+  "proofs": {
+    "path": "proofs.jsonl",
+    "sha256": "8c244a3a9a6895ff44b423af87f85b9fdc5d46c4d760cccf0a312c04fcf3c6e5",
+    "rows": 5954
+  },
+  "created_at": "2026-09-28T18:43:48+00:00"
+}

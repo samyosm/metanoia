@@ -1,0 +1,11 @@
+Test split, joint-input tokens (max over candidates), ModernBERT tokenizer; max_length 384.
+depth 1: tokens median 102 max 194 | >384: 0/155 | acc 0.994
+depth 2: tokens median 132 max 248 | >384: 0/132 | acc 1.000
+depth 3: tokens median 167 max 312 | >384: 0/154 | acc 1.000
+depth 4: tokens median 198 max 357 | >384: 0/159 | acc 0.786
+  depth 4 short: tokens 103-182 acc 0.830
+  depth 4 mid: tokens 184-231 acc 0.830
+  depth 4 long: tokens 232-357 acc 0.698
+mcqa_v0 dev by source (informal computation from predictions; official totals in mcqa_dev_score_*.json):
+  E1:   race acc 0.724 nll 0.764 n=2419 | sciq acc 0.938 nll 0.208 n=471
+  R005: race acc 0.749 nll 0.669 n=2419 | sciq acc 0.945 nll 0.159 n=471

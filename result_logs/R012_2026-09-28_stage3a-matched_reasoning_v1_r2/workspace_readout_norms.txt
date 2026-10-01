@@ -1,0 +1,4 @@
+||workspace.out.weight|| (zero at initialization), selected checkpoints:
+ws_statements (step 1000): 0.077, bias 0.0025
+ws_latent (final): 0.0682, bias -0.0015
+Direct-path dev logit spread at the end of training: 32.2 (direct), 24.9 (statements), 20.8 (latent).

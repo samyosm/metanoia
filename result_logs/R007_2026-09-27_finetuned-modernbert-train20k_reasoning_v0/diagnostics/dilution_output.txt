@@ -1,0 +1,6 @@
+mbft_joint_mcqa_v0
+  microworld: between-candidate spread / norm 0.0741 | mean cosine 0.99226 | logit std 1.3933
+  mcqa      : between-candidate spread / norm 0.1076 | mean cosine 0.98112 | logit std 2.0024
+mbft_joint_reasoning_train20k
+  microworld: between-candidate spread / norm 0.0207 | mean cosine 0.99912 | logit std 0.0010
+  mcqa      : between-candidate spread / norm 0.0692 | mean cosine 0.98727 | logit std 0.0057

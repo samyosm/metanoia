@@ -1,0 +1,520 @@
+{
+ "stats": {
+  "questions": 1368,
+  "g3_one_hop_nonempty": 0.8557850484372144,
+  "g3_two_hop_nonempty": 0.8972765490769512,
+  "mean_pool": 65.6477791994151,
+  "rerank_ms_per_pair_gpu": 2.2383718407569404,
+  "seconds": 1150
+ },
+ "reranker": "BAAI/bge-reranker-v2-m3",
+ "revision": "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e",
+ "examples": [
+  {
+   "question": "Frilled sharks and angler fish live far beneath the surface of the ocean, which is why they are known as",
+   "paths": {
+    "Deep sea animals": {
+     "one_hop": [
+      "Most angler fish live in deep sea.",
+      "Angler fish live in deep sea.",
+      "Deep sea angler fish have ability."
+     ],
+     "two_hop": [
+      [
+       "Some species of sharks live in coastal waters, but others dwell far out at sea.",
+       "Most species of sharks reside in saltwater which means they are found in the oceans."
+      ],
+      [
+       "Most sharks live in shallow sea.",
+       "Sharks live in shallow sea."
+      ]
+     ]
+    },
+    "fish": {
+     "one_hop": [],
+     "two_hop": []
+    },
+    "Long Sea Fish": {
+     "one_hop": [
+      "Most angler fish live in deep sea.",
+      "Angler fish live in deep sea.",
+      "Most angler fish live in sea."
+     ],
+     "two_hop": [
+      [
+       "Some species of sharks live in coastal waters, but others dwell far out at sea.",
+       "Most species of sharks reside in saltwater which means they are found in the oceans."
+      ],
+      [
+       "Ground sharks are found in open oceans, seas, estuaries, and brackish waters.",
+       "Ground sharks are found in open oceans , seas , estuaries , and brackish waters ."
+      ]
+     ]
+    },
+    "Far Sea Animals": {
+     "one_hop": [
+      "Most angler fish live in deep sea.",
+      "Angler fish live in deep sea.",
+      "Most angler fish live in sea."
+     ],
+     "two_hop": [
+      [
+       "Some species of sharks live in coastal waters, but others dwell far out at sea.",
+       "Most species of sharks reside in saltwater which means they are found in the oceans."
+      ],
+      [
+       "Ground sharks are found in open oceans, seas, estuaries, and brackish waters.",
+       "Ground sharks are found in open oceans , seas , estuaries , and brackish waters ."
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "question": "What boils at the boiling point?",
+   "paths": {
+    "Kool-Aid": {
+     "one_hop": [
+      "Auricular medicine uses medicine or homeopathics as an aid in diagnosing auricular points."
+     ],
+     "two_hop": [
+      [
+       "Peppermint oil can aid in oil secretion in skin, therefore preventing acne.",
+       "Boils can be the result of a physical condition such as diabetes, acne, or severe dermatitis."
+      ],
+      [
+       "Camphor is commonly mixed with other ingredients to aid in the relief of particular ailments.",
+       "Boils are common ailments, and usually minor ones."
+      ]
+     ]
+    },
+    "Cotton": {
+     "one_hop": [],
+     "two_hop": [
+      [
+       "Pythium is most damaging to cotton seedlings at low temperatures and high soil moisture content.",
+       "Liquids boil at very, very low temperatures."
+      ],
+      [
+       "Thrips feed on the tender plant foliage of cotton.",
+       "Boils are tender, swollen areas of infection that usually form around hair follicles."
+      ]
+     ]
+    },
+    "Paper towel": {
+     "one_hop": [
+      "Some people use cheap types of toilet paper and rub their bottoms raw to the point of bleeding.",
+      "Environmentalists point to hemp paper as a substitute for forest-consuming paper."
+     ],
+     "two_hop": [
+      [
+       "Towels soak in hot water.",
+       "Cold water requires more energy to boil than hot water."
+      ],
+      [
+       "Hydrocarbons are in the ink and paper is bleached white with chlorine.",
+       "Gasoline is a mixture of liquid hydrocarbons that have a variety of boiling points."
+      ]
+     ]
+    },
+    "Hair": {
+     "one_hop": [
+      "Boils are infections of hair follicles by certain bacteria.",
+      "Boils usually form around a hair follicle and are a painful, red bump with a white or yellow center.",
+      "Boils are tender, swollen areas of infection that usually form around hair follicles."
+     ],
+     "two_hop": [
+      [
+       "Boils are infections of hair follicles by certain bacteria.",
+       "Boils usually form around a hair follicle and are a painful, red bump with a white or yellow center."
+      ],
+      [
+       "Boils are infections of hair follicles by certain bacteria.",
+       "Boils usually form around a hair follicle and are a painful, red bump with a white or yellow center."
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "question": "Plant growth may be positively affected by",
+   "paths": {
+    "extra rainfall": {
+     "one_hop": [
+      "Extra nutrients cause plant growth.",
+      "Most extra nutrients cause plant growth.",
+      "Recent rainfall stimulates plant growth."
+     ],
+     "two_hop": [
+      [
+       "Normal rainfall leads to plant growth.",
+       "Most normal rainfall leads to plant growth."
+      ],
+      [
+       "Extra nutrients cause plant growth.",
+       "Most extra nutrients cause plant growth."
+      ]
+     ]
+    },
+    "freezing temperatures": {
+     "one_hop": [
+      "Plant growth begins whenever air and soil temperature are above freezing most of the time.",
+      "Temperature affects plant growth.",
+      "Plant growth is affected by light, temperature, humidity, water, nutrition, and soil."
+     ],
+     "two_hop": [
+      [
+       "Some plant species have a lower tolerance to cold temperature than others.",
+       "Many plant species depend on the effects of fire for growth and reproduction."
+      ],
+      [
+       "Temperature affects physiological processes in plants.",
+       "Water stress affects most of the physiological processes involved in plant growth."
+      ]
+     ]
+    },
+    "increase in pests": {
+     "one_hop": [
+      "Compaction can influence plant nutrition, pest problems and control as well as plant growth.",
+      "Plant growth means irreversible increase in size that results from cell division and enlargement.",
+      "Pest root nematodes feed in roots and can stunt plant growth."
+     ],
+     "two_hop": [
+      [
+       "Stressed plants are more susceptible to insects and pests.",
+       "Plants growing under adequate soil moisture are more sensitive than drought-stressed plants."
+      ],
+      [
+       "Great plant habits with vigorous growth and fast increase.",
+       "Most plants make vigorous growth."
+      ]
+     ]
+    },
+    "long droughts": {
+     "one_hop": [
+      "Drought causes plants to shut down their growth process.",
+      "Plants withstand long periods of drought, as they produce little growth in dry weather.",
+      "Drought stress affects nut size and filling, as well as leaf and shoot growth."
+     ],
+     "two_hop": [
+      [
+       "Drought increases nitrate concentration in plants.",
+       "Nitrate concentration is highest in young plants and decreases as the plant matures."
+      ],
+      [
+       "Some hardy plants tolerate drought.",
+       "Most hardy plants grow in environments."
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "question": "Layers of the earth include all but",
+   "paths": {
+    "mantle": {
+     "one_hop": [
+      "Earth has three main layers, crust, mantle, and a core.",
+      "Earth s interior layer, composed of both solid and putty-like rock is called the mantle .",
+      "Mantles are layers."
+     ],
+     "two_hop": [
+      [
+       "Convection carries heat from the mantle to the bottom of the lithosphere.",
+       "All lithosphere is composed of two layers of differing composition."
+      ],
+      [
+       "Chemical stratification occurs between the crust, mantle, and core.",
+       "Sedimentary rocks form layers or stratifications."
+      ]
+     ]
+    },
+    "center": {
+     "one_hop": [
+      "Centers are surrounded by layers.",
+      "Laminated glass is fabricated with a thin layer of plastic embedded near the center of the glass.",
+      "Outer layers stay cooler than the center and cause uneven kill of disease organisms."
+     ],
+     "two_hop": [
+      [
+       "A center of curvature is a center",
+       "Large areas distort due to the earth's curvature."
+      ],
+      [
+       "Ice caps tend to be slightly dome-shaped and spread out from their center.",
+       "Earth has a diversity of life, on the surface, underground, under ice caps, etc."
+      ]
+     ]
+    },
+    "crust": {
+     "one_hop": [
+      "Earth has three main layers, crust, mantle, and a core.",
+      "Earth consists of layers from the crust to the core made up of varying materials and consistencies.",
+      "Geologists study the layers of rock of the earth's crust."
+     ],
+     "two_hop": [
+      [
+       "Continental crust is the layer that forms the continents.",
+       "Continents are relatively thick layers of continental crust."
+      ],
+      [
+       "Oceanic crust is the layer below the deep ocean basins.",
+       "Earth has continents and ocean basins for that very reason."
+      ]
+     ]
+    },
+    "inner core": {
+     "one_hop": [
+      "Earth has three main layers, crust, mantle, and a core.",
+      "Earth consists of layers from the crust to the core made up of varying materials and consistencies.",
+      "Laminate flooring has an inner core and a glued-on layer or layers of outer material."
+     ],
+     "two_hop": [
+      [
+       "Earth has solid cores.",
+       "Most earth has solid cores."
+      ],
+      [
+       "Iron cores are surrounded by layers.",
+       "Earth has a nickel-iron core."
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "question": "A pelican is hungry, so decides to try to catch some fish. In order to do this, the pelican will",
+   "paths": {
+    "use the back of its head": {
+     "one_hop": [
+      "Pelicans are back and can be found foraging for fish around any watercourses.",
+      "Masked boobies plunge head first into the ocean to catch flying fish and squid.",
+      "Pelicans has-part backs."
+     ],
+     "two_hop": [
+      [
+       "Triggerfish have (part) heads.",
+       "Triggerfish isa fish."
+      ],
+      [
+       "Flounder has (part) heads.",
+       "Flounder isa fish."
+      ]
+     ]
+    },
+    "use the bottom of its stomach": {
+     "one_hop": [
+      "Coastal fisheries take both bottom, or demersal, and open-water, or pelagic, catches.",
+      "Poor catches occur when bottom turbidity is high on the benthic spawning grounds.",
+      "Many cats eat greens when they have an upset stomach, in order to induce vomiting."
+     ],
+     "two_hop": [
+      [
+       "Channel catfish are omnivorous generally feeding along the bottom.",
+       "Pelicans eat catfishes."
+      ],
+      [
+       "Goldfishes have stomachs.",
+       "Goldfish isa fish."
+      ]
+     ]
+    },
+    "use the front of its face": {
+     "one_hop": [
+      "Grey seals have long claws on their front flippers which are used to catch and hold fish.",
+      "Pelicans have (part) faces.",
+      "Storm drains, cattle guards, and railroad tracks can catch front tires and are slippery when wet."
+     ],
+     "two_hop": [
+      [
+       "Triggerfish have (part) faces.",
+       "Triggerfish isa fish."
+      ],
+      [
+       "Lungfishes have (part) faces.",
+       "Lungfish isa fish."
+      ]
+     ]
+    },
+    "use the back of its tail": {
+     "one_hop": [
+      "Pelicans are back and can be found foraging for fish around any watercourses.",
+      "Pelicans has-part backs.",
+      "Pelicans fly in groups called flocks, with their long necks bent back over their bodies."
+     ],
+     "two_hop": [
+      [
+       "Triggerfish have (part) tail fins.",
+       "Triggerfish isa fish."
+      ],
+      [
+       "Tail fins are part of fish.",
+       "Fish have (part) tail fins."
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "question": "A river can disappear over a period of time?",
+   "paths": {
+    "this is uncertain": {
+     "one_hop": [],
+     "two_hop": []
+    },
+    "this is sure": {
+     "one_hop": [],
+     "two_hop": []
+    },
+    "all of these": {
+     "one_hop": [],
+     "two_hop": []
+    },
+    "maybe": {
+     "one_hop": [],
+     "two_hop": []
+    }
+   }
+  },
+  {
+   "question": "Of the following household items, which is recyclable?",
+   "paths": {
+    "cooking oil": {
+     "one_hop": [
+      "Household waste is used to generate cooking gas.",
+      "Homemakers assist with cooking, light housekeeping, laundry, shopping and other household chores.",
+      "Most Somali households use it for cooking."
+     ],
+     "two_hop": [
+      [
+       "Recycled oil is used in making passenger car motor oils, diesel engine oils, and other products.",
+       "Petroleum is a product used as a solvent in many household cleaners among other products."
+      ],
+      [
+       "Household waste is used to generate cooking gas.",
+       "Wastewater is a combination of household wastes from the kitchen, toilet, shower and laundry."
+      ]
+     ]
+    },
+    "banana peel": {
+     "one_hop": [
+      "Bananas are the most widely traded fresh fruit item."
+     ],
+     "two_hop": [
+      [
+       "Banana peels are located in trash.",
+       "Heavy trash includes household furnishings and appliances."
+      ],
+      [
+       "Many bananas are used both raw and cooked.",
+       "Recycling is the processing of an existing item into a raw material for use in a new product."
+      ]
+     ]
+    },
+    "paint": {
+     "one_hop": [
+      "Leftover paint can become a household hazardous waste.",
+      "Paint is the largest component of the household hazardous waste stream.",
+      "Dippers use hoists to immerse racks or baskets of items in vats of paint."
+     ],
+     "two_hop": [
+      [
+       "Milk paint is an historic paint that was used on walls, furniture and woodwork.",
+       "Most households spend their refunds on items such as clothes, cars, and furniture."
+      ],
+      [
+       "Paint is the largest component of the household hazardous waste stream.",
+       "Unacceptable materials are household hazardous waste such as waste oil, pesticides, chemicals."
+      ]
+     ]
+    },
+    "soda can": {
+     "one_hop": [],
+     "two_hop": [
+      [
+       "Sodium bicarbonate is converted into soda ash, which is used to make glass and detergent.",
+       "Household cleaning agents such as ammonia, borax, lye, and detergents are common examples of bases."
+      ],
+      [
+       "Caustic soda is often an ingredient of oven and toilet cleaners.",
+       "Wastewater is a combination of household wastes from the kitchen, toilet, shower and laundry."
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "question": "An inherited characteristic present in a baby is",
+   "paths": {
+    "number of ears": {
+     "one_hop": [
+      "Babies can have eye, ear or lung infections.",
+      "Some babies have frequent ear infection.",
+      "Some babies have ear infection."
+     ],
+     "two_hop": [
+      [
+       "Ear infections occur frequently in infancy and early childhood in all children.",
+       "Some clinical signs are present from early infancy, and probably in the prenatal period."
+      ],
+      [
+       "Ears reach their adult size before other facial features.",
+       "Facial features are characteristics dictated by genetic inheritance ."
+      ]
+     ]
+    },
+    "birth date": {
+     "one_hop": [
+      "Autism is present at birth and the characteristics become evident in the first three years.",
+      "Premature labor is labor that occurs more than three weeks before a baby's due date.",
+      "Some babies spend six to nine months after their due dates in the nursery."
+     ],
+     "two_hop": [
+      [
+       "Preterm labour can result in the birth of a premature baby.",
+       "A premature baby is a newborn baby"
+      ],
+      [
+       "Congenital glaucoma is present at birth or occurs shortly thereafter.",
+       "Congenital glaucoma is a condition found in babies."
+      ]
+     ]
+    },
+    "birth weight": {
+     "one_hop": [
+      "Autism is present at birth and the characteristics become evident in the first three years.",
+      "Birth weight can also indicate whether a baby is born prematurely.",
+      "Premature babies are the most common low birth weight babies."
+     ],
+     "two_hop": [
+      [
+       "Preterm babies are often underweight at birth.",
+       "A preterm baby is a newborn baby"
+      ],
+      [
+       "Affected neonates are weak at or shortly after birth.",
+       "A neonate is a baby"
+      ]
+     ]
+    },
+    "number of siblings": {
+     "one_hop": [
+      "Some siblings are able to read baby's signals better than adults.",
+      "Emotional abuse is present in all forms of sibling abuse.",
+      "All babies gain weight at different rates and no two infants are alike, even if they are siblings."
+     ],
+     "two_hop": [
+      [
+       "Genetic factors are responsible for the disease in a small number of families.",
+       "Some genetic factors contribute to characteristics."
+      ],
+      [
+       "Diaper rash is common in infancy and can occur for a number of reasons.",
+       "Some clinical signs are present from early infancy, and probably in the prenatal period."
+      ]
+     ]
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,30 @@
+# EXPAND v2, branch reading with focused proposals (decision 0013): each candidate's
+# branch comes from the top 64 generics_v0 statements for "question candidate",
+# reordered so statements mentioning the candidate come first. Otherwise identical to
+# branch_v2_retrieved (decision 0012).
+name = "branch_v2_focused"
+
+[encoder]
+kind = "hf"
+model = "answerdotai/ModernBERT-base"
+revision = "8949b909ec900327062f0ebf497f51aef5e6f0c8"
+max_length = 384
+pooling = "mean"
+frozen = false
+gradient_checkpointing = true
+
+[scorer]
+kind = "direct"
+latent_dim = 256
+heads = 4
+hidden_dim = 512
+dropout = 0.1
+candidate_encoding = "joint"
+
+[branch]
+kind = "branch"
+memory = "artifacts/memories/generics_v0"
+nodes = "retrieved"
+proposals = "focused"
+train_widths = [0, 1, 2, 4, 8]
+max_width = 8

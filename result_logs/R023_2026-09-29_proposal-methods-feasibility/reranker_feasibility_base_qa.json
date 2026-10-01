@@ -1,0 +1,378 @@
+{
+ "reranker": "BAAI/bge-reranker-base",
+ "revision": "2cfc18c9415c912f9d8155881c133215df768a70",
+ "summary": {
+  "questions": 60,
+  "pool": 32,
+  "mean_rank_similarity": 15.85,
+  "mean_rank_reranker": 15.266666666666667,
+  "top2_similarity": 0.3333333333333333,
+  "top2_reranker": 0.13333333333333333,
+  "top8_similarity": 0.48333333333333334,
+  "top8_reranker": 0.3333333333333333,
+  "fact_scores_higher_for_gold_than_every_distractor": 0.4,
+  "cpu_ms_per_pair": 22.014481453668502
+ },
+ "rows": [
+  {
+   "rank_similarity": 32,
+   "rank_reranker": 30,
+   "fact_score_gold_query": -2.0045037269592285,
+   "fact_score_best_distractor_query": -0.7276982069015503
+  },
+  {
+   "rank_similarity": 32,
+   "rank_reranker": 32,
+   "fact_score_gold_query": -4.915297031402588,
+   "fact_score_best_distractor_query": -4.839466571807861
+  },
+  {
+   "rank_similarity": 5,
+   "rank_reranker": 4,
+   "fact_score_gold_query": 2.3807477951049805,
+   "fact_score_best_distractor_query": 4.567685604095459
+  },
+  {
+   "rank_similarity": 1,
+   "rank_reranker": 4,
+   "fact_score_gold_query": 2.1499218940734863,
+   "fact_score_best_distractor_query": 2.8668131828308105
+  },
+  {
+   "rank_similarity": 32,
+   "rank_reranker": 25,
+   "fact_score_gold_query": -2.802483081817627,
+   "fact_score_best_distractor_query": 1.4487345218658447
+  },
+  {
+   "rank_similarity": 12,
+   "rank_reranker": 8,
+   "fact_score_gold_query": 0.8924599885940552,
+   "fact_score_best_distractor_query": 2.801663637161255
+  },
+  {
+   "rank_similarity": 1,
+   "rank_reranker": 2,
+   "fact_score_gold_query": 2.305964946746826,
+   "fact_score_best_distractor_query": 4.237046718597412
+  },
+  {
+   "rank_similarity": 1,
+   "rank_reranker": 8,
+   "fact_score_gold_query": 5.193684101104736,
+   "fact_score_best_distractor_query": 4.914932727813721
+  },
+  {
+   "rank_similarity": 32,
+   "rank_reranker": 32,
+   "fact_score_gold_query": -10.191207885742188,
+   "fact_score_best_distractor_query": -10.16936206817627
+  },
+  {
+   "rank_similarity": 1,
+   "rank_reranker": 1,
+   "fact_score_gold_query": 7.885411262512207,
+   "fact_score_best_distractor_query": 3.2713820934295654
+  },
+  {
+   "rank_similarity": 1,
+   "rank_reranker": 12,
+   "fact_score_gold_query": 3.7114551067352295,
+   "fact_score_best_distractor_query": 3.11470890045166
+  },
+  {
+   "rank_similarity": 9,
+   "rank_reranker": 10,
+   "fact_score_gold_query": 1.9997060298919678,
+   "fact_score_best_distractor_query": 1.3115513324737549
+  },
+  {
+   "rank_similarity": 3,
+   "rank_reranker": 8,
+   "fact_score_gold_query": 1.5639764070510864,
+   "fact_score_best_distractor_query": 1.7084153890609741
+  },
+  {
+   "rank_similarity": 3,
+   "rank_reranker": 20,
+   "fact_score_gold_query": 0.3107224404811859,
+   "fact_score_best_distractor_query": 0.826539158821106
+  },
+  {
+   "rank_similarity": 32,
+   "rank_reranker": 31,
+   "fact_score_gold_query": -4.468613147735596,
+   "fact_score_best_distractor_query": -4.275186061859131
+  },
+  {
+   "rank_similarity": 32,
+   "rank_reranker": 22,
+   "fact_score_gold_query": -2.9318783283233643,
+   "fact_score_best_distractor_query": -2.600903272628784
+  },
+  {
+   "rank_similarity": 32,
+   "rank_reranker": 17,
+   "fact_score_gold_query": -0.44085195660591125,
+   "fact_score_best_distractor_query": -0.5709030628204346
+  },
+  {
+   "rank_similarity": 1,
+   "rank_reranker": 17,
+   "fact_score_gold_query": 0.16531966626644135,
+   "fact_score_best_distractor_query": 0.3025398552417755
+  },
+  {
+   "rank_similarity": 13,
+   "rank_reranker": 21,
+   "fact_score_gold_query": 0.09105906635522842,
+   "fact_score_best_distractor_query": 0.4502033591270447
+  },
+  {
+   "rank_similarity": 32,
+   "rank_reranker": 2,
+   "fact_score_gold_query": 5.16763162612915,
+   "fact_score_best_distractor_query": -1.5922019481658936
+  },
+  {
+   "rank_similarity": 32,
+   "rank_reranker": 21,
+   "fact_score_gold_query": 0.08135369420051575,
+   "fact_score_best_distractor_query": -0.6095975637435913
+  },
+  {
+   "rank_similarity": 5,
+   "rank_reranker": 22,
+   "fact_score_gold_query": -1.7246304750442505,
+   "fact_score_best_distractor_query": -0.9339487552642822
+  },
+  {
+   "rank_similarity": 32,
+   "rank_reranker": 17,
+   "fact_score_gold_query": -2.2878870964050293,
+   "fact_score_best_distractor_query": -8.309259414672852
+  },
+  {
+   "rank_similarity": 32,
+   "rank_reranker": 18,
+   "fact_score_gold_query": 0.8378994464874268,
+   "fact_score_best_distractor_query": -4.050570964813232
+  },
+  {
+   "rank_similarity": 1,
+   "rank_reranker": 29,
+   "fact_score_gold_query": -1.4206777811050415,
+   "fact_score_best_distractor_query": -0.7873444557189941
+  },
+  {
+   "rank_similarity": 1,
+   "rank_reranker": 1,
+   "fact_score_gold_query": 5.20633602142334,
+   "fact_score_best_distractor_query": 5.969279766082764
+  },
+  {
+   "rank_similarity": 32,
+   "rank_reranker": 3,
+   "fact_score_gold_query": 3.452409029006958,
+   "fact_score_best_distractor_query": 4.156750202178955
+  },
+  {
+   "rank_similarity": 4,
+   "rank_reranker": 1,
+   "fact_score_gold_query": 3.0615360736846924,
+   "fact_score_best_distractor_query": 3.630795955657959
+  },
+  {
+   "rank_similarity": 1,
+   "rank_reranker": 1,
+   "fact_score_gold_query": 8.106963157653809,
+   "fact_score_best_distractor_query": 8.228750228881836
+  },
+  {
+   "rank_similarity": 2,
+   "rank_reranker": 8,
+   "fact_score_gold_query": 1.656943678855896,
+   "fact_score_best_distractor_query": 1.3396515846252441
+  },
+  {
+   "rank_similarity": 1,
+   "rank_reranker": 11,
+   "fact_score_gold_query": 5.165719032287598,
+   "fact_score_best_distractor_query": 5.467698574066162
+  },
+  {
+   "rank_similarity": 32,
+   "rank_reranker": 27,
+   "fact_score_gold_query": -3.136889934539795,
+   "fact_score_best_distractor_query": -3.3022096157073975
+  },
+  {
+   "rank_similarity": 1,
+   "rank_reranker": 11,
+   "fact_score_gold_query": 2.2484493255615234,
+   "fact_score_best_distractor_query": 2.966107130050659
+  },
+  {
+   "rank_similarity": 1,
+   "rank_reranker": 8,
+   "fact_score_gold_query": 5.5050950050354,
+   "fact_score_best_distractor_query": 4.963446140289307
+  },
+  {
+   "rank_similarity": 32,
+   "rank_reranker": 21,
+   "fact_score_gold_query": 2.536435127258301,
+   "fact_score_best_distractor_query": 2.784433126449585
+  },
+  {
+   "rank_similarity": 32,
+   "rank_reranker": 22,
+   "fact_score_gold_query": 0.5034084916114807,
+   "fact_score_best_distractor_query": -0.7305774688720703
+  },
+  {
+   "rank_similarity": 32,
+   "rank_reranker": 19,
+   "fact_score_gold_query": 1.3084756135940552,
+   "fact_score_best_distractor_query": 1.4340800046920776
+  },
+  {
+   "rank_similarity": 32,
+   "rank_reranker": 32,
+   "fact_score_gold_query": -5.873941898345947,
+   "fact_score_best_distractor_query": -7.6776604652404785
+  },
+  {
+   "rank_similarity": 1,
+   "rank_reranker": 6,
+   "fact_score_gold_query": 5.764097690582275,
+   "fact_score_best_distractor_query": -3.148649215698242
+  },
+  {
+   "rank_similarity": 1,
+   "rank_reranker": 1,
+   "fact_score_gold_query": 4.9851508140563965,
+   "fact_score_best_distractor_query": 6.684234142303467
+  },
+  {
+   "rank_similarity": 32,
+   "rank_reranker": 17,
+   "fact_score_gold_query": -5.319456577301025,
+   "fact_score_best_distractor_query": -7.326587200164795
+  },
+  {
+   "rank_similarity": 8,
+   "rank_reranker": 14,
+   "fact_score_gold_query": -2.090664863586426,
+   "fact_score_best_distractor_query": -0.4633484184741974
+  },
+  {
+   "rank_similarity": 24,
+   "rank_reranker": 21,
+   "fact_score_gold_query": -0.2243795394897461,
+   "fact_score_best_distractor_query": -0.5246884822845459
+  },
+  {
+   "rank_similarity": 2,
+   "rank_reranker": 10,
+   "fact_score_gold_query": 1.3692413568496704,
+   "fact_score_best_distractor_query": 2.6752872467041016
+  },
+  {
+   "rank_similarity": 32,
+   "rank_reranker": 31,
+   "fact_score_gold_query": -3.414370059967041,
+   "fact_score_best_distractor_query": 0.7542741298675537
+  },
+  {
+   "rank_similarity": 32,
+   "rank_reranker": 12,
+   "fact_score_gold_query": 3.2091007232666016,
+   "fact_score_best_distractor_query": 3.860635280609131
+  },
+  {
+   "rank_similarity": 32,
+   "rank_reranker": 32,
+   "fact_score_gold_query": -3.660782814025879,
+   "fact_score_best_distractor_query": -3.5486702919006348
+  },
+  {
+   "rank_similarity": 6,
+   "rank_reranker": 4,
+   "fact_score_gold_query": 3.74638295173645,
+   "fact_score_best_distractor_query": 4.8367600440979
+  },
+  {
+   "rank_similarity": 32,
+   "rank_reranker": 7,
+   "fact_score_gold_query": 0.628227710723877,
+   "fact_score_best_distractor_query": -7.441944599151611
+  },
+  {
+   "rank_similarity": 1,
+   "rank_reranker": 9,
+   "fact_score_gold_query": 2.560258388519287,
+   "fact_score_best_distractor_query": 1.7280470132827759
+  },
+  {
+   "rank_similarity": 13,
+   "rank_reranker": 17,
+   "fact_score_gold_query": 3.0715551376342773,
+   "fact_score_best_distractor_query": 3.037416934967041
+  },
+  {
+   "rank_similarity": 2,
+   "rank_reranker": 22,
+   "fact_score_gold_query": 3.198202133178711,
+   "fact_score_best_distractor_query": 5.693662643432617
+  },
+  {
+   "rank_similarity": 3,
+   "rank_reranker": 9,
+   "fact_score_gold_query": 1.6760586500167847,
+   "fact_score_best_distractor_query": -2.075840473175049
+  },
+  {
+   "rank_similarity": 1,
+   "rank_reranker": 1,
+   "fact_score_gold_query": 8.185234069824219,
+   "fact_score_best_distractor_query": 6.99916410446167
+  },
+  {
+   "rank_similarity": 32,
+   "rank_reranker": 32,
+   "fact_score_gold_query": -5.495938777923584,
+   "fact_score_best_distractor_query": -4.41682767868042
+  },
+  {
+   "rank_similarity": 3,
+   "rank_reranker": 3,
+   "fact_score_gold_query": 4.40913200378418,
+   "fact_score_best_distractor_query": 4.88491153717041
+  },
+  {
+   "rank_similarity": 32,
+   "rank_reranker": 13,
+   "fact_score_gold_query": 2.876981496810913,
+   "fact_score_best_distractor_query": 3.507884979248047
+  },
+  {
+   "rank_similarity": 1,
+   "rank_reranker": 28,
+   "fact_score_gold_query": -0.31676414608955383,
+   "fact_score_best_distractor_query": -2.204677104949951
+  },
+  {
+   "rank_similarity": 32,
+   "rank_reranker": 32,
+   "fact_score_gold_query": -7.244999408721924,
+   "fact_score_best_distractor_query": -8.105154991149902
+  },
+  {
+   "rank_similarity": 17,
+   "rank_reranker": 17,
+   "fact_score_gold_query": 0.9881876707077026,
+   "fact_score_best_distractor_query": 1.2849937677383423
+  }
+ ]
+}

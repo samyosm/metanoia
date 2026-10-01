@@ -1,0 +1,272 @@
+{
+ "summary": {
+  "r005/none": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.388,
+    "nll": 1.4943420692227125
+   },
+   "all": {
+    "n": 4046,
+    "accuracy": 0.5071675729115176,
+    "nll": 1.1751948681634894
+   },
+   "arc_easy": {
+    "n": 2375,
+    "accuracy": 0.5873684210526315,
+    "nll": 0.9879148084095083
+   },
+   "arc_challenge": {
+    "n": 1171,
+    "accuracy": 0.39538855678906915,
+    "nll": 1.4187615132412805
+   }
+  },
+  "r005/retrieved": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.426,
+    "nll": 1.388673112641607
+   },
+   "all": {
+    "n": 4046,
+    "accuracy": 0.5190311418685121,
+    "nll": 1.1665260708957088
+   },
+   "arc_easy": {
+    "n": 2375,
+    "accuracy": 0.592421052631579,
+    "nll": 1.024285469814982
+   },
+   "arc_challenge": {
+    "n": 1171,
+    "accuracy": 0.4099060631938514,
+    "nll": 1.3601621995838191
+   }
+  },
+  "r005/random": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.408,
+    "nll": 1.2755393251648488
+   },
+   "all": {
+    "n": 4046,
+    "accuracy": 0.49703410776075135,
+    "nll": 1.1780873655840587
+   },
+   "arc_easy": {
+    "n": 2375,
+    "accuracy": 0.5646315789473684,
+    "nll": 1.0924628286974702
+   },
+   "arc_challenge": {
+    "n": 1171,
+    "accuracy": 0.39795046968403075,
+    "nll": 1.3101388560326088
+   }
+  },
+  "r005/qret": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.446,
+    "nll": 1.2483738125476458
+   },
+   "all": {
+    "n": 4046,
+    "accuracy": 0.5261987147800297,
+    "nll": 1.114913469886713
+   },
+   "arc_easy": {
+    "n": 2375,
+    "accuracy": 0.5945263157894737,
+    "nll": 1.005767114464336
+   },
+   "arc_challenge": {
+    "n": 1171,
+    "accuracy": 0.4218616567036721,
+    "nll": 1.2792964099359692
+   }
+  },
+  "r005/gold": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.618,
+    "nll": 1.029499494875764
+   },
+   "all": {
+    "n": 500,
+    "accuracy": 0.618,
+    "nll": 1.029499494875764
+   }
+  },
+  "kv0/none": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.614,
+    "nll": 0.9678192899546195
+   },
+   "all": {
+    "n": 4046,
+    "accuracy": 0.5813148788927336,
+    "nll": 1.0101805049082904
+   },
+   "arc_easy": {
+    "n": 2375,
+    "accuracy": 0.6176842105263158,
+    "nll": 0.9485115374264397
+   },
+   "arc_challenge": {
+    "n": 1171,
+    "accuracy": 0.4935952177625961,
+    "nll": 1.153343959431118
+   }
+  },
+  "kv0/retrieved": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.566,
+    "nll": 1.0648465403026341
+   },
+   "all": {
+    "n": 4046,
+    "accuracy": 0.5528917449332674,
+    "nll": 1.0841520732167418
+   },
+   "arc_easy": {
+    "n": 2375,
+    "accuracy": 0.5987368421052631,
+    "nll": 1.0315402773443598
+   },
+   "arc_challenge": {
+    "n": 1171,
+    "accuracy": 0.4543125533731853,
+    "nll": 1.1991015024686296
+   }
+  },
+  "kv0/random": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.562,
+    "nll": 1.1315854857648042
+   },
+   "all": {
+    "n": 4046,
+    "accuracy": 0.5346020761245674,
+    "nll": 1.1602264771612252
+   },
+   "arc_easy": {
+    "n": 2375,
+    "accuracy": 0.5629473684210526,
+    "nll": 1.137387063183184
+   },
+   "arc_challenge": {
+    "n": 1171,
+    "accuracy": 0.4654141759180188,
+    "nll": 1.218778231128824
+   }
+  },
+  "kv0/qret": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.558,
+    "nll": 1.073525554068352
+   },
+   "all": {
+    "n": 4046,
+    "accuracy": 0.5407810182896688,
+    "nll": 1.1243309562118886
+   },
+   "arc_easy": {
+    "n": 2375,
+    "accuracy": 0.576421052631579,
+    "nll": 1.0880045309334045
+   },
+   "arc_challenge": {
+    "n": 1171,
+    "accuracy": 0.46114432109308284,
+    "nll": 1.219700692427233
+   }
+  },
+  "kv0/gold": {
+   "obqa": {
+    "n": 500,
+    "accuracy": 0.736,
+    "nll": 0.7106522185444201
+   },
+   "all": {
+    "n": 500,
+    "accuracy": 0.736,
+    "nll": 0.7106522185444201
+   }
+  },
+  "probe": {
+   "mean_cos_between_concepts_same_input": 0.9313506269827485,
+   "mean_cos_between_inputs": 0.8933095335960388,
+   "n_inputs": 64,
+   "concepts_per_input": 16
+  }
+ },
+ "examples": [
+  {
+   "cond": "retrieved",
+   "id": "knowledge_v0-obqa-test-000000",
+   "context": "saver: someone who saves (especially money). save: accumulate money for future use. afford: have the financial means to do something or buy something. vacation: spend or take a vacation. disposable income: income (after taxes) that is available to you for saving or spending. save: spend less; buy at a reduced price. saving: characterized by thriftiness; - Ellen Glasgow. savings bank: a container (usually with a slot in the top) for keeping money at home."
+  },
+  {
+   "cond": "retrieved",
+   "id": "knowledge_v0-obqa-test-000001",
+   "context": "mist: a thin fog with condensation near the ground. mud flat: a tract of low muddy land near an estuary; covered at high tide and exposed at low tide. salt marsh: low-lying wet land that is frequently flooded with saltwater. brumous: filled or abounding with fog or mist. fogbank: a large mass of fog on the sea (as seen from a distance). ice fog: a dense winter fog containing ice particles. fogged: obscured by fog. fog: an atmosphere in which visibility is reduced because of a cloud of some substance. rain shadow: an area that has little precipitation because some barrier causes the winds to lo"
+  },
+  {
+   "cond": "retrieved",
+   "id": "knowledge_v0-obqa-test-000002",
+   "context": "predatory: living by preying on other animals especially by catching living prey. predator: any animal that lives by preying on other animals. carnivore: a terrestrial or aquatic flesh-eating mammal. pterois: lionfishes. predation: the act of preying by a predator who kills and eats the prey. cannibalize: eat human flesh. bunting: any of numerous seed-eating songbirds of Europe or North America. grass-eating: feeding on grasses. herbivorous: feeding only on plants. carnivorous: (used of plants as well as animals) feeding on animals."
+  },
+  {
+   "cond": "retrieved",
+   "id": "knowledge_v0-obqa-test-000003",
+   "context": "chestnut oak: an oak having leaves resembling those of chestnut trees. brake: an area thickly overgrown usually with one kind of plant. laurel oak: large nearly semi-evergreen oak of southeastern United States; thrives in damp soil. opposite: of leaves etc; growing in pairs on either side of a stem. planting: putting seeds or young plants in the ground to grow. stump: the base part of a tree that remains standing after the tree has been felled. deadwood: a branch or a part of a tree that is dead. fell: the act of felling something (as a tree). defoliation: causing the leaves of trees and other"
+  },
+  {
+   "cond": "retrieved",
+   "id": "knowledge_v0-obqa-test-000004",
+   "context": "electric: a car that is powered by electricity. power mower: a lawn mower powered by a gasoline motor. distributor: electrical device that distributes voltage to the spark plugs of a gasoline engine in the order of the firing sequence. fuel line: a pipe that carries gasoline from a tank to a gasoline engine. power station: an electrical generating station. telpherage: a transportation system in which cars (telphers) are suspended from cables and operated on electricity. streetcar: a wheeled vehicle that runs on rails and is propelled by electricity. electricity: energy made available by the fl"
+  },
+  {
+   "cond": "retrieved",
+   "id": "knowledge_v0-obqa-test-000005",
+   "context": "rain forest: a forest with heavy annual rainfall. atmosphere: a particular environment or surrounding influence. atmosphere: the weather or climate at some place. acid rain: rain containing acids that form in the atmosphere when industrial gas emissions (especially sulfur dioxide and nitrogen oxides) combine with water. nitrogen fixation: the assimilation of atmospheric nitrogen by soil bacteria and its release for plant use on the death of the bacteria. re-afforest: reestablish a forest after clear-cutting or fire, etc.. carbonize: turn into carbon, as by burning. carbon cycle: the organic ci"
+  },
+  {
+   "cond": "retrieved",
+   "id": "knowledge_v0-obqa-test-000006",
+   "context": "electric: a car that is powered by electricity. power mower: a lawn mower powered by a gasoline motor. gas engine: an internal-combustion engine similar to a gasoline engine but using natural gas instead of gasoline vapor. spark plug: electrical device that fits into the cylinder head of an internal-combustion engine and ignites the gas by means of an electric spark. fuel cell: cell that produces electricity by oxidation of fuel (hydrogen and oxygen or zinc and air); often used in electric cars. drive line: mechanism that transmits power from the engine to the driving wheels of a motor vehicle"
+  },
+  {
+   "cond": "retrieved",
+   "id": "knowledge_v0-obqa-test-000007",
+   "context": "sidereal day: the time for one complete rotation of the earth relative to a particular star, about 4 minutes shorter than a mean solar day. lunar eclipse: the earth interrupts light shining on the moon. half-moon: the time at which the Moon is at first or last quarter when half its face is illuminated. solar eclipse: the moon interrupts light from the sun. morning star: a planet (usually Venus) seen just before sunrise in the eastern sky. day: time for Earth to make a complete rotation on its axis. venus: the second nearest planet to the sun; it is peculiar in that its rotation is slow and ret"
+  },
+  {
+   "cond": "retrieved",
+   "id": "knowledge_v0-obqa-test-000008",
+   "context": "summer solstice: June 21, when the sun is at its northernmost point. summer: the warmest season of the year; in the northern hemisphere it extends from the summer solstice to the autumnal equinox. solstice: either of the two times of the year when the sun is at its greatest distance from the celestial equator. june: the month following May and preceding July. july: the month following June and preceding August. winter: the coldest season of the year; in the northern hemisphere it extends from the winter solstice to the vernal equinox. october: the month following September and preceding Novemb"
+  },
+  {
+   "cond": "retrieved",
+   "id": "knowledge_v0-obqa-test-000009",
+   "context": "bacteria bed: layer of sand or gravel used to expose sewage effluent to air and the action of microorganisms. microorganism: any organism of microscopic size. soil: the part of the earth's surface consisting of humus and disintegrated rock. polyangiaceae: bacteria living mostly in soils and on dung. stone breaker: someone who breaks up stone. road metal: broken rock used for repairing or making roads. detritus: loose material (stone fragments and silt etc) that is worn away from rocks. pollutant: waste matter that contaminates the water or air or soil. pollution: undesirable state of the natur"
+  },
+  {
+   "cond": "retrieved",
+   "id": "knowledge_v0-obqa-test-000010",
+   "context": "caveman: someone who lives in a cave. cave: a geological formation consisting of an underground enclosure with access from the surface of the ground or from the sea. cavern: a large cave or a large chamber in a cave. cove: small or narrow cave in the side of a cliff or mountain. oceanic: constituting or living in the open sea. oceanic: relating to or occurring or living in or frequenting the open ocean. inhospitableness: the environmental condition in a region that lacks a favorable climate or terrain for life or growth. hardy: able to survive under unfavorable weather conditions. town: the pe"
+  },
+  {
+   "cond": "retrieved",
+   "id": "knowledge_v0-obqa-test-000011",
+   "context": "pitahaya cactus: cactus of the southwestern United States and northern Mexico having edible juicy fruit. fruit tree: tree bearing edible fruit. garambulla: arborescent cactus of western Mexico bearing a small oblong edible berrylike fruit. conserve: fruit preserved by cooking with sugar. tuber: a fleshy underground stem or root serving for reproductive and food storage. tub: a large open vessel for holding or storing liquids. cauline: especially of leaves; growing on a stem especially on the upper part of a stem. chichipe: tall treelike Mexican cactus with edible red fruit. spine-tipped: of a "
+  }
+ ]
+}

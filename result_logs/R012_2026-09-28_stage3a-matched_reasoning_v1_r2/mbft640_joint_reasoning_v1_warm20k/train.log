@@ -1,0 +1,46 @@
+Loading weights:   0%|          | 0/134 [00:00<?, ?it/s]Loading weights: 100%|██████████| 134/134 [00:00<00:00, 14165.66it/s]
+[transformers] [1mModernBertModel LOAD REPORT[0m from: answerdotai/ModernBERT-base
+Key               | Status     |  | 
+------------------+------------+--+-
+decoder.bias      | UNEXPECTED |  | 
+head.norm.weight  | UNEXPECTED |  | 
+head.dense.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+{"epoch": 0, "step": 50, "of": 1250, "train_loss": 1.4756547850370407, "elapsed_seconds": 237.2}
+{"epoch": 0, "step": 100, "of": 1250, "train_loss": 1.381481682062149, "elapsed_seconds": 489.3}
+checkpoint artifacts/predictors/mbft640_joint_reasoning_v1_warm20k.incomplete/checkpoints/step_0000125
+{"epoch": 0, "step": 150, "of": 1250, "train_loss": 0.8272855137534498, "elapsed_seconds": 743.6}
+{"epoch": 0, "step": 200, "of": 1250, "train_loss": 0.21472319305718834, "elapsed_seconds": 994.0}
+{"epoch": 0, "step": 250, "of": 1250, "train_loss": 0.06225847928149464, "elapsed_seconds": 1241.1}
+checkpoint artifacts/predictors/mbft640_joint_reasoning_v1_warm20k.incomplete/checkpoints/step_0000250
+{"epoch": 0, "step": 300, "of": 1250, "train_loss": 0.02814859780936495, "elapsed_seconds": 1490.7}
+{"epoch": 0, "step": 350, "of": 1250, "train_loss": 0.004786087073419507, "elapsed_seconds": 1739.4}
+checkpoint artifacts/predictors/mbft640_joint_reasoning_v1_warm20k.incomplete/checkpoints/step_0000375
+{"epoch": 0, "step": 400, "of": 1250, "train_loss": 0.0009851995541387915, "elapsed_seconds": 1986.0}
+{"epoch": 0, "step": 450, "of": 1250, "train_loss": 0.00724075690243243, "elapsed_seconds": 2232.1}
+{"epoch": 0, "step": 500, "of": 1250, "train_loss": 0.0053117459453391105, "elapsed_seconds": 2477.2}
+checkpoint artifacts/predictors/mbft640_joint_reasoning_v1_warm20k.incomplete/checkpoints/step_0000500
+{"epoch": 0, "step": 550, "of": 1250, "train_loss": 0.004937999973748104, "elapsed_seconds": 2722.6}
+{"epoch": 0, "step": 600, "of": 1250, "train_loss": 0.04704601010260259, "elapsed_seconds": 2970.1}
+checkpoint artifacts/predictors/mbft640_joint_reasoning_v1_warm20k.incomplete/checkpoints/step_0000625
+{"epoch": 0, "step": 650, "of": 1250, "train_loss": 0.04231608745710729, "elapsed_seconds": 3219.7}
+{"epoch": 0, "step": 700, "of": 1250, "train_loss": 0.014081504182789332, "elapsed_seconds": 3465.1}
+{"epoch": 0, "step": 750, "of": 1250, "train_loss": 0.0032009611425702733, "elapsed_seconds": 3714.0}
+checkpoint artifacts/predictors/mbft640_joint_reasoning_v1_warm20k.incomplete/checkpoints/step_0000750
+{"epoch": 0, "step": 800, "of": 1250, "train_loss": 7.085667606556711e-05, "elapsed_seconds": 3963.8}
+{"epoch": 0, "step": 850, "of": 1250, "train_loss": 0.00570098905993202, "elapsed_seconds": 4209.8}
+checkpoint artifacts/predictors/mbft640_joint_reasoning_v1_warm20k.incomplete/checkpoints/step_0000875
+{"epoch": 0, "step": 900, "of": 1250, "train_loss": 0.000298420169921112, "elapsed_seconds": 4456.4}
+{"epoch": 0, "step": 950, "of": 1250, "train_loss": 4.566560161212152e-07, "elapsed_seconds": 4703.7}
+{"epoch": 0, "step": 1000, "of": 1250, "train_loss": 0.0012179508551158058, "elapsed_seconds": 4948.7}
+checkpoint artifacts/predictors/mbft640_joint_reasoning_v1_warm20k.incomplete/checkpoints/step_0001000
+{"epoch": 0, "step": 1050, "of": 1250, "train_loss": 7.196894579531765e-05, "elapsed_seconds": 5198.5}
+{"epoch": 0, "step": 1100, "of": 1250, "train_loss": 0.016331221068279157, "elapsed_seconds": 5445.3}
+checkpoint artifacts/predictors/mbft640_joint_reasoning_v1_warm20k.incomplete/checkpoints/step_0001125
+{"epoch": 0, "step": 1150, "of": 1250, "train_loss": 2.3806419277789813e-05, "elapsed_seconds": 5695.2}
+{"epoch": 0, "step": 1200, "of": 1250, "train_loss": 0.0001791612746995419, "elapsed_seconds": 5941.1}
+{"epoch": 0, "step": 1250, "of": 1250, "train_loss": 8.436355825542918e-06, "elapsed_seconds": 6186.6}
+{"epoch": 0, "step": 1250, "train_loss": 0.1657344748326305, "dev_loss": 8.940695295223123e-10, "dev_logit_spread": 32.150373754501345, "grad_norm_encoder": 6.998301186485101, "grad_norm_scorer": 0.3335018196677903, "nonfinite_grad_steps": 4, "elapsed_seconds": 6219.6}
+wrote artifacts/predictors/mbft640_joint_reasoning_v1_warm20k: direct_modernbert_ft_joint_640@4810281132d1
